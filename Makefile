@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/06/26 17:56:46 by rrouille         ###   ########.fr        #
+#    Updated: 2023/07/04 18:08:11 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,13 +17,12 @@ NAMEBNS			= philo_bonus
 # Arguments passed to the executable
 ARGS			= ${filter-out $@,${MAKECMDGOALS}}
 PRINT_SCREEN	= YES
+FAST_MODE		= NO
 
 # Directories
-SRCSDIR			= ./
+SRCSDIR			= ./srcs
 OBJSDIR			= objs/
-HDRDIR			= ./
-SRCSBNSDIR		= ./philo_bonus
-OBJSBNSDIR		= objs/philo_bonus
+HDRDIR			= ./includes
 
 # Colors for the terminal
 GRAY			= \033[0;90m
@@ -61,9 +60,7 @@ CLEARLN			= \r\033[K
 # Sources
 SRCS			= ${shell find ${SRCSDIR} -maxdepth 1 -type f -name '*.c'}
 OBJS			= ${patsubst ${SRCSDIR}%,${OBJSDIR}%,${SRCS:%.c=%.o}}
-SRCSBNS			= ${shell find ${SRCSBNSDIR} -type f -name '*.c'}
-OBJSBNS			= ${patsubst ${SRCSBNSDIR}%,${OBJSBNSDIR}%,${SRCSBNS:%.c=%.o}}
-CFLAGS			= -Werror -Wall -Wextra -g -fsanitize=thread -pthread 
+CFLAGS			= -Werror -Wall -Wextra
 CC				= gcc
 RM				= rm -rf
 MAKE			= make
@@ -84,63 +81,25 @@ BS_N			= echo "\n"
 all:	 draw_begining ${NAME} draw_ready
 
 # Build rule for object files
-${OBJSDIR}/%.o : ${SRCSDIR}/%.c
+${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 			@${MKDIR} ${OBJSDIR}
-			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@
-
-# Build rule for bonus object files
-${OBJSBNSDIR}/%.o : ${SRCSBNSDIR}/%.c
-			@${MKDIR} ${OBJSBNSDIR}
 			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@
 
 # Linking rule
 ${NAME}: ${OBJS}
 			@${CHARG_LINE}
-			@for i in ${OBJS} ${C_NOT_LAST}; do \
-				${CHARG_LINE}; \
-			done;
 			@${CHARG_LINE} ${C_LAST};
-			@${CC} ${CFLAGS} ${OBJS} -o ${NAME}
+			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME}
 			@${END_COMP}
 			@sleep 0.5
  
 # Run the program
-run:	clear ${NAME}
+run:	clear fast
 			@echo "${GREEN}🔧 Operations completed: 🔧${ENDCOLOR}"
 			@./${NAME} ${ARGS}
-r:		clear ${NAME}
+r:		clear fast
 			@echo "${GREEN}🔧 Operations completed: 🔧${ENDCOLOR}"
 			@./${NAME} ${ARGS}
-
-# Count eat times
-count:	clear ${NAME}
-			@echo "${GREEN}🍴 Number of meal received by philosophers: 🍴${ENDCOLOR}"
-			@./${NAME} ${ARGS} | grep "is eating" | wc -l
-c:		clear ${NAME}
-			@echo "${GREEN}🍴 Number of meal received by philosophers: 🍴${ENDCOLOR}"
-			@./${NAME} ${ARGS} | grep "is eating" | wc -l
-
-# Check forbidden functions
-ff:		clear ${NAME}
-			@echo "${GREEN}🔧 Used functions: 🔧${ENDCOLOR}"
-			@nm -u ./${NAME} | awk '{print $2}' | sed -E 's/^_//'
-
-
-# Bonus
-bonus:	draw_bonus ${OBJSBNS}
-			@if [ -z "${BONUS_OBJS}" ]; then \
-				echo "${RED}⚠️ Sorry, bonuses are not available yet... ⚠️\n${RESET}"; \
-			else \
-				${CHARG_LINE}; \
-				for i in ${OBJSBNS} ${C_NOT_LAST}; do \
-					${CHARG_LINE}; \
-				done; \
-				${CHARG_LINE} ${C_LAST}; \
-				${CC} ${CFLAGS} ${OBJSBNS} -o ${NAMEBNS}; \
-				${END_COMP}; \
-			fi
-			@sleep 0.3
-b:		bonus
 
 ###############################################################################
 #                   ↓↓↓↓↓           CLEANING           ↓↓↓↓↓                  #
@@ -150,7 +109,7 @@ b:		bonus
 clean:
 			@echo "${CLEAR}\c"
 			@${S_OBJS}
-			@${RM} objs/
+			@${RM} objs/ mylib/
 			@sleep 0.3
 			@echo "${CLEAR}\c"
 			@echo "${GREEN}✅ Simple clean completed! ✨\n"
@@ -229,6 +188,33 @@ draw_norm_no:
 			@cat ascii_art/obama_sad
 			@echo "${ENDCOLOR}"
 
+# Build mylib dependency
+lib:	clear
+			@if [ "${FAST_MODE}" = "NO" ]; then \
+				if [ -d mylib ]; then \
+					echo "${GREEN}🎉 Program already exists, updating it. 🔄\n${RESET}"; \
+					git -C mylib pull; \
+					echo ""; \
+					make -C mylib; \
+					echo "\c"; \
+					sleep 0.3; \
+				else \
+					git clone https://github.com/rphlr/mylib --quiet; \
+					make -C mylib; \
+					echo "\c"; \
+					sleep 0.3; \
+					${START}; \
+				fi; \
+			else \
+				if [ -d mylib ]; then \
+					git -C mylib pull; \
+					make fast -C mylib; \
+				else \
+					git clone https://github.com/rphlr/mylib --quiet; \
+					make fast -C mylib; \
+				fi; \
+			fi
+
 # Build rule for help function
 help:
 			@if [ "${PRINT_SCREEN}" = "YES" ]; then \
@@ -240,14 +226,11 @@ help:
 					printf '${CLEARLN}'; \
 				done; \
 			fi
-			@echo "${GRAY}🏃 Run ${ITALIC}\`./${NAME} <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> {<number_of_times_each_philosopher_must_eat>}\`${ENDCOLOR}${GRAY} to start the program. 🚀\n"
+			@echo "${GRAY}🏃 Run ${ITALIC}\`./${NAME}\`${ENDCOLOR}${GRAY} to see the program in action.${ENDCOLOR}${GRAY}"
 			@echo "${BOLD}${UNDERLINE}💡 TIPS: 💡${ENDCOLOR}${GRAY}"
-			@echo "\t- You can also use ${ITALIC}\`make run <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> {<number_of_times_each_philosopher_must_eat>}\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make r <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> {<number_of_times_each_philosopher_must_eat>}\`${ENDCOLOR}${GRAY} to try it out."
-			@echo "\t- Use a tester with ${ITALIC}\`make test <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> {<number_of_times_each_philosopher_must_eat>}\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make t <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> {<number_of_times_each_philosopher_must_eat>}\`${ENDCOLOR}${GRAY}."
-			@echo "\t- Check for memory leaks with ${ITALIC}\`make leaks <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> {<number_of_times_each_philosopher_must_eat>}\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make l <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> {<number_of_times_each_philosopher_must_eat>}\`${ENDCOLOR}${GRAY}."
+			@echo "\t- You can also use ${ITALIC}\`make run\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make r\`${ENDCOLOR}${GRAY} to try it out."
+			@echo "\t- Check for memory leaks with ${ITALIC}\`make leaks\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make l\`${ENDCOLOR}${GRAY}."
 			@echo "\t- Check the 42 norm with ${ITALIC}\`make norm\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make n\`${ENDCOLOR}${GRAY}."
-			@echo ""
-			@echo "\t- Bonus? Try it with ${ITALIC}\`make bonus\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make b\`${ENDCOLOR}${GRAY} 🌟."
 			@echo ""
 			@echo "${YELLOW}🌟 Use ${ITALIC}\`make help\`${ENDCOLOR}${YELLOW} or ${ITALIC}\`make h\`${ENDCOLOR}${YELLOW} to display these helpful tips. 🚀${ENDCOLOR}"
 h:		help
@@ -258,16 +241,24 @@ norm:
 
 n:		norm
 
+# fast
+fast: FAST_MODE := YES
+
+fast: ${OBJS}
+			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME}
+			
+f: fast
+
 # Leaks
-leaks:	clear ${NAME}
+leaks:	clear fast
 			@echo "${CLEAR}\c"
 			@leaks -atExit -- ./${NAME} ${ARGS}
-l:		clear ${NAME}
+l:		clear fast
 			@echo "${CLEAR}\c"
 			@leaks -atExit -- ./${NAME} ${ARGS}
 
 # Run the program with lldb
-lldb:	clear ${NAME}
+lldb:	clear fast
 			@echo "${CLEAR}\c"
 			@lldb ./${NAME} ${ARGS}
 			@echo "${CLEAR}"
