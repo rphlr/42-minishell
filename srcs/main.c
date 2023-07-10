@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/04 19:10:11 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/10 10:53:08 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,33 @@ typedef struct s_env
 	char	*shell;
 }	t_env;
 
-t_env	*init_env(char **envp)
+typedef struct s_cmd
 {
+	char	**args;
+	char	*cmd;
+	char	*redir_in;
+	char	*redir_out;
+	char	*redir_append;
+	char	*pipe;
+	struct s_cmd	*next;
+}	t_cmd;
+
+typedef struct s_global
+{
+	int		exit_code;
 	t_env	*env;
-	int		i;
+	t_cmd	*cmd;
+}	t_global;
+
+t_global	*init_env(char **envp)
+{
+	t_global	*global;
+	t_env		*env;
+	int			i;
 
 	i = -1;
+	global = NULL;
+	global = ft_gc_malloc(sizeof(t_global));
 	env = ft_gc_malloc(sizeof(t_env));
 	if (!env)
 		return (NULL);
@@ -75,17 +96,42 @@ t_env	*init_env(char **envp)
 		else if (!ft_strncmp(envp[i], "OLDPWD=", 7))
 			env->oldpwd = ft_strdup(envp[i] + 7);
 	}
-	return (env);
+	global->env = env;
+	global->exit_code = 0;
+	return (global);
 }
+
+// void	init_cmd(t_global *global)
+// {
+// 	char	*line;
+
+// 	line = readline(PROMPT);
+// 	if (!line)
+// 	{
+// 		ft_printf("exit\n");
+// 		global->exit_code = 1;
+// 		return ;
+// 	}
+// 	if (line[0])
+// 		// add_history(line);
+// 	// global->cmd = parse_cmd(line);
+// 	free(line);
+// }
 
 int	main(int ac, char **av, char **envp)
 {
-	t_env	*env;
+	t_global	*global;
 
 	(void)ac;
 	(void)av;
-	env = init_env(envp);
-	if (!env)
+	global = init_env(envp);
+	if (!global->env)
 		return (1);
+	// while (!global->exit_code)
+	// {
+		// init_cmd(global);
+		ft_printf(PROMPT);
+		ft_printf("command: %s\n", global->cmd->cmd);
+	// }
 	return (0);
 }

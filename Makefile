@@ -60,7 +60,7 @@ CLEARLN			= \r\033[K
 # Sources
 SRCS			= ${shell find ${SRCSDIR} -maxdepth 1 -type f -name '*.c'}
 OBJS			= ${patsubst ${SRCSDIR}%,${OBJSDIR}%,${SRCS:%.c=%.o}}
-CFLAGS			= -Werror -Wall -Wextra
+CFLAGS			= -Werror -Wall -Wextra -g3 -fsanitize=address
 CC				= gcc
 RM				= rm -rf
 MAKE			= make
@@ -244,7 +244,7 @@ n:		norm
 # fast
 fast: FAST_MODE := YES
 
-fast: ${OBJS}
+fast: lib ${OBJS}
 			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME}
 			
 f: fast
