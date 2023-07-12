@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/10 10:53:08 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/10 11:53:27 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,8 @@ int	main(int ac, char **av, char **envp)
 	// while (!global->exit_code)
 	// {
 		// init_cmd(global);
-		ft_printf(PROMPT);
-		ft_printf("command: %s\n", global->cmd->cmd);
+		// ft_printf(PROMPT);
+		// ft_printf("command: %s\n", global->cmd->cmd);
 	// }
 	return (0);
 }
