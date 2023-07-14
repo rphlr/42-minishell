@@ -6,7 +6,11 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/10 10:53:08 by rrouille         ###   ########.fr       */
+<<<<<<< HEAD
+/*   Updated: 2023/07/14 14:07:38 by rrouille         ###   ########.fr       */
+=======
+/*   Updated: 2023/07/10 11:53:27 by rrouille         ###   ########.fr       */
+>>>>>>> 2b77e515bf9520deb82aedfa722fb7235e6b54c3
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,43 +45,22 @@
 // BONUS: Implement && and ||
 // BONUS: Implement Wilcard * (globbing)
 
-typedef struct s_env
+t_cmd 	*init_cmds(char **av)
 {
-	char	**path;
-	char	*home;
-	char	*pwd;
-	char	*oldpwd;
-	char	*user;
-	char	*shell;
-}	t_env;
+	t_cmd	cmd;
 
-typedef struct s_cmd
-{
-	char	**args;
-	char	*cmd;
-	char	*redir_in;
-	char	*redir_out;
-	char	*redir_append;
-	char	*pipe;
-	struct s_cmd	*next;
-}	t_cmd;
+	cmd = ft_gc_malloc(sizeof(t_cmd));
+	//
+}
 
-typedef struct s_global
-{
-	int		exit_code;
-	t_env	*env;
-	t_cmd	*cmd;
-}	t_global;
-
-t_global	*init_env(char **envp)
+t_global	*init_env(char **av, char **envp)
 {
 	t_global	*global;
 	t_env		*env;
 	int			i;
 
 	i = -1;
-	global = NULL;
-	global = ft_gc_malloc(sizeof(t_global));
+	global = init_global(av);
 	env = ft_gc_malloc(sizeof(t_env));
 	if (!env)
 		return (NULL);
@@ -130,8 +113,8 @@ int	main(int ac, char **av, char **envp)
 	// while (!global->exit_code)
 	// {
 		// init_cmd(global);
-		ft_printf(PROMPT);
-		ft_printf("command: %s\n", global->cmd->cmd);
+		// ft_printf(PROMPT);
+		// ft_printf("command: %s\n", global->cmd->cmd);
 	// }
 	return (0);
 }
