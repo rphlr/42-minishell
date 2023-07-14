@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/04 16:33:29 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/14 13:46:20 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,33 @@
 # define STDERR 2
 
 # define PROMPT "minishell> "
+
+typedef struct s_env
+{
+	char	**path;
+	char	*home;
+	char	*pwd;
+	char	*oldpwd;
+	char	*user;
+	char	*shell;
+}	t_env;
+
+typedef struct s_cmd
+{
+	char	**args;
+	char	*cmd;
+	char	*redir_in;
+	char	*redir_out;
+	char	*redir_append;
+	char	*pipe;
+	struct s_cmd	*next;
+}	t_cmd;
+
+typedef struct s_global
+{
+	int		exit_code;
+	t_env	*env;
+	t_cmd	*cmd;
+}	t_global;
 
 #endif
