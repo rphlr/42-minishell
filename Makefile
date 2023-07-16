@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/07/16 16:49:10 by rrouille         ###   ########.fr        #
+#    Updated: 2023/07/16 17:02:06 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ FAST_MODE		= NO
 
 # Directories
 SRCSDIR			= ./srcs
-OBJSDIR			= objs/
+OBJSDIR			= objs
 HDRDIR			= ./includes
 
 # Colors for the terminal
@@ -83,7 +83,7 @@ all:	 draw_begining ${NAME} draw_ready
 # Build rule for object files
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 			@${MKDIR} ${OBJSDIR}
-			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@
+			@${CC} ${CFLAGS} -lreadline -L ~/.brew/opt/readline/lib -I ${HDRDIR} -c $< -o $@
 
 # Linking rule
 ${NAME}: ${OBJS}
