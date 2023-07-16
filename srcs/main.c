@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/16 16:41:24 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/16 17:35:50 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	lsh_loop(void)
 		return ;
 	}
 	if (line[0])
-		add_history(line);
+		// add_history(line);
 	cmd = init_cmds(ft_split(line, ' '));
 	free(line);
 }

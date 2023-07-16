@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/07/16 17:05:07 by rrouille         ###   ########.fr        #
+#    Updated: 2023/07/16 18:07:42 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,7 +60,7 @@ CLEARLN			= \r\033[K
 # Sources
 SRCS			= ${shell find ${SRCSDIR} -maxdepth 1 -type f -name '*.c'}
 OBJS			= ${patsubst ${SRCSDIR}%,${OBJSDIR}%,${SRCS:%.c=%.o}}
-CFLAGS			= -Werror -Wall -Wextra -g3 -fsanitize=address
+CFLAGS			= -Werror -Wall -Wextra #-g3 -fsanitize=address
 CC				= gcc
 RM				= rm -rf
 MAKE			= make
@@ -77,21 +77,28 @@ S_NAME			= echo "${RED}🧹 Cleaning program... 🧹${ENDCOLOR}"
 CHARG_LINE		= echo "${BG_G} ${ENDCOLOR}\c" && sleep 0.05
 BS_N			= echo "\n"
 
-# First rule
-all:	 draw_begining ${NAME} draw_ready
-
-# Build rule for object files
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
-			@${MKDIR} ${OBJSDIR}
-			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@
+	@${MKDIR} ${OBJSDIR}
+	@${CC} ${CFLAGS} -c $< -o $@ -I $(HDRDIR) -I ~/.brew/opt/readline/include
 
-# Linking rule
-${NAME}: ${OBJS}
-			@${CHARG_LINE}
-			@${CHARG_LINE} ${C_LAST};
-			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME} -lreadline -L ~/.brew/Cellar/readline/8.2.1/lib
-			@${END_COMP}
-			@sleep 0.5
+$(NAME): $(OBJS)
+	# make -C libft
+	$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L ~/.brew/opt/readline/lib
+
+all: $(NAME)
+
+# # Build rule for object files
+# ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
+# 			@${MKDIR} ${OBJSDIR}
+# 			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@
+
+# # Linking rule
+# ${NAME}: ${OBJS}
+# 			@${CHARG_LINE}
+# 			@${CHARG_LINE} ${C_LAST};
+# 			@${CC} ${CFLAGS} ${OBJS} -Lmylib -o ${NAME} -I ~/.brew/opt/readline/include -L ~/.brew/opt/readline/lib -lreadline
+# 			@${END_COMP}
+# 			@sleep 0.5
  
 # Run the program
 run:	clear fast
@@ -245,8 +252,8 @@ n:		norm
 fast: FAST_MODE := YES
 
 fast: lib ${OBJS}
-			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME}
-			
+			@$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L ~/.brew/opt/readline/lib
+
 f: fast
 
 # Leaks
