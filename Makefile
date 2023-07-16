@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/07/16 17:02:06 by rrouille         ###   ########.fr        #
+#    Updated: 2023/07/16 17:05:07 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -83,13 +83,13 @@ all:	 draw_begining ${NAME} draw_ready
 # Build rule for object files
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 			@${MKDIR} ${OBJSDIR}
-			@${CC} ${CFLAGS} -lreadline -L ~/.brew/opt/readline/lib -I ${HDRDIR} -c $< -o $@
+			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@
 
 # Linking rule
 ${NAME}: ${OBJS}
 			@${CHARG_LINE}
 			@${CHARG_LINE} ${C_LAST};
-			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME}
+			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME} -lreadline -L ~/.brew/Cellar/readline/8.2.1/lib
 			@${END_COMP}
 			@sleep 0.5
  
