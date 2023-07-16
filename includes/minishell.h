@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/14 13:46:20 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/16 16:41:34 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,12 @@
 # define STDERR 2
 
 # define PROMPT "minishell> "
+
+typedef struct s_history
+{
+	char	*cmd;
+	struct s_history	*next;
+}	t_history;
 
 typedef struct s_env
 {

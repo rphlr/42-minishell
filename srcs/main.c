@@ -6,10 +6,9 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/14 14:15:50 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/16 16:41:24 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
@@ -42,22 +41,12 @@
 // BONUS: Implement && and ||
 // BONUS: Implement Wilcard * (globbing)
 
-t_cmd 	*init_cmds(char **av)
+t_env	*init_env(char **envp)
 {
-	t_cmd	cmd;
-
-	cmd = ft_gc_malloc(sizeof(t_cmd));
-	//
-}
-
-t_global	*init_env(char **av, char **envp)
-{
-	t_global	*global;
 	t_env		*env;
 	int			i;
 
 	i = -1;
-	global = init_global(av);
 	env = ft_gc_malloc(sizeof(t_env));
 	if (!env)
 		return (NULL);
@@ -76,9 +65,7 @@ t_global	*init_env(char **av, char **envp)
 		else if (!ft_strncmp(envp[i], "OLDPWD=", 7))
 			env->oldpwd = ft_strdup(envp[i] + 7);
 	}
-	global->env = env;
-	global->exit_code = 0;
-	return (global);
+	return (env);
 }
 
 // void	init_cmd(t_global *global)
@@ -98,15 +85,50 @@ t_global	*init_env(char **av, char **envp)
 // 	free(line);
 // }
 
+t_cmd	*init_cmds(char **cmds)
+{
+	t_cmd	*cmd;
+
+	cmd = ft_gc_malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->args = cmds;
+	cmd->cmd = NULL;
+	cmd->redir_in = NULL;
+	cmd->redir_out = NULL;
+	cmd->redir_append = NULL;
+	cmd->pipe = NULL;
+	cmd->next = NULL;
+	return (cmd);
+}
+
+void	lsh_loop(void)
+{
+	char	*line;
+	t_cmd	*cmd;
+
+	line = readline(PROMPT);
+	if (!line)
+	{
+		ft_printf("exit\n");
+		return ;
+	}
+	if (line[0])
+		add_history(line);
+	cmd = init_cmds(ft_split(line, ' '));
+	free(line);
+}
+
 int	main(int ac, char **av, char **envp)
 {
-	t_global	*global;
+	t_env	*env;
 
 	(void)ac;
 	(void)av;
-	global = init_env(envp);
-	if (!global->env)
+	env = init_env(envp);
+	if (!env)
 		return (1);
+	lsh_loop();
 	// while (!global->exit_code)
 	// {
 		// init_cmd(global);
