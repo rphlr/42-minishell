@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/16 17:41:03 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/16 18:27:11 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,6 @@
 
 # define PROMPT "minishell> "
 
-typedef struct s_history
-{
-	char	*cmd;
-	struct s_history	*next;
-}	t_history;
-
 typedef struct s_env
 {
 	char	**path;
@@ -51,12 +45,12 @@ typedef struct s_env
 
 typedef struct s_cmd
 {
-	char	**args;
-	char	*cmd;
-	char	*redir_in;
-	char	*redir_out;
-	char	*redir_append;
-	char	*pipe;
+	char			**args;
+	char			*cmd;
+	char			*redir_in;
+	char			*redir_out;
+	char			*redir_append;
+	char			*pipe;
 	struct s_cmd	*next;
 }	t_cmd;
 

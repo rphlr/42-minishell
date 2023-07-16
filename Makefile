@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/07/16 18:07:42 by rrouille         ###   ########.fr        #
+#    Updated: 2023/07/16 18:30:43 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -186,12 +186,12 @@ draw_help:
 			@echo "${ENDCOLOR}"
 
 draw_norm_yes:
-			@echo "${CLEAR}${GRAY}${BOLD}\c"
+			@echo "${CLEAR}${GREEN}${BOLD}\c"
 			@cat ascii_art/obama
 			@echo "${ENDCOLOR}"
 
 draw_norm_no:
-			@echo "${CLEAR}${GRAY}${BOLD}\c"
+			@echo "${CLEAR}${RED}${BOLD}\c"
 			@cat ascii_art/obama_sad
 			@echo "${ENDCOLOR}"
 
@@ -253,7 +253,7 @@ fast: FAST_MODE := YES
 
 fast: lib ${OBJS}
 			@$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L ~/.brew/opt/readline/lib
-
+			
 f: fast
 
 # Leaks
