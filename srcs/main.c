@@ -42,43 +42,48 @@
 // BONUS: Implement && and ||
 // BONUS: Implement Wilcard * (globbing)
 
-t_cmd 	*init_cmds(char **av)
+t_cmd	*init_cmds(char **cmds)
 {
-	t_cmd	cmd;
+  t_cmd	*cmd;
 
-	cmd = ft_gc_malloc(sizeof(t_cmd));
-	//
+  cmd = ft_gc_malloc(sizeof(t_cmd));
+  if (!cmd)
+    return (NULL);
+  cmd->args = cmds;
+  cmd->cmd = NULL;
+  cmd->redir_in = NULL;
+  cmd->redir_out = NULL;
+  cmd->redir_append = NULL;
+  cmd->pipe = NULL;
+  cmd->next = NULL;
+  return (cmd);
 }
 
-t_global	*init_env(char **av, char **envp)
+t_env	*init_env(char **envp)
 {
-	t_global	*global;
-	t_env		*env;
-	int			i;
+  t_env	*env;
+  int		i;
 
-	i = -1;
-	global = init_global(av);
-	env = ft_gc_malloc(sizeof(t_env));
-	if (!env)
-		return (NULL);
-	while (envp[++i])
-	{
-		if (!ft_strncmp(envp[i], "PATH=", 5))
-			env->path = ft_split(envp[i] + 5, ':');
-		else if (!ft_strncmp(envp[i], "HOME=", 5))
-			env->home = ft_strdup(envp[i] + 5);
-		else if (!ft_strncmp(envp[i], "PWD=", 4))
-			env->pwd = ft_strdup(envp[i] + 4);
-		else if (!ft_strncmp(envp[i], "USER=", 5))
-			env->user = ft_strdup(envp[i] + 5);
-		else if (!ft_strncmp(envp[i], "SHELL=", 6))
-			env->shell = ft_strdup(envp[i] + 6);
-		else if (!ft_strncmp(envp[i], "OLDPWD=", 7))
-			env->oldpwd = ft_strdup(envp[i] + 7);
-	}
-	global->env = env;
-	global->exit_code = 0;
-	return (global);
+  i = -1;
+  env = ft_gc_malloc(sizeof(t_env));
+  if (!env)
+    return (NULL);
+  while (envp[++i])
+  {
+    if (!ft_strncmp(envp[i], "PATH=", 5))
+      env->path = ft_split(envp[i] + 5, ':');
+    else if (!ft_strncmp(envp[i], "HOME=", 5))
+      env->home = ft_strdup(envp[i] + 5);
+    else if (!ft_strncmp(envp[i], "PWD=", 4))
+      env->pwd = ft_strdup(envp[i] + 4);
+    else if (!ft_strncmp(envp[i], "USER=", 5))
+      env->user = ft_strdup(envp[i] + 5);
+    else if (!ft_strncmp(envp[i], "SHELL=", 6))
+      env->shell = ft_strdup(envp[i] + 6);
+    else if (!ft_strncmp(envp[i], "OLDPWD=", 7))
+      env->oldpwd = ft_strdup(envp[i] + 7);
+  }
+  return (env);
 }
 
 // void	init_cmd(t_global *global)
@@ -98,20 +103,41 @@ t_global	*init_env(char **av, char **envp)
 // 	free(line);
 // }
 
+void	lsh_loop(void)
+{
+  char	*line;
+  t_cmd	*cmd;
+
+  while (1)
+  {
+    line = readline(PROMPT);
+    if (!line)
+    {
+      ft_printf("❯ Exiting minishell...\n");
+      break ;
+    }
+    if (ft_strcmp(line, "exit") == 0)
+    {
+      free(line);
+      ft_printf("❯ Exiting minishell...\n");
+      break ;
+    }
+    if (line[0])
+      add_history(line);
+    cmd = init_cmds(ft_split(line, ' '));
+    free(line);
+  }
+}
+
 int	main(int ac, char **av, char **envp)
 {
-	t_global	*global;
+  t_env	*env;
 
-	(void)ac;
-	(void)av;
-	global = init_env(envp);
-	if (!global->env)
-		return (1);
-	// while (!global->exit_code)
-	// {
-		// init_cmd(global);
-		// ft_printf(PROMPT);
-		// ft_printf("command: %s\n", global->cmd->cmd);
-	// }
-	return (0);
+  (void)ac;
+  (void)av;
+  env = init_env(envp);
+  if (!env)
+    return (1);
+  lsh_loop();
+  return (0);
 }
