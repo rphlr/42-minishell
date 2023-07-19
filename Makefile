@@ -79,11 +79,11 @@ BS_N			= echo "\n"
 
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 	@${MKDIR} ${OBJSDIR}
-	@${CC} ${CFLAGS} -c $< -o $@ -I $(HDRDIR) -I ~/.brew/opt/readline/include
+	@${CC} ${CFLAGS} -c $< -o $@ -I $(HDRDIR) -I readline/include
 
 $(NAME): $(OBJS)
 	# make -C libft
-	$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L ~/.brew/opt/readline/lib
+	$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L readline/lib
 
 all: $(NAME)
 
