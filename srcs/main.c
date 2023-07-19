@@ -101,6 +101,11 @@ bool	check_args(char *line)
 	// }
 }
 
+void	execute(t_cmd *cmd)
+{
+	(void) cmd;
+}
+
 void	lsh_loop(void)
 {
 	char	*line;
@@ -115,6 +120,7 @@ void	lsh_loop(void)
 		if (line[0])
 			add_history(line);
 		cmd = init_cmds(ft_split(line, ' '));
+		execute(cmd);
 		free(line);
 	}
 }
