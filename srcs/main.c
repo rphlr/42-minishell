@@ -85,6 +85,24 @@ t_cmd	*init_cmds(char **cmds)
 	return (cmd);
 }
 
+
+bool	check_args(line)
+{
+	bool	valid;
+	
+	
+	if (!line || !ft_strcmp(line, "exit"))
+	{
+		free(line);
+		ft_printf("❯ Exiting minishell...\n");
+		break ;
+	}
+	// else if ()
+	// {
+
+	// }
+}
+
 void	lsh_loop(void)
 {
 	char	*line;
@@ -93,17 +111,7 @@ void	lsh_loop(void)
 	while (1)
 	{
 		line = readline(PROMPT);
-		if (!line)
-		{
-			ft_printf("❯ Exiting minishell...\n");
-			break ;
-		}
-		if (ft_strcmp(line, "exit") == 0)
-		{
-			free(line);
-			ft_printf("❯ Exiting minishell...\n");
-			break ;
-		}
+		check_args(line);
 		if (line[0])
 			add_history(line);
 		cmd = init_cmds(ft_split(line, ' '));
