@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/07/04 18:08:11 by rrouille         ###   ########.fr        #
+#    Updated: 2023/07/16 18:30:43 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ FAST_MODE		= NO
 
 # Directories
 SRCSDIR			= ./srcs
-OBJSDIR			= objs/
+OBJSDIR			= objs
 HDRDIR			= ./includes
 
 # Colors for the terminal
@@ -60,7 +60,7 @@ CLEARLN			= \r\033[K
 # Sources
 SRCS			= ${shell find ${SRCSDIR} -maxdepth 1 -type f -name '*.c'}
 OBJS			= ${patsubst ${SRCSDIR}%,${OBJSDIR}%,${SRCS:%.c=%.o}}
-CFLAGS			= -Werror -Wall -Wextra -g3 -fsanitize=address
+CFLAGS			= -Werror -Wall -Wextra #-g3 -fsanitize=address
 CC				= gcc
 RM				= rm -rf
 MAKE			= make
@@ -77,21 +77,28 @@ S_NAME			= echo "${RED}🧹 Cleaning program... 🧹${ENDCOLOR}"
 CHARG_LINE		= echo "${BG_G} ${ENDCOLOR}\c" && sleep 0.05
 BS_N			= echo "\n"
 
-# First rule
-all:	 draw_begining ${NAME} draw_ready
-
-# Build rule for object files
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
-			@${MKDIR} ${OBJSDIR}
-			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@
+	@${MKDIR} ${OBJSDIR}
+	@${CC} ${CFLAGS} -c $< -o $@ -I $(HDRDIR) -I readline/include
 
-# Linking rule
-${NAME}: ${OBJS}
-			@${CHARG_LINE}
-			@${CHARG_LINE} ${C_LAST};
-			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME}
-			@${END_COMP}
-			@sleep 0.5
+$(NAME): $(OBJS)
+	# make -C libft
+	$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L readline/lib
+
+all: $(NAME)
+
+# # Build rule for object files
+# ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
+# 			@${MKDIR} ${OBJSDIR}
+# 			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@
+
+# # Linking rule
+# ${NAME}: ${OBJS}
+# 			@${CHARG_LINE}
+# 			@${CHARG_LINE} ${C_LAST};
+# 			@${CC} ${CFLAGS} ${OBJS} -Lmylib -o ${NAME} -I ~/.brew/opt/readline/include -L ~/.brew/opt/readline/lib -lreadline
+# 			@${END_COMP}
+# 			@sleep 0.5
  
 # Run the program
 run:	clear fast
@@ -179,12 +186,12 @@ draw_help:
 			@echo "${ENDCOLOR}"
 
 draw_norm_yes:
-			@echo "${CLEAR}${GRAY}${BOLD}\c"
+			@echo "${CLEAR}${GREEN}${BOLD}\c"
 			@cat ascii_art/obama
 			@echo "${ENDCOLOR}"
 
 draw_norm_no:
-			@echo "${CLEAR}${GRAY}${BOLD}\c"
+			@echo "${CLEAR}${RED}${BOLD}\c"
 			@cat ascii_art/obama_sad
 			@echo "${ENDCOLOR}"
 
@@ -245,7 +252,7 @@ n:		norm
 fast: FAST_MODE := YES
 
 fast: lib ${OBJS}
-			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME}
+			@$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L ~/.brew/opt/readline/lib
 			
 f: fast
 
