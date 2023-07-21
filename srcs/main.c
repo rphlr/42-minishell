@@ -157,7 +157,8 @@ int	lsh_loop(void)
 			 	if (err_code < 0 || err_code > 255)
 					err_code %= 256;
 			}
-			err_code = 1;
+			else
+				err_code = 1;
 			break ;
 		}
 		if (cmd->args[0])
