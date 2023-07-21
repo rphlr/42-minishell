@@ -136,7 +136,6 @@ int	lsh_loop(void)
 		}
 		if (cmd->args[0])
 			add_history(*cmd->args);
-		// free(cmd);
 	}
 	return (err_code);
 }
