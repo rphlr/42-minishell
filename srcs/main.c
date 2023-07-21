@@ -37,7 +37,7 @@
 // ❌: Implement unset without any options
 // ❌: Implement env without any options and any arguments
 // ✅: Implement exit without any options
-// ❌: exit
+// ✅: exit
 // BONUS: Implement && and ||
 // BONUS: Implement Wilcard * (globbing)
 
