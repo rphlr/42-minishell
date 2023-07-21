@@ -134,22 +134,19 @@ int	lsh_loop(void)
 		line = readline(PROMPT);
 		if (!check_args(line))
 			break ;
-		else
-		{
-			cmd = init_cmds(ft_split(line, ' '));
-			free(line);
-		}
+		cmd = init_cmds(ft_split(line, ' '));
+		free(line);
 		if (!ft_strcmp(cmd->args[0], "exit"))
 		{
 			ft_printf("exit\n");
-			if (cmd->args[1] && cmd->args[2])
+			if (!cmd->args[1])
+				break ;
+			if (!check_exit_args(cmd->args[1]))
+				err_code = 255;
+			else if (cmd->args[2])
 			{
-				if (check_exit_args(cmd->args[1]))
-				{
-					ft_printf("minishell: exit: too many arguments\n");
-					continue ;
-				}
-				return (255);
+				ft_printf("minishell: exit: too many arguments\n");
+				continue ;
 			}
 			else if (cmd->args[1])
 			{
@@ -157,8 +154,6 @@ int	lsh_loop(void)
 			 	if (err_code < 0 || err_code > 255)
 					err_code %= 256;
 			}
-			else
-				err_code = 1;
 			break ;
 		}
 		if (cmd->args[0])
