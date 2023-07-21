@@ -88,10 +88,10 @@ t_cmd	*init_cmds(char **cmds)
 
 bool	check_args(char *line)
 {
-	if (!line || !ft_strcmp(line, "exit"))
+	if (!line)
 	{
 		free(line);
-		ft_printf("❯ Exiting minishell...\n");
+		ft_printf("Error while loading argument, exiting...\n");
 		return false;
 	}
 	return true;
@@ -101,28 +101,69 @@ bool	check_args(char *line)
 	// }
 }
 
+bool	check_exit_args(char *arg)
+{
+	int	i;
+
+	i = -1;
+	while (arg[++i])
+	{
+		if (!ft_isdigit(arg[i]))
+		{
+			ft_printf("minishell: exit: %s: numeric argument required\n", arg);
+			return (false);
+		}
+	}
+	return (true);
+}
+
 void	execute(t_cmd *cmd)
 {
 	(void) cmd;
 }
 
-void	lsh_loop(void)
+int	lsh_loop(void)
 {
 	char	*line;
 	t_cmd	*cmd;
+	int		err_code;
 
-	cmd = NULL;
+	err_code = 0;
 	while (1)
 	{
 		line = readline(PROMPT);
 		if (!check_args(line))
 			break ;
-		if (line[0])
-			add_history(line);
-		cmd = init_cmds(ft_split(line, ' '));
-		execute(cmd);
-		free(line);
+		else
+		{
+			cmd = init_cmds(ft_split(line, ' '));
+			free(line);
+		}
+		if (!ft_strcmp(cmd->args[0], "exit"))
+		{
+			ft_printf("exit\n");
+			if (cmd->args[1] && cmd->args[2])
+			{
+				if (check_exit_args(cmd->args[1]))
+				{
+					ft_printf("minishell: exit: too many arguments\n");
+					continue ;
+				}
+				return (255);
+			}
+			else if (cmd->args[1])
+			{
+				err_code = ft_atoi(cmd->args[1]);
+			 	if (err_code < 0 || err_code > 255)
+					err_code %= 256;
+			}
+			err_code = 1;
+			break ;
+		}
+		if (cmd->args[0])
+			add_history(*cmd->args);
 	}
+	return (err_code);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -134,6 +175,6 @@ int	main(int ac, char **av, char **envp)
 	env = init_env(envp);
 	if (!env)
 		return (1);
-	lsh_loop();
-	return (0);
+	int err_code = lsh_loop();
+	exit (err_code);
 }
