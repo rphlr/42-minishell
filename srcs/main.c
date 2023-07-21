@@ -119,18 +119,24 @@ int	lsh_loop(void)
 		if (!check_args(line))
 			break ;
 		else
+		{
 			cmd = init_cmds(ft_split(line, ' '));
+			free(line);
+		}
 		if (!ft_strcmp(cmd->args[0], "exit"))
 		{
 			if (cmd->args[1])
-				err_code = ft_atoi(cmd->args[1]) % 256;
+			{
+				err_code = ft_atoi(cmd->args[1]);
+			 	if (err_code < 0 || err_code > 255)
+					err_code %= 256;
+			}
 			ft_printf("❯ Exiting minishell...\n");
 			break ;
 		}
-		if (line[0])
-			add_history(line);
-		cmd = init_cmds(ft_split(line, ' '));
-		free(line);
+		if (cmd->args[0])
+			add_history(*cmd->args);
+		// free(cmd);
 	}
 	return (err_code);
 }
@@ -144,5 +150,7 @@ int	main(int ac, char **av, char **envp)
 	env = init_env(envp);
 	if (!env)
 		return (1);
-	exit (lsh_loop());
+	int err_code = lsh_loop();
+	ft_printf("err_code: %d\n", err_code);
+	exit (err_code);
 }
