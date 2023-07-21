@@ -101,6 +101,22 @@ bool	check_args(char *line)
 	// }
 }
 
+bool	check_exit_args(char *arg)
+{
+	int	i;
+
+	i = -1;
+	while (arg[++i])
+	{
+		if (!ft_isdigit(arg[i]))
+		{
+			ft_printf("❯ minishell: exit: %s: numeric argument required\n", arg);
+			return (false);
+		}
+	}
+	return (true);
+}
+
 void	execute(t_cmd *cmd)
 {
 	(void) cmd;
@@ -125,13 +141,21 @@ int	lsh_loop(void)
 		}
 		if (!ft_strcmp(cmd->args[0], "exit"))
 		{
-			if (cmd->args[1])
+			if (cmd->args[1] && cmd->args[2])
 			{
+				ft_printf("exit\nminishell: exit: too many arguments\n");
+				continue ;
+			}
+			else if (cmd->args[1])
+			{
+				if (!check_exit_args(cmd->args[1]))
+					return (255);
 				err_code = ft_atoi(cmd->args[1]);
 			 	if (err_code < 0 || err_code > 255)
 					err_code %= 256;
 			}
-			ft_printf("❯ Exiting minishell...\n");
+			ft_printf("exit\n");
+			err_code = 1;
 			break ;
 		}
 		if (cmd->args[0])
@@ -150,6 +174,5 @@ int	main(int ac, char **av, char **envp)
 	if (!env)
 		return (1);
 	int err_code = lsh_loop();
-	ft_printf("err_code: %d\n", err_code);
 	exit (err_code);
 }
