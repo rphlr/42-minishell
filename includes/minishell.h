@@ -50,7 +50,7 @@ typedef struct s_cmd
 	char			*redir_in;
 	char			*redir_out;
 	char			*redir_append;
-	char			*pipe;
+	bool			pipe;
 	struct s_cmd	*next;
 }	t_cmd;
 
