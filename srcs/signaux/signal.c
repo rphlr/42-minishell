@@ -1,3 +1,7 @@
+#include "../../minishell"
+
+void	
+
 /*void	rl_replace_line(const char *text, int clear_undo)
 {
 	int	len;
