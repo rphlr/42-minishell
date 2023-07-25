@@ -164,7 +164,7 @@ char	*epur_str(char *line)
 	j = 0;
 	while (line[++i])
 	{
-		while (line[i] == ' ' || line[i] == '\t')
+		while ((line[0] == ' ' || line[0] == '\t') && (line[i] == ' ' || line[i] == '\t'))
 				i++;
 		if (line[i] == ' ' || line[i] == '\t')
 		{
@@ -192,13 +192,10 @@ int	lsh_loop(void)
 		line = readline(PROMPT);
 		if (!check_args(line))
 			break ;
-		if (line)
-			add_history(line);
 		line = epur_str(line);
 		if (!ft_strcmp(line, ""))
 			continue ;
 		cmd = init_cmds(ft_split(line, ' '));
-		free(line);
 		parse_cmd(cmd);
 		if (!ft_strcmp(cmd->args[0], "exit"))
 		{
@@ -220,6 +217,9 @@ int	lsh_loop(void)
 			}
 			break ;
 		}
+		if (line)
+			add_history(line);
+		free(line);
 	}
 	return (err_code);
 }
