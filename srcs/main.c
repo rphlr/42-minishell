@@ -85,7 +85,6 @@ t_cmd	*init_cmds(char **cmds)
 	return (cmd);
 }
 
-
 bool	check_args(char *line)
 {
 	if (!line)
@@ -224,7 +223,26 @@ int	check_syntax(char *str)
 	return (1);
 }
 
-int	check_n(char **str)
+int	check_n(char *str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (str)
+	{
+		if (str[j++] == '-' && str[j] == 'n')
+		{
+			while (str[j] == 'n')
+				j++;
+			return (1);
+		}
+	}
+	return (0);
+}
+
+int	check_e(char **str)
 {
 	int	i;
 	int	j;
@@ -233,9 +251,9 @@ int	check_n(char **str)
 	j = 0;
 	while (str[++i])
 	{
-		if (str[i][j++] == '-' && str[i][j] == 'n')
+		if (str[i][j++] == '-' && str[i][j] == 'e')
 		{
-			while (str[i][j] == 'n')
+			while (str[i][j] == 'e')
 				j++;
 			if (!str[i][j])
 				return (1);
@@ -257,24 +275,87 @@ int	ft_strstart(char *str, char *start)
 	return (1);
 }
 
+void	echo_print_special_char(char *str)
+{
+	int	i;
+
+	i = -1;
+	while (str[++i])
+	{
+
+		str = ignore_quotes(str);
+		if (str[i] == '\\')
+		{
+			if (str[i + 1] == 'n')
+				ft_printf("\n");
+			else if (str[i + 1] == 't')
+				ft_printf("\t");
+			else if (str[i + 1] == 'v')
+				ft_printf("\v");
+			else if (str[i + 1] == 'b')
+				ft_printf("\b");
+			else if (str[i + 1] == 'r')
+				ft_printf("\r");
+			else if (str[i + 1] == 'f')
+				ft_printf("\f");
+			else if (str[i + 1] == 'a')
+				ft_printf("\a");
+			else if (str[i + 1] == '\\')
+			{
+				if (str[i + 2] == 'n')
+					ft_printf("\n");
+				else if (str[i + 2] == 't')
+					ft_printf("\t");
+				else if (str[i + 2] == 'v')
+					ft_printf("\v");
+				else if (str[i + 2] == 'b')
+					ft_printf("\b");
+				else if (str[i + 2] == 'r')
+					ft_printf("\r");
+				else if (str[i + 2] == 'f')
+					ft_printf("\f");
+				else if (str[i + 2] == 'a')
+					ft_printf("\a");
+				else if (str[i + 2] == '\\')
+					ft_printf("\\");;
+				i++;
+			}
+			else if (str[i + 1] == '0')
+				ft_printf("\0");
+			else
+				ft_printf("%c", str[i + 1]);
+			i++;
+		}
+		else
+			ft_printf("%c", str[i]);
+	}
+}
+
 void	ft_echo(t_cmd *cmd)
 {
 	int	i;
 	int	n;
+	int	e;
 	int	j;
 
 	i = 0;
 	n = 0;
 	j = 0;
+	e = 0;
 	while (cmd->args[++i])
 	{
 		n = check_n(cmd->args);
-		if (!ft_strstart(cmd->args[i], "-n"))
+		ft_printf("n = %d\n", n);
+		e = check_e(cmd->args);
+		ft_printf("e = %d\n", e);
+		if (!ft_strstart(cmd->args[i], "-n") && !ft_strstart(cmd->args[i], "-e"))
 		{
 			if (j)
 				ft_printf(" ");
 			if (!check_syntax(cmd->args[i]))
 				return ; // need to add syntax
+			else if (e)
+				echo_print_special_char(cmd->args[i]);
 			else
 			{
 				cmd->args[i] = ignore_quotes(cmd->args[i]);
