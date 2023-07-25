@@ -130,7 +130,6 @@ int	parse_cmd(t_cmd *cmd)
 			cmd->redir_out = cmd->args[i + 1];
 			cmd->args[i] = NULL;
 			cmd->args[i + 1] = NULL;
-			i++;
 		}
 		else if (!ft_strcmp(cmd->args[i], "|") || !ft_strcmp(cmd->args[i], ";") || !ft_strcmp(cmd->args[i], "&&") || !ft_strcmp(cmd->args[i], "||") || !ft_strcmp(cmd->args[i], "!"))
 		{
@@ -145,7 +144,11 @@ int	parse_cmd(t_cmd *cmd)
 			cmd->args[i + 1] = NULL;
 			break ;
 		}
-
+		else if (!ft_strcmp(cmd->args[i], "/") || !ft_strcmp(cmd->args[i], "./") || !ft_strcmp(cmd->args[i], "../"))
+		{
+			ft_printf("minishell: %s: is a directory\n", cmd->args[i]);
+			break ;
+		}
 	}
 	return (0);
 }
@@ -164,8 +167,11 @@ char	*epur_str(char *line)
 	j = 0;
 	while (line[++i])
 	{
-		while ((line[0] == ' ' || line[0] == '\t') && (line[i] == ' ' || line[i] == '\t'))
-				i++;
+		if (i == 0)
+		{
+			while (line[i] == ' ' || line[i] == '\t')
+					i++;
+		}
 		if (line[i] == ' ' || line[i] == '\t')
 		{
 			while (line[i] == ' ' || line[i] == '\t')
@@ -180,6 +186,150 @@ char	*epur_str(char *line)
 	return (line);
 }
 
+char	*ignore_quotes(char *str)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	j = 0;
+	while (str[++i])
+	{
+		if (str[i] == '\'' || str[i] == '\"')
+			continue ;
+		str[j++] = str[i];
+	}
+	str[j] = '\0';
+	return (str);
+}
+
+int	check_syntax(char *str)
+{
+	int	i;
+	int	nbr_of_simple_cote;
+	int	nbr_of_double_cote;
+
+	i = -1;
+	nbr_of_simple_cote = 0;
+	nbr_of_double_cote = 0;
+	while (str[++i])
+	{
+		if (str[i] == '\'')
+			nbr_of_simple_cote++;
+		if (str[i] == '\"')
+			nbr_of_double_cote++;
+	}
+	if (nbr_of_simple_cote % 2 != 0 || nbr_of_double_cote % 2 != 0)
+		return (0);
+	return (1);
+}
+
+int	check_n(char **str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (str[++i])
+	{
+		if (str[i][j++] == '-' && str[i][j] == 'n')
+		{
+			while (str[i][j] == 'n')
+				j++;
+			if (!str[i][j])
+				return (1);
+		}
+	}
+	return (0);
+}
+
+int	ft_strstart(char *str, char *start)
+{
+	int	i;
+
+	i = -1;
+	while (str[++i] && start[i])
+	{
+		if (str[i] != start[i])
+			return (0);
+	}
+	return (1);
+}
+
+void	ft_echo(t_cmd *cmd)
+{
+	int	i;
+	int	n;
+	int	j;
+
+	i = 0;
+	n = 0;
+	j = 0;
+	while (cmd->args[++i])
+	{
+		n = check_n(cmd->args);
+		if (!ft_strstart(cmd->args[i], "-n"))
+		{
+			if (j)
+				ft_printf(" ");
+			if (!check_syntax(cmd->args[i]))
+				return ; // need to add syntax
+			else
+			{
+				cmd->args[i] = ignore_quotes(cmd->args[i]);
+				ft_printf("%s", cmd->args[i]);
+			}
+			j++;
+		}
+	}
+	if (!n)
+		ft_printf("\n");
+}
+
+void	ft_cd(t_cmd *cmd)
+{
+	(void) cmd;
+}
+
+void	ft_pwd(t_cmd *cmd)
+{
+	(void) cmd;
+}
+
+void	ft_export(t_cmd *cmd)
+{
+	(void) cmd;
+}
+
+void	ft_unset(t_cmd *cmd)
+{
+	(void) cmd;
+}
+
+void	ft_env(t_cmd *cmd)
+{
+	(void) cmd;
+}
+
+void	run_cmd(t_cmd *cmd)
+{
+	if (!ft_strcmp(cmd->args[0], "echo"))
+		ft_echo(cmd);
+	else if (!ft_strcmp(cmd->args[0], "cd"))
+		ft_cd(cmd);
+	else if (!ft_strcmp(cmd->args[0], "pwd"))
+		ft_pwd(cmd);
+	else if (!ft_strcmp(cmd->args[0], "export"))
+		ft_export(cmd);
+	else if (!ft_strcmp(cmd->args[0], "unset"))
+		ft_unset(cmd);
+	else if (!ft_strcmp(cmd->args[0], "env"))
+		ft_env(cmd);
+	else
+		execute(cmd);
+}
+
 int	lsh_loop(void)
 {
 	char	*line;
@@ -192,10 +342,13 @@ int	lsh_loop(void)
 		line = readline(PROMPT);
 		if (!check_args(line))
 			break ;
+		if (line && ft_strcmp(line, ""))
+			add_history(line);
 		line = epur_str(line);
 		if (!ft_strcmp(line, ""))
 			continue ;
 		cmd = init_cmds(ft_split(line, ' '));
+		free(line);
 		parse_cmd(cmd);
 		if (!ft_strcmp(cmd->args[0], "exit"))
 		{
@@ -217,9 +370,7 @@ int	lsh_loop(void)
 			}
 			break ;
 		}
-		if (line)
-			add_history(line);
-		free(line);
+		run_cmd(cmd);
 	}
 	return (err_code);
 }
