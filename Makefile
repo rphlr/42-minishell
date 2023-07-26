@@ -1,4 +1,4 @@
-# **************************************************************************** #
+#******************************************************************************#
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
@@ -6,9 +6,9 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/07/16 18:30:43 by rrouille         ###   ########.fr        #
+#    Updated: 2023/07/26 07:50:45 by rrouille         ###   ########.fr        #
 #                                                                              #
-# **************************************************************************** #
+#******************************************************************************#
 
 # Name of the executable
 NAME			= minishell
@@ -58,7 +58,7 @@ CLEAR			= \033c
 CLEARLN			= \r\033[K
 
 # Sources
-SRCS			= ${shell find ${SRCSDIR} -maxdepth 1 -type f -name '*.c'}
+SRCS			= ${shell find ${SRCSDIR} -type f -name '*.c'}
 OBJS			= ${patsubst ${SRCSDIR}%,${OBJSDIR}%,${SRCS:%.c=%.o}}
 CFLAGS			= -Werror -Wall -Wextra #-g3 -fsanitize=address
 CC				= gcc
@@ -77,6 +77,9 @@ S_NAME			= echo "${RED}🧹 Cleaning program... 🧹${ENDCOLOR}"
 CHARG_LINE		= echo "${BG_G} ${ENDCOLOR}\c" && sleep 0.05
 BS_N			= echo "\n"
 
+# Folders
+OBJS_FOLDERS	= ${shell find ${SRCSDIR} -type d | sed "s|${SRCSDIR}|${OBJSDIR}|"}
+
 # ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 # 	@${MKDIR} ${OBJSDIR}
 # 	@${CC} ${CFLAGS} -c $< -o $@ -I $(HDRDIR) -I readline/include
@@ -89,7 +92,7 @@ all: $(NAME)
 
 # Build rule for object files
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
-			@${MKDIR} ${OBJSDIR}
+			@${MKDIR} ${OBJS_FOLDERS}
 			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@ -I readline/include
 
 # Linking rule

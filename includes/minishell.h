@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/16 18:27:11 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/26 09:13:47 by rrouille         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -62,6 +62,31 @@
 
 # define PROMPT C_UNDERLINE""C_BOLD""C_BMAGENTA" Les pros du HTML >"C_RESET" "
 
+typedef enum s_token
+{
+	WORD,
+	PIPE,
+	INPUT,
+	OUTPUT,
+	APPEND,
+	SEMICOLON,
+	VARIABLES,
+	END
+}	t_token;
+
+typedef enum s_redirectiontype {
+    NO_REDIRECTION,
+    INPUT_REDIRECTION,
+    OUTPUT_REDIRECTION,
+    APPEND_REDIRECTION
+} t_redirectiontype;
+
+typedef struct s_redirection
+{
+	t_redirectiontype	type;
+	char			*filename;
+} t_redirection;
+
 typedef struct s_env
 {
 	char	**path;
@@ -72,16 +97,7 @@ typedef struct s_env
 	char	*shell;
 }	t_env;
 
-typedef struct s_cmd
-{
-	char			**args;
-	char			*cmd;
-	char			*redir_in;
-	char			*redir_out;
-	char			*redir_append;
-	bool			pipe;
-	struct s_cmd	*next;
-}	t_cmd;
+typedef struct s_cmd t_cmd;
 
 typedef struct s_global
 {
@@ -89,5 +105,24 @@ typedef struct s_global
 	t_env	*env;
 	t_cmd	*cmd;
 }	t_global;
+
+typedef struct s_cmd
+{
+	char			**token;
+	t_token			*type;
+	char			*cmd;
+	t_redirection	*input;
+	t_redirection	*output;
+	bool			pipe;
+	t_env			*env;
+	t_global		*global;
+	struct s_cmd	*next;
+}	t_cmd;
+
+
+/* FUNCTIONS */
+int	ft_strstart(char *str, char *start);
+void	ft_echo(t_cmd *cmd);
+t_token	*init_tokens_type(char **tokens);
 
 #endif

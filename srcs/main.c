@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/16 18:30:27 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/26 09:13:15 by rrouille         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "minishell.h"
 
@@ -68,24 +68,24 @@ t_env	*init_env(char **envp)
 	return (env);
 }
 
-t_cmd	*init_cmds(char **cmds)
+t_cmd	*init_cmds(char **tokens)
 {
 	t_cmd	*cmd;
 
 	cmd = ft_gc_malloc(sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
-	cmd->args = cmds;
+	cmd->token = tokens;
+	cmd->type = init_tokens_type(tokens);
 	cmd->cmd = NULL;
-	cmd->redir_in = NULL;
-	cmd->redir_out = NULL;
-	cmd->redir_append = NULL;
+	cmd->input = NULL;
+	cmd->output = NULL;
 	cmd->pipe = NULL;
 	cmd->next = NULL;
 	return (cmd);
 }
 
-bool	check_args(char *line)
+bool	check_token(char *line)
 {
 	if (!line)
 	{
@@ -96,7 +96,7 @@ bool	check_args(char *line)
 	return true;
 }
 
-bool	check_exit_args(char *arg)
+bool	check_exit_token(char *arg)
 {
 	int	i;
 
@@ -112,44 +112,64 @@ bool	check_exit_args(char *arg)
 	return (true);
 }
 
-int	parse_cmd(t_cmd *cmd)
+int parse_cmd(t_cmd* cmd)
 {
-	int	i;
-
-	i = -1;
-	while (cmd->args[++i])
+	int i;
+	
+	i = 0;
+	while (cmd->token[i])
 	{
-		if (!ft_strcmp(cmd->args[i], ">") || !ft_strcmp(cmd->args[i], ">>") || !ft_strcmp(cmd->args[i], "<") || !ft_strcmp(cmd->args[i], "<<"))
+		if (!ft_strcmp(cmd->token[i], "$HOME"))
 		{
-			if (!cmd->args[i + 1])
-			{
-				ft_printf("minishell: syntax error near unexpected token `newline'\n");
-				return (1);
-			}
-			cmd->redir_out = cmd->args[i + 1];
-			cmd->args[i] = NULL;
-			cmd->args[i + 1] = NULL;
+			cmd->token[i] = cmd->env->home;
 		}
-		else if (!ft_strcmp(cmd->args[i], "|") || !ft_strcmp(cmd->args[i], ";") || !ft_strcmp(cmd->args[i], "&&") || !ft_strcmp(cmd->args[i], "||") || !ft_strcmp(cmd->args[i], "!"))
+		else if (!ft_strcmp(cmd->token[i], "$PWD"))
 		{
-			if (!cmd->args[i + 1])
-			{
-				ft_printf("minishell: syntax error near unexpected token `%s'\n", cmd->args[i]);
-				return (1);
-			}
-			if (!ft_strcmp(cmd->args[i], "|"))
-				cmd->pipe = true;
-			cmd->args[i] = NULL;
-			cmd->args[i + 1] = NULL;
-			break ;
+			cmd->token[i] = cmd->env->pwd;
 		}
-		else if (!ft_strcmp(cmd->args[i], "/") || !ft_strcmp(cmd->args[i], "./") || !ft_strcmp(cmd->args[i], "../"))
+		else if (!ft_strcmp(cmd->token[i], "$OLDPWD"))
 		{
-			ft_printf("minishell: %s: is a directory\n", cmd->args[i]);
-			break ;
+			cmd->token[i] = cmd->env->oldpwd;
 		}
+		else if (!ft_strcmp(cmd->token[i], "$USER"))
+		{
+			cmd->token[i] = cmd->env->user;
+		}
+		else if (!ft_strcmp(cmd->token[i], "$SHELL"))
+		{
+			cmd->token[i] = cmd->env->shell;
+		}
+		else if (!ft_strcmp(cmd->token[i], "$?"))
+		{
+			cmd->token[i] = ft_itoa(cmd->global->exit_code);
+		}
+		else if (!ft_strcmp(cmd->token[i], "<"))
+		{
+			
+		}
+		else if (!ft_strcmp(cmd->token[i], "<<"))
+		{
+
+		}
+		else if (!ft_strcmp(cmd->token[i], ">"))
+		{
+
+		}
+		else if (!ft_strcmp(cmd->token[i], ">"))
+		{
+
+		}
+		else if (!ft_strcmp(cmd->token[i], ">>"))
+		{
+
+		}
+		else if (!ft_strcmp(cmd->token[i], "|"))
+		{
+
+		}
+		i++;
 	}
-	return (0);
+	return 0;
 }
 
 void	execute(t_cmd *cmd)
@@ -185,83 +205,6 @@ char	*epur_str(char *line)
 	return (line);
 }
 
-char	*ignore_quotes(char *str)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	j = 0;
-	while (str[++i])
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-			continue ;
-		str[j++] = str[i];
-	}
-	str[j] = '\0';
-	return (str);
-}
-
-int	check_syntax(char *str)
-{
-	int	i;
-	int	nbr_of_simple_cote;
-	int	nbr_of_double_cote;
-
-	i = -1;
-	nbr_of_simple_cote = 0;
-	nbr_of_double_cote = 0;
-	while (str[++i])
-	{
-		if (str[i] == '\'')
-			nbr_of_simple_cote++;
-		if (str[i] == '\"')
-			nbr_of_double_cote++;
-	}
-	if (nbr_of_simple_cote % 2 != 0 || nbr_of_double_cote % 2 != 0)
-		return (0);
-	return (1);
-}
-
-int	check_n(char *str)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (str)
-	{
-		if (str[j++] == '-' && str[j] == 'n')
-		{
-			while (str[j] == 'n')
-				j++;
-			return (1);
-		}
-	}
-	return (0);
-}
-
-int	check_e(char **str)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (str[++i])
-	{
-		if (str[i][j++] == '-' && str[i][j] == 'e')
-		{
-			while (str[i][j] == 'e')
-				j++;
-			if (!str[i][j])
-				return (1);
-		}
-	}
-	return (0);
-}
-
 int	ft_strstart(char *str, char *start)
 {
 	int	i;
@@ -273,99 +216,6 @@ int	ft_strstart(char *str, char *start)
 			return (0);
 	}
 	return (1);
-}
-
-void	echo_print_special_char(char *str)
-{
-	int	i;
-
-	i = -1;
-	while (str[++i])
-	{
-
-		str = ignore_quotes(str);
-		if (str[i] == '\\')
-		{
-			if (str[i + 1] == 'n')
-				ft_printf("\n");
-			else if (str[i + 1] == 't')
-				ft_printf("\t");
-			else if (str[i + 1] == 'v')
-				ft_printf("\v");
-			else if (str[i + 1] == 'b')
-				ft_printf("\b");
-			else if (str[i + 1] == 'r')
-				ft_printf("\r");
-			else if (str[i + 1] == 'f')
-				ft_printf("\f");
-			else if (str[i + 1] == 'a')
-				ft_printf("\a");
-			else if (str[i + 1] == '\\')
-			{
-				if (str[i + 2] == 'n')
-					ft_printf("\n");
-				else if (str[i + 2] == 't')
-					ft_printf("\t");
-				else if (str[i + 2] == 'v')
-					ft_printf("\v");
-				else if (str[i + 2] == 'b')
-					ft_printf("\b");
-				else if (str[i + 2] == 'r')
-					ft_printf("\r");
-				else if (str[i + 2] == 'f')
-					ft_printf("\f");
-				else if (str[i + 2] == 'a')
-					ft_printf("\a");
-				else if (str[i + 2] == '\\')
-					ft_printf("\\");;
-				i++;
-			}
-			else if (str[i + 1] == '0')
-				ft_printf("\0");
-			else
-				ft_printf("%c", str[i + 1]);
-			i++;
-		}
-		else
-			ft_printf("%c", str[i]);
-	}
-}
-
-void	ft_echo(t_cmd *cmd)
-{
-	int	i;
-	int	n;
-	int	e;
-	int	j;
-
-	i = 0;
-	n = 0;
-	j = 0;
-	e = 0;
-	while (cmd->args[++i])
-	{
-		n = check_n(cmd->args);
-		ft_printf("n = %d\n", n);
-		e = check_e(cmd->args);
-		ft_printf("e = %d\n", e);
-		if (!ft_strstart(cmd->args[i], "-n") && !ft_strstart(cmd->args[i], "-e"))
-		{
-			if (j)
-				ft_printf(" ");
-			if (!check_syntax(cmd->args[i]))
-				return ; // need to add syntax
-			else if (e)
-				echo_print_special_char(cmd->args[i]);
-			else
-			{
-				cmd->args[i] = ignore_quotes(cmd->args[i]);
-				ft_printf("%s", cmd->args[i]);
-			}
-			j++;
-		}
-	}
-	if (!n)
-		ft_printf("\n");
 }
 
 void	ft_cd(t_cmd *cmd)
@@ -395,17 +245,20 @@ void	ft_env(t_cmd *cmd)
 
 void	run_cmd(t_cmd *cmd)
 {
-	if (!ft_strcmp(cmd->args[0], "echo"))
+	if (!ft_strcmp(cmd->token[0], "echo"))
+	{
+		printf("echo\n");
 		ft_echo(cmd);
-	else if (!ft_strcmp(cmd->args[0], "cd"))
+	}
+	else if (!ft_strcmp(cmd->token[0], "cd"))
 		ft_cd(cmd);
-	else if (!ft_strcmp(cmd->args[0], "pwd"))
+	else if (!ft_strcmp(cmd->token[0], "pwd"))
 		ft_pwd(cmd);
-	else if (!ft_strcmp(cmd->args[0], "export"))
+	else if (!ft_strcmp(cmd->token[0], "export"))
 		ft_export(cmd);
-	else if (!ft_strcmp(cmd->args[0], "unset"))
+	else if (!ft_strcmp(cmd->token[0], "unset"))
 		ft_unset(cmd);
-	else if (!ft_strcmp(cmd->args[0], "env"))
+	else if (!ft_strcmp(cmd->token[0], "env"))
 		ft_env(cmd);
 	else
 		execute(cmd);
@@ -421,7 +274,7 @@ int	lsh_loop(void)
 	while (1)
 	{
 		line = readline(PROMPT);
-		if (!check_args(line))
+		if (!check_token(line))
 			break ;
 		if (line && ft_strcmp(line, ""))
 			add_history(line);
@@ -431,21 +284,21 @@ int	lsh_loop(void)
 		cmd = init_cmds(ft_split(line, ' '));
 		free(line);
 		parse_cmd(cmd);
-		if (!ft_strcmp(cmd->args[0], "exit"))
+		if (!ft_strcmp(cmd->token[0], "exit"))
 		{
 			ft_printf("exit\n");
-			if (!cmd->args[1])
+			if (!cmd->token[1])
 				break ;
-			if (!check_exit_args(cmd->args[1]))
+			if (!check_exit_token(cmd->token[1]))
 				err_code = 255;
-			else if (cmd->args[2])
+			else if (cmd->token[2])
 			{
 				ft_printf("minishell: exit: too many arguments\n");
 				continue ;
 			}
-			else if (cmd->args[1])
+			else if (cmd->token[1])
 			{
-				err_code = ft_atoi(cmd->args[1]);
+				err_code = ft_atoi(cmd->token[1]);
 			 	if (err_code < 0 || err_code > 255)
 					err_code %= 256;
 			}
