@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/26 09:13:47 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/30 16:17:05 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -64,15 +64,37 @@
 
 typedef enum s_token
 {
-	WORD,
-	PIPE,
-	INPUT,
-	OUTPUT,
-	APPEND,
-	SEMICOLON,
-	VARIABLES,
-	END
+	WORD, // 0
+	PIPE, // 1
+	INPUT, // 2
+	OUTPUT, // 3
+	APPEND, // 4
+	HEREDOC, // 5
+	SEMICOLON, // 6
+	COLON, // 7
+	VARIABLES, // 8
+	CLOSED_QUOTE, // 9
+	CLOSED_DQUOTE, // 10
+	NOT_CLOSED_QUOTE, // 11
+	NOT_CLOSED_DQUOTE, // 12
+	AND, // 13
+	OR, // 14
+	END // 15
 }	t_token;
+
+typedef enum state
+{
+	VALID,
+	QUOTE_ERROR,
+	DQUOTE_ERROR,
+	PIPE_ERROR,
+	INPUT_ERROR,
+	OUTPUT_ERROR,
+	APPEND_ERROR,
+	HEREDOC_ERROR,
+	AND_ERROR,
+	OR_ERROR
+}	t_state;
 
 typedef enum s_redirectiontype {
     NO_REDIRECTION,
@@ -110,12 +132,18 @@ typedef struct s_cmd
 {
 	char			**token;
 	t_token			*type;
-	char			*cmd;
+	char			**cmd;
 	t_redirection	*input;
 	t_redirection	*output;
 	bool			pipe;
-	t_env			*env;
-	t_global		*global;
+	bool			heredoc;
+	int				heredoc_fd;
+	int 			nbr_cmd;
+	int				nbr_token;
+	int				nbr_pipe;
+	int				nbr_redirection;
+	// t_env			*env;
+	// t_global		*global;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -124,5 +152,6 @@ typedef struct s_cmd
 int	ft_strstart(char *str, char *start);
 void	ft_echo(t_cmd *cmd);
 t_token	*init_tokens_type(char **tokens);
+int ft_tablen(char **tab);
 
 #endif

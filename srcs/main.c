@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/26 09:13:15 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/30 16:33:06 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -14,7 +14,7 @@
 
 // ✅: display prompt when minishell is ready to receive input
 // ✅: read input
-// ❌: parse input
+// ✅: parse input
 // ❌: Search and launch the right executable (based on the PATH variable
 //		 or by using relative or absolute path)
 // ❌: display output
@@ -68,16 +68,188 @@ t_env	*init_env(char **envp)
 	return (env);
 }
 
+t_state	validity_maker(t_token *type)
+{
+	int	i;
+	int nbr_pipe;
+	int nbr_redirection;
+	int nbr_quote;
+	int nbr_dquote;
+
+	i = -1;
+	nbr_pipe = 0;
+	nbr_redirection = 0;
+	nbr_quote = 0;
+	nbr_dquote = 0;
+	while (type[++i] != END)
+	{
+		if (type[i] == PIPE)
+		{
+			nbr_pipe++;
+			if (type[i + 1] == PIPE || type[i + 1] == END)
+				return (PIPE_ERROR);
+		}
+		else if (type[i] == INPUT)
+		{
+			nbr_redirection++;
+			if (type[i + 1] == END)
+				return (INPUT_ERROR);
+		}
+		else if (type[i] == OUTPUT)
+		{
+			nbr_redirection++;
+			if (type[i + 1] == END)
+				return (OUTPUT_ERROR);
+		}
+		else if (type[i] == APPEND)
+		{
+			nbr_redirection++;
+			if (type[i + 1] == END)
+				return (APPEND_ERROR);
+		}
+		else if (type[i] == HEREDOC)
+		{
+			nbr_redirection++;
+			if (type[i + 1] == END)
+				return (HEREDOC_ERROR);
+		}
+		// else if (type[i] == INPUT || type[i] == OUTPUT || type[i] == APPEND || type[i] == HEREDOC)
+		// {
+		// 	nbr_redirection++;
+		// 	if (type[i + 1] == INPUT || type[i + 1] == OUTPUT
+		// 		|| type[i + 1] == APPEND || type[i + 1] == PIPE)
+		// 	{
+		// 		ft_printf("minishell: syntax error near unexpected token `%s'\n",
+		// 			type[i + 1] == INPUT ? "<" : type[i + 1] == OUTPUT ? ">" : type[i + 1] == APPEND ? ">>" : "<<");
+		// 		return (OUTPUT_ERROR);
+		// 	}
+		// 	else if (type[i + 1] == END)
+		// 		return (INPUT_ERROR);
+		// 	ft_printf("nbr_redirection = %d\n", nbr_redirection);
+		// }
+		else if (type[i] == NOT_CLOSED_QUOTE)
+			nbr_quote++;
+		else if (type[i] == NOT_CLOSED_DQUOTE)
+			nbr_dquote++;
+		else if (type[i] == CLOSED_QUOTE)
+			nbr_quote += 2;
+		else if (type[i] == CLOSED_DQUOTE)
+			nbr_dquote += 2;
+		else if (type[i] == AND)
+		{
+			if (type[i + 1] == AND || type[i + 1] == END)
+				return (AND_ERROR);
+		}
+		else if (type[i] == OR)
+		{
+			if (type[i + 1] == OR || type[i + 1] == END)
+				return (OR_ERROR);
+		}
+		else if (type[i] == VARIABLES)
+		{
+			// if (type[i + 1] == VARIABLES || type[i + 1] == END)
+			// {
+			// 	ft_printf("minishell: syntax error near unexpected token `$'\n");
+			// 	return (true);
+			// }
+		}
+		else if (type[i] == WORD)
+		{
+			// if (type[i + 1] == WORD || type[i + 1] == END)
+			// {
+			// 	ft_printf("minishell: syntax error near unexpected token `newline'\n");
+			// 	return (true);
+			// }
+		}
+		// ft_printf("type[i] = %d\n", type[i]);
+		// ft_printf("nbr_quote = %d\n", nbr_quote);
+		// ft_printf("nbr_dquote = %d\n", nbr_dquote);
+	}
+	if (nbr_quote % 2 != 0)
+	{
+		ft_printf("quote error\n");
+		return (QUOTE_ERROR);
+	}
+	if (nbr_dquote % 2 != 0)
+	{
+		ft_printf("dquote error\n");
+		return (DQUOTE_ERROR);
+	}
+	ft_printf("nbr_pipe = %d\n", nbr_pipe);
+	ft_printf("nbr_redirection = %d\n", nbr_redirection);
+	return (VALID);
+}
+
+int ft_tablen(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
+		i++;
+	return (i);
+}
+
+char	**config_cmds(char **tokens, t_token *type)
+{
+	int		i;
+	int		j;
+	char	**cmd;
+
+	i = -1;
+	j = 0;
+	cmd = ft_gc_malloc(sizeof(char *) * (ft_tablen(tokens) + 1));
+	while (type[++i] != END)
+	{
+		if (type[i] == WORD)
+		{
+			cmd[j++] = ft_strdup(tokens[i]);
+			ft_printf("cmd[%d] = %s\n", j - 1, cmd[j - 1]);
+		}
+	}
+	if (j == 0)
+		cmd = NULL;
+	return (cmd);
+}
+
 t_cmd	*init_cmds(char **tokens)
 {
 	t_cmd	*cmd;
+	t_state	state = VALID;
 
 	cmd = ft_gc_malloc(sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
 	cmd->token = tokens;
 	cmd->type = init_tokens_type(tokens);
-	cmd->cmd = NULL;
+	state = validity_maker(cmd->type);
+	if (state == QUOTE_ERROR)
+		ft_printf("minishell: quote error\n");
+	else if (state == DQUOTE_ERROR)
+		ft_printf("minishell: dquote error\n");
+	else if (state == PIPE_ERROR)
+		ft_printf("minishell: syntax error near unexpected token `|'\n");
+	else if (state == INPUT_ERROR)
+		ft_printf("minishell: syntax error near unexpected token `<'\n");
+	else if (state == OUTPUT_ERROR)
+		ft_printf("minishell: syntax error near unexpected token `>'\n");
+	else if (state == APPEND_ERROR)
+		ft_printf("minishell: syntax error near unexpected token `>>'\n");
+	else if (state == HEREDOC_ERROR)
+		ft_printf("minishell: syntax error near unexpected token `<<'\n");
+	else if (state == AND_ERROR)
+		ft_printf("minishell: syntax error near unexpected token `&&'\n");
+	else if (state == OR_ERROR)
+		ft_printf("minishell: syntax error near unexpected token `||'\n");
+	if (state != VALID)
+		return (cmd);
+	cmd->cmd = config_cmds(tokens, cmd->type);
+	cmd->heredoc = NULL;
+	// cmd->env = NULL;
+	// cmd->global = NULL;
+	cmd->nbr_cmd = 0;
+	cmd->nbr_pipe = 0;
+	cmd->nbr_redirection = 0;
 	cmd->input = NULL;
 	cmd->output = NULL;
 	cmd->pipe = NULL;
@@ -112,7 +284,7 @@ bool	check_exit_token(char *arg)
 	return (true);
 }
 
-int parse_cmd(t_cmd* cmd)
+int parse_cmd(t_global *global, t_cmd *cmd)
 {
 	int i;
 	
@@ -121,27 +293,27 @@ int parse_cmd(t_cmd* cmd)
 	{
 		if (!ft_strcmp(cmd->token[i], "$HOME"))
 		{
-			cmd->token[i] = cmd->env->home;
+			cmd->token[i] = global->env->home;
 		}
 		else if (!ft_strcmp(cmd->token[i], "$PWD"))
 		{
-			cmd->token[i] = cmd->env->pwd;
+			cmd->token[i] = global->env->pwd;
 		}
 		else if (!ft_strcmp(cmd->token[i], "$OLDPWD"))
 		{
-			cmd->token[i] = cmd->env->oldpwd;
+			cmd->token[i] = global->env->oldpwd;
 		}
 		else if (!ft_strcmp(cmd->token[i], "$USER"))
 		{
-			cmd->token[i] = cmd->env->user;
+			cmd->token[i] = global->env->user;
 		}
 		else if (!ft_strcmp(cmd->token[i], "$SHELL"))
 		{
-			cmd->token[i] = cmd->env->shell;
+			cmd->token[i] = global->env->shell;
 		}
 		else if (!ft_strcmp(cmd->token[i], "$?"))
 		{
-			cmd->token[i] = ft_itoa(cmd->global->exit_code);
+			cmd->token[i] = ft_itoa(global->exit_code);
 		}
 		else if (!ft_strcmp(cmd->token[i], "<"))
 		{
@@ -264,7 +436,7 @@ void	run_cmd(t_cmd *cmd)
 		execute(cmd);
 }
 
-int	lsh_loop(void)
+int	lsh_loop(t_global *global)
 {
 	char	*line;
 	t_cmd	*cmd;
@@ -283,7 +455,7 @@ int	lsh_loop(void)
 			continue ;
 		cmd = init_cmds(ft_split(line, ' '));
 		free(line);
-		parse_cmd(cmd);
+		parse_cmd(global, cmd);
 		if (!ft_strcmp(cmd->token[0], "exit"))
 		{
 			ft_printf("exit\n");
@@ -304,20 +476,52 @@ int	lsh_loop(void)
 			}
 			break ;
 		}
+		else if (!ft_strcmp(cmd->token[0], "env"))
+		{
+			int	i = -1;
+			ft_printf("USER=%s\n", global->env->user);
+			ft_printf("PATH=");
+			while (global->env->path[++i])
+			{
+				if (i == 0)
+					ft_printf("%s", global->env->path[i]);
+				else
+					ft_printf(":%s", global->env->path[i]);
+			}
+			ft_printf("\n");
+			ft_printf("HOME=%s\n", global->env->home);
+			ft_printf("SHELL=%s\n", global->env->shell);
+			ft_printf("PWD=%s\n", global->env->pwd);
+			ft_printf("OLDPWD=%s\n", global->env->oldpwd);
+		}
 		run_cmd(cmd);
 	}
 	return (err_code);
 }
 
+t_global	*init_global(char **envp)
+{
+	t_global	*global;
+	
+	global = ft_gc_malloc(sizeof(t_global));
+	global->exit_code = 0;
+	global->env = init_env(envp);
+	if (!global->env)
+		return (NULL);
+	global->cmd = NULL;
+	return (global);
+}
+
 int	main(int ac, char **av, char **envp)
 {
-	t_env	*env;
+	// t_env		*env;
+	t_global	*global;
 
 	(void)ac;
 	(void)av;
-	env = init_env(envp);
-	if (!env)
+	global = init_global(envp);
+	if (!global)
 		return (1);
-	int err_code = lsh_loop();
+	int err_code = lsh_loop(global);
 	exit (err_code);
 }
