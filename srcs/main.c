@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/30 16:33:06 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/30 17:23:40 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -71,45 +71,36 @@ t_env	*init_env(char **envp)
 t_state	validity_maker(t_token *type)
 {
 	int	i;
-	int nbr_pipe;
-	int nbr_redirection;
 	int nbr_quote;
 	int nbr_dquote;
 
 	i = -1;
-	nbr_pipe = 0;
-	nbr_redirection = 0;
 	nbr_quote = 0;
 	nbr_dquote = 0;
 	while (type[++i] != END)
 	{
 		if (type[i] == PIPE)
 		{
-			nbr_pipe++;
 			if (type[i + 1] == PIPE || type[i + 1] == END)
 				return (PIPE_ERROR);
 		}
 		else if (type[i] == INPUT)
 		{
-			nbr_redirection++;
 			if (type[i + 1] == END)
 				return (INPUT_ERROR);
 		}
 		else if (type[i] == OUTPUT)
 		{
-			nbr_redirection++;
 			if (type[i + 1] == END)
 				return (OUTPUT_ERROR);
 		}
 		else if (type[i] == APPEND)
 		{
-			nbr_redirection++;
 			if (type[i + 1] == END)
 				return (APPEND_ERROR);
 		}
 		else if (type[i] == HEREDOC)
 		{
-			nbr_redirection++;
 			if (type[i + 1] == END)
 				return (HEREDOC_ERROR);
 		}
@@ -175,8 +166,6 @@ t_state	validity_maker(t_token *type)
 		ft_printf("dquote error\n");
 		return (DQUOTE_ERROR);
 	}
-	ft_printf("nbr_pipe = %d\n", nbr_pipe);
-	ft_printf("nbr_redirection = %d\n", nbr_redirection);
 	return (VALID);
 }
 
@@ -199,17 +188,70 @@ char	**config_cmds(char **tokens, t_token *type)
 	i = -1;
 	j = 0;
 	cmd = ft_gc_malloc(sizeof(char *) * (ft_tablen(tokens) + 1));
-	while (type[++i] != END)
+	while (type[++i] != END || type[i] == PIPE)
 	{
-		if (type[i] == WORD)
+		if (type[i] != END && type[i] != PIPE)
 		{
-			cmd[j++] = ft_strdup(tokens[i]);
-			ft_printf("cmd[%d] = %s\n", j - 1, cmd[j - 1]);
+			if (i == 0 || type[i - 1] == PIPE)
+				cmd[j++] = ft_strdup(tokens[i]);
+			else
+			{
+				cmd[j - 1] = ft_strjoin(cmd[j - 1], " ");
+				cmd[j - 1] = ft_strjoin(cmd[j - 1], tokens[i]);
+			}
 		}
 	}
 	if (j == 0)
 		cmd = NULL;
+	i = -1;
+	while (cmd[++i])
+		ft_printf("cmd[%d] = %s\n", i, cmd[i]);
 	return (cmd);
+}
+
+int	count_cmd(t_token *type)
+{
+	int	i;
+	int	nbr_cmd;
+
+	i = -1;
+	nbr_cmd = 0;
+	while (type[++i] != END)
+	{
+		if (type[i] == PIPE)
+			nbr_cmd++;
+	}
+	return (nbr_cmd + 1);
+}
+
+int	count_pipe(t_token *type)
+{
+	int	i;
+	int	nbr_pipe;
+
+	i = -1;
+	nbr_pipe = 0;
+	while (type[++i] != END)
+	{
+		if (type[i] == PIPE)
+			nbr_pipe++;
+	}
+	return (nbr_pipe);
+}
+
+int	count_redirection(t_token *type)
+{
+	int	i;
+	int	nbr_redirection;
+
+	i = -1;
+	nbr_redirection = 0;
+	while (type[++i] != END)
+	{
+		if (type[i] == INPUT || type[i] == OUTPUT || type[i] == APPEND || type[i] == HEREDOC)
+			nbr_redirection++;
+	}
+	return (nbr_redirection);
 }
 
 t_cmd	*init_cmds(char **tokens)
@@ -244,15 +286,18 @@ t_cmd	*init_cmds(char **tokens)
 	if (state != VALID)
 		return (cmd);
 	cmd->cmd = config_cmds(tokens, cmd->type);
-	cmd->heredoc = NULL;
-	// cmd->env = NULL;
-	// cmd->global = NULL;
-	cmd->nbr_cmd = 0;
-	cmd->nbr_pipe = 0;
-	cmd->nbr_redirection = 0;
 	cmd->input = NULL;
 	cmd->output = NULL;
 	cmd->pipe = NULL;
+	cmd->heredoc = NULL;
+	cmd->nbr_cmd = count_cmd(cmd->type);
+	cmd->nbr_token = ft_tablen(tokens);
+	cmd->nbr_pipe = count_pipe(cmd->type);
+	cmd->nbr_redirection = count_redirection(cmd->type);
+	ft_printf("nbr_cmd = %d\n", cmd->nbr_cmd);
+	ft_printf("nbr_token = %d\n", cmd->nbr_token);
+	ft_printf("nbr_pipe = %d\n", cmd->nbr_pipe);
+	ft_printf("nbr_redirection = %d\n", cmd->nbr_redirection);
 	cmd->next = NULL;
 	return (cmd);
 }

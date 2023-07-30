@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/30 16:17:05 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/30 17:22:04 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -119,15 +119,6 @@ typedef struct s_env
 	char	*shell;
 }	t_env;
 
-typedef struct s_cmd t_cmd;
-
-typedef struct s_global
-{
-	int		exit_code;
-	t_env	*env;
-	t_cmd	*cmd;
-}	t_global;
-
 typedef struct s_cmd
 {
 	char			**token;
@@ -142,10 +133,15 @@ typedef struct s_cmd
 	int				nbr_token;
 	int				nbr_pipe;
 	int				nbr_redirection;
-	// t_env			*env;
-	// t_global		*global;
 	struct s_cmd	*next;
 }	t_cmd;
+
+typedef struct s_global
+{
+	int		exit_code;
+	t_env	*env;
+	t_cmd	*cmd;
+}	t_global;
 
 
 /* FUNCTIONS */
