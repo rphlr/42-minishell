@@ -22,9 +22,11 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/signal.h>
 # include <fcntl.h>
 # include <errno.h>
 # include <string.h>
+# include <termios.h>
 # include "../mylib/includes/mylib.h"
 
 # define STDIN 0
@@ -60,5 +62,14 @@ typedef struct s_global
 	t_env	*env;
 	t_cmd	*cmd;
 }	t_global;
+
+// *---* signals *---*
+void	parent_signal(void);
+void	sigint_parent(int signum);
+void	ctr_c_signal_parent(void);
+void    child_signal(struct termios *mirror_termios);
+void    sigint_child(void);
+void    ctr_bl_signal(void);
+
 
 #endif
