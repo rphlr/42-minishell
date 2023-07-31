@@ -6,11 +6,49 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 09:02:47 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/30 16:00:16 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/31 14:03:17 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "minishell.h"
+
+static void	detect_type(char **tokens, int i, t_token *type)
+{
+	int	j;
+
+	j = 0;
+	while (tokens[i][j])
+	{
+		if (tokens[i][j] == '$')
+			type[i] = DOLLAR;
+		else if (tokens[i][j] == '\'')
+			type[i] = NOT_CLOSED_QUOTE;
+		else if (tokens[i][j] == '\"')
+			type[i] = NOT_CLOSED_DQUOTE;
+		else if (tokens[i][j] == '|')
+			type[i] = PIPE;
+		else if (tokens[i][j] == '<')
+			type[i] = INPUT;
+		else if (tokens[i][j] == '>')
+			type[i] = OUTPUT;
+		else if (tokens[i][j] == ';')
+			type[i] = SEMICOLON;
+		else if (tokens[i][j] == ':')
+			type[i] = COLON;
+		else if (tokens[i][j] == '&')
+		{
+			if (tokens[i][j + 1] == '&')
+				type[i] = AND;
+			else
+				type[i] = WORD;
+		}
+		else if (tokens[i][j] == '|')
+			type[i] = OR;
+		else
+			type[i] = WORD;
+		j++;
+	}
+}
 
 t_token	*init_tokens_type(char **tokens)
 {
@@ -25,27 +63,48 @@ t_token	*init_tokens_type(char **tokens)
 	while (tokens[++i])
 	{
 		j = 0;
-		if (!ft_strcmp(tokens[i], "|"))
-			type[i] = PIPE;
-		else if (!ft_strcmp(tokens[i], "<"))
-			type[i] = INPUT;
-		else if (!ft_strcmp(tokens[i], ">"))
-			type[i] = OUTPUT;
-		else if (!ft_strcmp(tokens[i], ">>"))
-			type[i] = APPEND;
-		else if (!ft_strcmp(tokens[i], "<<"))
-			type[i] = HEREDOC;
+		if (tokens[i][j] == '|')
+		{
+			while (tokens[i][j] == '|')
+				j++;
+			if (j == 1)
+				type[i] = PIPE;
+			else
+				type[i] = OR;
+		}
+		else if (tokens[i][j] ==  '<')
+		{
+			while (tokens[i][j] == '<')
+				j++;
+			if (j == 1 || j == 3)
+				type[i] = INPUT;
+			else
+				type[i] = HEREDOC;
+		}
+		else if (tokens[i][j] ==  '>')
+		{
+			while (tokens[i][j] == '>')
+				j++;
+			if (j == 1 || j == 3)
+				type[i] = OUTPUT;
+			else
+				type[i] = APPEND;
+		}
 		else if (!ft_strcmp(tokens[i], ";"))
 			type[i] = SEMICOLON;
 		else if (!ft_strcmp(tokens[i], ":" ))
 			type[i] = COLON;
-		else if (!ft_strcmp(tokens[i], "&&"))
+		else if (tokens[i][j] == '&')
+		{
 			type[i] = AND;
-		else if (!ft_strcmp(tokens[i], "||"))
-			type[i] = OR;
+		}
 		else if (tokens[i][j] == '$')
-			type[i] = VARIABLES;
-		else if (tokens[i][0] == '\'')
+			type[i] = DOLLAR;
+		else if (tokens[i][j] == '~')
+			type[i] = TILDE;
+		else if (tokens[i][j] == '*')
+			type[i] = STAR;
+		else if (tokens[i][j] == '\'')
 		{
 			j = 1;
 			while (tokens[i][j] != '\'')
@@ -59,7 +118,7 @@ t_token	*init_tokens_type(char **tokens)
 			if (type[i] != NOT_CLOSED_QUOTE)
 				type[i] = CLOSED_QUOTE;
 		}
-		else if (tokens[i][0] == '\"')
+		else if (tokens[i][j] == '\"')
 		{
 			j = 1;
 			while (tokens[i][j] != '\"')
@@ -73,67 +132,76 @@ t_token	*init_tokens_type(char **tokens)
 			if (type[i] != NOT_CLOSED_DQUOTE)
 				type[i] = CLOSED_DQUOTE;
 		}
+		else if (tokens[i][j] == '-')
+		{
+			if (tokens[i][j + 1] == '-')
+				type[i] = WORD;
+			else
+				type[i] = OPTIONS;
+		}
 		else
 		{
-			while (tokens[i][j])
-			{
-				if (tokens[i][j] == '$')
-				{
-					type[i] = VARIABLES;
-					break;
-				}
-				else if (tokens[i][j] == '\'')
-				{
-					type[i] = NOT_CLOSED_QUOTE;
-					break;
-				}
-				else if (tokens[i][j] == '\"')
-				{
-					type[i] = NOT_CLOSED_DQUOTE;
-					break;
-				}
-				else if (tokens[i][j] == '|')
-				{
-					type[i] = PIPE;
-					break;
-				}
-				else if (tokens[i][j] == '<')
-				{
-					type[i] = INPUT;
-					break;
-				}
-				else if (tokens[i][j] == '>')
-				{
-					type[i] = OUTPUT;
-					break;
-				}
-				else if (tokens[i][j] == ';')
-				{
-					type[i] = SEMICOLON;
-					break;
-				}
-				else if (tokens[i][j] == ':')
-				{
-					type[i] = COLON;
-					break;
-				}
-				else if (tokens[i][j] == '&')
-				{
-					if (tokens[i][j + 1] == '&')
-						type[i] = AND;
-					else
-						type[i] = WORD;
-					break;
-				}
-				else if (tokens[i][j] == '|')
-				{
-					type[i] = OR;
-					break;
-				}
-				else
-					type[i] = WORD;
-				j++;
-			}
+			// while (tokens[i][j])
+			// {
+			// 	if (tokens[i][j] == '$')
+			// 	{
+			// 		type[i] = VARIABLES;
+			// 		break;
+			// 	}
+			// 	else if (tokens[i][j] == '\'')
+			// 	{
+			// 		type[i] = NOT_CLOSED_QUOTE;
+			// 		break;
+			// 	}
+			// 	else if (tokens[i][j] == '\"')
+			// 	{
+			// 		type[i] = NOT_CLOSED_DQUOTE;
+			// 		break;
+			// 	}
+			// 	else if (tokens[i][j] == '|')
+			// 	{
+			// 		type[i] = PIPE;
+			// 		break;
+			// 	}
+			// 	else if (tokens[i][j] == '<')
+			// 	{
+			// 		type[i] = INPUT;
+			// 		break;
+			// 	}
+			// 	else if (tokens[i][j] == '>')
+			// 	{
+			// 		type[i] = OUTPUT;
+			// 		break;
+			// 	}
+			// 	else if (tokens[i][j] == ';')
+			// 	{
+			// 		type[i] = SEMICOLON;
+			// 		break;
+			// 	}
+			// 	else if (tokens[i][j] == ':')
+			// 	{
+			// 		type[i] = COLON;
+			// 		break;
+			// 	}
+			// 	else if (tokens[i][j] == '&')
+			// 	{
+			// 		if (tokens[i][j + 1] == '&')
+			// 			type[i] = AND;
+			// 		else
+			// 			type[i] = WORD;
+			// 		break;
+			// 	}
+			// 	else if (tokens[i][j] == '|')
+			// 	{
+			// 		type[i] = OR;
+			// 		break;
+			// 	}
+			// 	else
+			// 		type[i] = WORD;
+			// 	j++;
+			// }
+			detect_type(tokens, i, type);
+			// type[i] = WORD;
 		}
 	}
 	type[i] = END;

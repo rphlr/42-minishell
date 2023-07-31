@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/30 17:23:40 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/31 14:23:22 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -104,20 +104,6 @@ t_state	validity_maker(t_token *type)
 			if (type[i + 1] == END)
 				return (HEREDOC_ERROR);
 		}
-		// else if (type[i] == INPUT || type[i] == OUTPUT || type[i] == APPEND || type[i] == HEREDOC)
-		// {
-		// 	nbr_redirection++;
-		// 	if (type[i + 1] == INPUT || type[i + 1] == OUTPUT
-		// 		|| type[i + 1] == APPEND || type[i + 1] == PIPE)
-		// 	{
-		// 		ft_printf("minishell: syntax error near unexpected token `%s'\n",
-		// 			type[i + 1] == INPUT ? "<" : type[i + 1] == OUTPUT ? ">" : type[i + 1] == APPEND ? ">>" : "<<");
-		// 		return (OUTPUT_ERROR);
-		// 	}
-		// 	else if (type[i + 1] == END)
-		// 		return (INPUT_ERROR);
-		// 	ft_printf("nbr_redirection = %d\n", nbr_redirection);
-		// }
 		else if (type[i] == NOT_CLOSED_QUOTE)
 			nbr_quote++;
 		else if (type[i] == NOT_CLOSED_DQUOTE)
@@ -136,13 +122,29 @@ t_state	validity_maker(t_token *type)
 			if (type[i + 1] == OR || type[i + 1] == END)
 				return (OR_ERROR);
 		}
-		else if (type[i] == VARIABLES)
+		else if (type[i] == DOLLAR)
 		{
-			// if (type[i + 1] == VARIABLES || type[i + 1] == END)
-			// {
-			// 	ft_printf("minishell: syntax error near unexpected token `$'\n");
-			// 	return (true);
-			// }
+			
+		}
+		else if (type[i] == TILDE)
+		{
+			
+		}
+		else if (type[i] == STAR)
+		{
+			
+		}
+		else if (type[i] == SEMICOLON)
+		{
+			if (type[i + 1] == SEMICOLON || type[i + 1] == END)
+			{
+				ft_printf("minishell: syntax error near unexpected token `;'\n");
+				return (SEMICOLON_ERROR);
+			}
+		}
+		else if (type[i] == COLON)
+		{
+			
 		}
 		else if (type[i] == WORD)
 		{
@@ -203,9 +205,6 @@ char	**config_cmds(char **tokens, t_token *type)
 	}
 	if (j == 0)
 		cmd = NULL;
-	i = -1;
-	while (cmd[++i])
-		ft_printf("cmd[%d] = %s\n", i, cmd[i]);
 	return (cmd);
 }
 
@@ -254,17 +253,11 @@ int	count_redirection(t_token *type)
 	return (nbr_redirection);
 }
 
-t_cmd	*init_cmds(char **tokens)
+t_state	check_errors(t_token *type, char **tokens)
 {
-	t_cmd	*cmd;
 	t_state	state = VALID;
 
-	cmd = ft_gc_malloc(sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	cmd->token = tokens;
-	cmd->type = init_tokens_type(tokens);
-	state = validity_maker(cmd->type);
+	state = validity_maker(type);
 	if (state == QUOTE_ERROR)
 		ft_printf("minishell: quote error\n");
 	else if (state == DQUOTE_ERROR)
@@ -272,19 +265,140 @@ t_cmd	*init_cmds(char **tokens)
 	else if (state == PIPE_ERROR)
 		ft_printf("minishell: syntax error near unexpected token `|'\n");
 	else if (state == INPUT_ERROR)
-		ft_printf("minishell: syntax error near unexpected token `<'\n");
+	{
+		if (!ft_strcmp(tokens[0], "<"))
+			ft_printf("minishell: syntax error near unexpected token `newline'\n");
+		else
+			ft_printf("minishell: syntax error near unexpected token `<'\n");
+	}
 	else if (state == OUTPUT_ERROR)
-		ft_printf("minishell: syntax error near unexpected token `>'\n");
+	{
+		if (!ft_strcmp(tokens[0], ">"))
+			ft_printf("minishell: syntax error near unexpected token `newline'\n");
+		else
+			ft_printf("minishell: syntax error near unexpected token `>'\n");
+	}
 	else if (state == APPEND_ERROR)
-		ft_printf("minishell: syntax error near unexpected token `>>'\n");
+	{
+		if (!ft_strcmp(tokens[0], ">>"))
+			ft_printf("minishell: syntax error near unexpected token `newline'\n");
+		else
+			ft_printf("minishell: syntax error near unexpected token `>>'\n");
+	}
 	else if (state == HEREDOC_ERROR)
-		ft_printf("minishell: syntax error near unexpected token `<<'\n");
+	{
+		if (!ft_strcmp(tokens[0], "<<"))
+			ft_printf("minishell: syntax error near unexpected token `newline'\n");
+		else
+			ft_printf("minishell: syntax error near unexpected token `<<'\n");
+	}
 	else if (state == AND_ERROR)
-		ft_printf("minishell: syntax error near unexpected token `&&'\n");
+	{
+		if (!ft_strcmp(tokens[0], "&"))
+			ft_printf("minishell: syntax error near unexpected token `&'\n");
+		else
+			ft_printf("minishell: syntax error near unexpected token `&&'\n");
+	}
 	else if (state == OR_ERROR)
 		ft_printf("minishell: syntax error near unexpected token `||'\n");
 	if (state != VALID)
-		return (cmd);
+		return (state);
+	return (VALID);
+}
+
+void	print_infos(t_cmd *cmd)
+{
+	int	i;
+
+	ft_printf(C_RED""C_UNDERLINE""C_BOLD"TOKENS\n"C_RESET);
+	ft_printf(C_RED"Nombre de tokens\t= "C_RESET""C_GREEN"%d\n"C_RESET, cmd->nbr_token);
+	ft_printf(C_RED"tokens reçus et traités\t= "C_RESET);
+	i = -1;
+	while (cmd->token[++i])
+	{
+		ft_printf(C_GREEN);
+		if (cmd->type[i + 1] == END)
+			ft_printf("%s", cmd->token[i]);
+		else
+			ft_printf("%s, ", cmd->token[i]);
+	}
+	ft_printf("\n"C_RESET);
+	ft_printf(C_RED"Type de tokens\t\t= "C_RESET);
+	i = -1;
+	while (cmd->type[++i] != END)
+	{
+		ft_printf(C_GREEN);
+		if (cmd->type[i] == WORD)
+			ft_printf("WORD");
+		else if (cmd->type[i] == DOLLAR)
+			ft_printf("DOLLAR");
+		else if (cmd->type[i] == TILDE)
+			ft_printf("TILDE");
+		else if (cmd->type[i] == STAR)
+			ft_printf("STAR");
+		else if (cmd->type[i] == PIPE)
+			ft_printf("PIPE");
+		else if (cmd->type[i] == INPUT)
+			ft_printf("INPUT");
+		else if (cmd->type[i] == OUTPUT)
+			ft_printf("OUTPUT");
+		else if (cmd->type[i] == HEREDOC)
+			ft_printf("HEREDOC");
+		else if (cmd->type[i] == APPEND)
+			ft_printf("APPEND");
+		else if (cmd->type[i] == SEMICOLON)
+			ft_printf("SEMICOLON");
+		else if (cmd->type[i] == COLON)
+			ft_printf("COLON");
+		else if (cmd->type[i] == AND)
+			ft_printf("AND");
+		else if (cmd->type[i] == OR)
+			ft_printf("OR");
+		else if (cmd->type[i] == CLOSED_QUOTE)
+			ft_printf("CLOSED_QUOTE");
+		else if (cmd->type[i] == NOT_CLOSED_QUOTE)
+			ft_printf("NOT_CLOSED_QUOTE");
+		else if (cmd->type[i] == CLOSED_DQUOTE)
+			ft_printf("CLOSED_DQUOTE");
+		else if (cmd->type[i] == NOT_CLOSED_DQUOTE)
+			ft_printf("NOT_CLOSED_DQUOTE");
+		else if (cmd->type[i] == OPTIONS)
+			ft_printf("OPTION");
+		else
+			ft_printf("UNKNOWN");
+		if (cmd->type[i + 1] != END)
+			ft_printf(", ");
+	}
+	ft_printf("\n"C_RESET);
+
+	ft_printf(C_RED""C_UNDERLINE""C_BOLD"\nCOMMANDES\n"C_RESET);
+	ft_printf(C_RED"Nombre de commandes\t= "C_RESET""C_GREEN"%d\n", cmd->nbr_cmd);
+	i = -1;
+	while (cmd->cmd[++i])
+	{
+		ft_printf(C_RED"Commande "C_RESET""C_GREEN"%d"C_RESET""C_RED"\t\t= "C_RESET, i + 1);
+		ft_printf(C_GREEN"%s\n"C_RESET, cmd->cmd[i]);
+	}
+	
+	ft_printf(C_RED""C_UNDERLINE""C_BOLD"\nREDIRECTIONS\n"C_RESET);
+	ft_printf(C_RED"Nombre de pipes\t\t= "C_RESET""C_GREEN"%d\n"C_RESET, cmd->nbr_pipe);
+	ft_printf(C_RED"Nombre de redirections\t= "C_RESET""C_GREEN"%d\n"C_RESET, cmd->nbr_redirection);
+}
+
+t_cmd	*init_cmds(char **tokens)
+{
+	t_cmd	*cmd;
+	// t_global	*global;
+	t_state	state = VALID;
+
+	cmd = ft_gc_malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->token = tokens;
+	cmd->type = init_tokens_type(tokens);
+	state = check_errors(cmd->type, tokens);
+	if (state)
+		return (NULL);
 	cmd->cmd = config_cmds(tokens, cmd->type);
 	cmd->input = NULL;
 	cmd->output = NULL;
@@ -294,10 +408,10 @@ t_cmd	*init_cmds(char **tokens)
 	cmd->nbr_token = ft_tablen(tokens);
 	cmd->nbr_pipe = count_pipe(cmd->type);
 	cmd->nbr_redirection = count_redirection(cmd->type);
-	ft_printf("nbr_cmd = %d\n", cmd->nbr_cmd);
-	ft_printf("nbr_token = %d\n", cmd->nbr_token);
-	ft_printf("nbr_pipe = %d\n", cmd->nbr_pipe);
-	ft_printf("nbr_redirection = %d\n", cmd->nbr_redirection);
+	// ft_printf("nbr_cmd = %d\n", cmd->nbr_cmd);
+	// ft_printf("nbr_token = %d\n", cmd->nbr_token);
+	// ft_printf("nbr_pipe = %d\n", cmd->nbr_pipe);
+	// ft_printf("nbr_redirection = %d\n", cmd->nbr_redirection);
 	cmd->next = NULL;
 	return (cmd);
 }
@@ -485,9 +599,8 @@ int	lsh_loop(t_global *global)
 {
 	char	*line;
 	t_cmd	*cmd;
-	int		err_code;
 
-	err_code = 0;
+	cmd = global->cmd;
 	while (1)
 	{
 		line = readline(PROMPT);
@@ -499,15 +612,22 @@ int	lsh_loop(t_global *global)
 		if (!ft_strcmp(line, ""))
 			continue ;
 		cmd = init_cmds(ft_split(line, ' '));
+		print_infos(cmd); // delete this line when done
+		if (!cmd)
+		{
+			global->exit_code = 258;
+			continue ;
+		}
 		free(line);
 		parse_cmd(global, cmd);
 		if (!ft_strcmp(cmd->token[0], "exit"))
 		{
+			global->exit_code = 0;
 			ft_printf("exit\n");
 			if (!cmd->token[1])
 				break ;
 			if (!check_exit_token(cmd->token[1]))
-				err_code = 255;
+				global->exit_code = 255;
 			else if (cmd->token[2])
 			{
 				ft_printf("minishell: exit: too many arguments\n");
@@ -515,9 +635,9 @@ int	lsh_loop(t_global *global)
 			}
 			else if (cmd->token[1])
 			{
-				err_code = ft_atoi(cmd->token[1]);
-			 	if (err_code < 0 || err_code > 255)
-					err_code %= 256;
+				global->exit_code = ft_atoi(cmd->token[1]);
+			 	if (global->exit_code < 0 || global->exit_code > 255)
+					global->exit_code %= 256;
 			}
 			break ;
 		}
@@ -541,7 +661,7 @@ int	lsh_loop(t_global *global)
 		}
 		run_cmd(cmd);
 	}
-	return (err_code);
+	return (global->exit_code);
 }
 
 t_global	*init_global(char **envp)
@@ -568,5 +688,5 @@ int	main(int ac, char **av, char **envp)
 	if (!global)
 		return (1);
 	int err_code = lsh_loop(global);
-	exit (err_code);
+	return (err_code);
 }

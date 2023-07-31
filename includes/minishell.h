@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/30 17:22:04 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/31 13:28:50 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -60,7 +60,8 @@
 # define STDOUT 1
 # define STDERR 2
 
-# define PROMPT C_UNDERLINE""C_BOLD""C_BMAGENTA" Les pros du HTML >"C_RESET" "
+# define PROMPT C_CYAN" rapidshell > "C_RESET
+// # define PROMPT C_BOLD""C_REVERSE""C_UNDERLINE""C_BRED" Les pros du HTML >"C_RESET" "
 
 typedef enum s_token
 {
@@ -70,16 +71,19 @@ typedef enum s_token
 	OUTPUT, // 3
 	APPEND, // 4
 	HEREDOC, // 5
-	SEMICOLON, // 6
-	COLON, // 7
-	VARIABLES, // 8
-	CLOSED_QUOTE, // 9
-	CLOSED_DQUOTE, // 10
-	NOT_CLOSED_QUOTE, // 11
-	NOT_CLOSED_DQUOTE, // 12
-	AND, // 13
-	OR, // 14
-	END // 15
+	CLOSED_QUOTE, // 6
+	CLOSED_DQUOTE, // 7
+	NOT_CLOSED_QUOTE, // 8
+	NOT_CLOSED_DQUOTE, // 9
+	OPTIONS, // 10
+	AND, // 11
+	OR, // 12
+	STAR, // 13
+	DOLLAR, // 14
+	TILDE, // 15
+	SEMICOLON, // 16
+	COLON, // 17
+	END // 18
 }	t_token;
 
 typedef enum state
@@ -93,7 +97,8 @@ typedef enum state
 	APPEND_ERROR,
 	HEREDOC_ERROR,
 	AND_ERROR,
-	OR_ERROR
+	OR_ERROR,
+	SEMICOLON_ERROR
 }	t_state;
 
 typedef enum s_redirectiontype {
