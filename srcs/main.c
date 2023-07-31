@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/31 14:23:22 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/07/31 14:48:03 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -612,12 +612,12 @@ int	lsh_loop(t_global *global)
 		if (!ft_strcmp(line, ""))
 			continue ;
 		cmd = init_cmds(ft_split(line, ' '));
-		print_infos(cmd); // delete this line when done
 		if (!cmd)
 		{
 			global->exit_code = 258;
 			continue ;
 		}
+		print_infos(cmd); // delete this line when done
 		free(line);
 		parse_cmd(global, cmd);
 		if (!ft_strcmp(cmd->token[0], "exit"))
