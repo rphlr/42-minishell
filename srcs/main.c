@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/31 14:48:03 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/01 17:52:24 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -38,8 +38,47 @@
 // ❌: Implement env without any options and any arguments
 // ✅: Implement exit without any options
 // ✅: exit
+// BONUS
+// ✅: Detect Wilcard * (globbing)
+// ✅: Detect && and ||
 // BONUS: Implement && and ||
 // BONUS: Implement Wilcard * (globbing)
+
+// Check if option has multiple same letters and return 1 if it does. Check if option has syntax error and return 1 if it does.
+int	check_options_doublon(char *token)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (token[++i])
+	{
+		j = i;
+		while (token[++j])
+		{
+			if (token[i] == token[j])
+				return (1);
+		}
+	}
+	return (0);
+}
+
+int	check_options_syntax(char *token)
+{
+	int	i;
+
+	i = 0;
+	while (token[++i])
+	{
+		if (!ft_isalpha(token[i]))
+		{
+			if (ft_isdigit(token[i]))
+				continue ;
+			return (1);
+		}
+	}
+	return (0);
+}
 
 t_env	*init_env(char **envp)
 {
@@ -67,8 +106,36 @@ t_env	*init_env(char **envp)
 	}
 	return (env);
 }
+// if option has multiple same letters, keep only one. Example: -ssjhhjsdgf3 -> -sjhdgf3
+char	*format_options(char *token)
+{
+	size_t	i;
+	size_t	j;
+	size_t	k;
+	char	*new_token;
 
-t_state	validity_maker(t_token *type)
+	i = -1;
+	j = 0;
+	k = 0;
+	new_token = ft_gc_malloc(sizeof(char) * (ft_strlen(token) + 1));
+	if (!new_token)
+		return (NULL);
+	while (token[++i])
+	{
+		j = i;
+		while (token[++j])
+		{
+			if (token[i] == token[j])
+				break ;
+		}
+		if (j == ft_strlen(token))
+			new_token[k++] = token[i];
+	}
+	new_token[k] = '\0';
+	return (new_token);
+}
+
+t_state	validity_maker(t_token *type, char **tokens)
 {
 	int	i;
 	int nbr_quote;
@@ -148,15 +215,21 @@ t_state	validity_maker(t_token *type)
 		}
 		else if (type[i] == WORD)
 		{
-			// if (type[i + 1] == WORD || type[i + 1] == END)
-			// {
-			// 	ft_printf("minishell: syntax error near unexpected token `newline'\n");
-			// 	return (true);
-			// }
+			
 		}
-		// ft_printf("type[i] = %d\n", type[i]);
-		// ft_printf("nbr_quote = %d\n", nbr_quote);
-		// ft_printf("nbr_dquote = %d\n", nbr_dquote);
+		else if (type[i] == OPTIONS)
+		{
+			if (check_options_syntax(tokens[i]))
+			{
+				ft_printf("minishell: syntax error near unexpected token `%s'\n", tokens[i]);
+				return (OPTIONS_ERROR);
+			}
+			else if (check_options_doublon(tokens[i]))
+			{
+				tokens[i] = format_options(tokens[i]);
+			}
+			ft_printf("options = %s\n", tokens[i]);
+		}
 	}
 	if (nbr_quote % 2 != 0)
 	{
@@ -257,7 +330,7 @@ t_state	check_errors(t_token *type, char **tokens)
 {
 	t_state	state = VALID;
 
-	state = validity_maker(type);
+	state = validity_maker(type, tokens);
 	if (state == QUOTE_ERROR)
 		ft_printf("minishell: quote error\n");
 	else if (state == DQUOTE_ERROR)
@@ -595,6 +668,7 @@ void	run_cmd(t_cmd *cmd)
 		execute(cmd);
 }
 
+
 int	lsh_loop(t_global *global)
 {
 	char	*line;
@@ -603,6 +677,7 @@ int	lsh_loop(t_global *global)
 	cmd = global->cmd;
 	while (1)
 	{
+		// line = read_custom_line();
 		line = readline(PROMPT);
 		if (!check_token(line))
 			break ;

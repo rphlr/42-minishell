@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/31 13:28:50 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/01 16:55:49 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -98,7 +98,8 @@ typedef enum state
 	HEREDOC_ERROR,
 	AND_ERROR,
 	OR_ERROR,
-	SEMICOLON_ERROR
+	SEMICOLON_ERROR,
+	OPTIONS_ERROR
 }	t_state;
 
 typedef enum s_redirectiontype {
