@@ -61,7 +61,7 @@ t_cmd	*init_cmds(char **cmds)
 t_env	*init_env(char **envp)
 {
   t_env	*env;
-  int		i;
+  int i;
 
   i = -1;
   env = ft_gc_malloc(sizeof(t_env));
@@ -94,10 +94,6 @@ bool	check_args(char *line)
 		return false;
 	}
 	return true;
-	// else if ()
-	// {
-
-	// }
 }
 
 void	execute(t_cmd *cmd)
@@ -135,4 +131,13 @@ int	main(int ac, char **av, char **envp)
     return (1);
   lsh_loop();
   return (0);
+}
+
+void  shell_loop(t_shell *shell)
+{
+  while (TRUE)
+  {
+      signals(&shell->mirror_termios);
+
+  }
 }
