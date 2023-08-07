@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   tokenisation.c                                     :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 09:02:47 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/31 14:03:17 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/07 17:21:13 by rrouille         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -72,7 +72,7 @@ t_token	*init_tokens_type(char **tokens)
 			else
 				type[i] = OR;
 		}
-		else if (tokens[i][j] ==  '<')
+		else if (tokens[i][j] == '<')
 		{
 			while (tokens[i][j] == '<')
 				j++;
@@ -81,7 +81,7 @@ t_token	*init_tokens_type(char **tokens)
 			else
 				type[i] = HEREDOC;
 		}
-		else if (tokens[i][j] ==  '>')
+		else if (tokens[i][j] == '>')
 		{
 			while (tokens[i][j] == '>')
 				j++;
@@ -95,9 +95,7 @@ t_token	*init_tokens_type(char **tokens)
 		else if (!ft_strcmp(tokens[i], ":" ))
 			type[i] = COLON;
 		else if (tokens[i][j] == '&')
-		{
 			type[i] = AND;
-		}
 		else if (tokens[i][j] == '$')
 			type[i] = DOLLAR;
 		else if (tokens[i][j] == '~')
@@ -112,7 +110,7 @@ t_token	*init_tokens_type(char **tokens)
 				if (!tokens[i][j++])
 				{
 					type[i] = NOT_CLOSED_QUOTE;
-					break;
+					break ;
 				}
 			}
 			if (type[i] != NOT_CLOSED_QUOTE)
@@ -126,7 +124,7 @@ t_token	*init_tokens_type(char **tokens)
 				if (!tokens[i][j++])
 				{
 					type[i] = NOT_CLOSED_DQUOTE;
-					break;
+					break ;
 				}
 			}
 			if (type[i] != NOT_CLOSED_DQUOTE)
@@ -140,69 +138,7 @@ t_token	*init_tokens_type(char **tokens)
 				type[i] = OPTIONS;
 		}
 		else
-		{
-			// while (tokens[i][j])
-			// {
-			// 	if (tokens[i][j] == '$')
-			// 	{
-			// 		type[i] = VARIABLES;
-			// 		break;
-			// 	}
-			// 	else if (tokens[i][j] == '\'')
-			// 	{
-			// 		type[i] = NOT_CLOSED_QUOTE;
-			// 		break;
-			// 	}
-			// 	else if (tokens[i][j] == '\"')
-			// 	{
-			// 		type[i] = NOT_CLOSED_DQUOTE;
-			// 		break;
-			// 	}
-			// 	else if (tokens[i][j] == '|')
-			// 	{
-			// 		type[i] = PIPE;
-			// 		break;
-			// 	}
-			// 	else if (tokens[i][j] == '<')
-			// 	{
-			// 		type[i] = INPUT;
-			// 		break;
-			// 	}
-			// 	else if (tokens[i][j] == '>')
-			// 	{
-			// 		type[i] = OUTPUT;
-			// 		break;
-			// 	}
-			// 	else if (tokens[i][j] == ';')
-			// 	{
-			// 		type[i] = SEMICOLON;
-			// 		break;
-			// 	}
-			// 	else if (tokens[i][j] == ':')
-			// 	{
-			// 		type[i] = COLON;
-			// 		break;
-			// 	}
-			// 	else if (tokens[i][j] == '&')
-			// 	{
-			// 		if (tokens[i][j + 1] == '&')
-			// 			type[i] = AND;
-			// 		else
-			// 			type[i] = WORD;
-			// 		break;
-			// 	}
-			// 	else if (tokens[i][j] == '|')
-			// 	{
-			// 		type[i] = OR;
-			// 		break;
-			// 	}
-			// 	else
-			// 		type[i] = WORD;
-			// 	j++;
-			// }
 			detect_type(tokens, i, type);
-			// type[i] = WORD;
-		}
 	}
 	type[i] = END;
 	return (type);

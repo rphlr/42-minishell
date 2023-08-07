@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/01 16:55:49 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/07 16:35:33 by rrouille         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -65,25 +65,25 @@
 
 typedef enum s_token
 {
-	WORD, // 0
-	PIPE, // 1
-	INPUT, // 2
-	OUTPUT, // 3
-	APPEND, // 4
-	HEREDOC, // 5
-	CLOSED_QUOTE, // 6
-	CLOSED_DQUOTE, // 7
-	NOT_CLOSED_QUOTE, // 8
-	NOT_CLOSED_DQUOTE, // 9
-	OPTIONS, // 10
-	AND, // 11
-	OR, // 12
-	STAR, // 13
-	DOLLAR, // 14
-	TILDE, // 15
-	SEMICOLON, // 16
-	COLON, // 17
-	END // 18
+	WORD,
+	PIPE,
+	INPUT,
+	OUTPUT,
+	APPEND,
+	HEREDOC,
+	AND,
+	OR,
+	SEMICOLON,
+	CLOSED_QUOTE,
+	CLOSED_DQUOTE,
+	NOT_CLOSED_QUOTE,
+	NOT_CLOSED_DQUOTE,
+	OPTIONS,
+	STAR,
+	DOLLAR,
+	TILDE,
+	COLON,
+	END
 }	t_token;
 
 typedef enum state
@@ -155,5 +155,27 @@ int	ft_strstart(char *str, char *start);
 void	ft_echo(t_cmd *cmd);
 t_token	*init_tokens_type(char **tokens);
 int ft_tablen(char **tab);
+void	ft_env(t_global *global);
+void	ft_pwd(t_cmd *cmd);
+void	ft_export(t_cmd *cmd);
+void	ft_cd(t_cmd *cmd);
+void	ft_unset(t_cmd *cmd);
+void	ft_exit(t_global *global);
+int parse_cmd(t_global *global, t_cmd *cmd);
+char	*epur_str(char *line);
+t_global	*init_global(char **envp);
+t_cmd	*init_cmds(char **tokens);
+int	count_redirection(t_token *type);
+int	count_pipe(t_token *type);
+int	count_cmd(t_token *type);
+t_state	check_errors(t_token *type, char **tokens);
+int	check_options_syntax(char *token);
+int	check_options_doublon(char *token);
+bool	check_token(char *line);
+t_state	validity_maker(t_token *type, char **tokens);
+char	*format_options(char *token);
+
+// remove when finish
+void	print_infos(t_cmd *cmd);
 
 #endif
