@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 07:34:38 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/07 17:48:09 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/07 18:47:31 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,33 +50,6 @@ int	check_syntax(char *str)
 	return (1);
 }
 
-int	check_echo_token(char **str)
-{
-	int	i;
-	int	j;
-	int	arg;
-
-	j = 0;
-	i = 0;
-	arg = 0;
-	while (str[++i])
-	{
-		if (str[i][j++] == '-' && str[i][j] == 'n')
-		{
-			while (str[i][j] == 'n')
-				j++;
-			arg = 1;
-		}
-		if (str[i][j++] == '-' && str[i][j] == 'e')
-		{
-			while (str[i][j] == 'e')
-				j++;
-			arg = 2;
-		}
-	}
-	return (arg);
-}
-
 void	echo_print_special_char(char *str)
 {
 	while (*str)
@@ -90,34 +63,34 @@ void	ft_echo(t_cmd *cmd)
 {
 	int	arg;
 
-	arg = check_echo_token(cmd->token);
+	arg = 0;
 	ft_printf("arg = %d\n", arg);
 	if (arg == 1)
 	{
-		for (int i = 1; cmd->token[i]; i++)
+		while (*++cmd->token)
 		{
-			cmd->token[i] = ignore_quotes(cmd->token[i]);
-			ft_printf("%s", cmd->token[i]);
-			if (cmd->token[i + 1])
+			*cmd->token = ignore_quotes(*cmd->token);
+			ft_printf("%s", *cmd->token);
+			if (*(cmd->token + 1))
 				ft_printf(" ");
 		}
 	}
 	else if (arg == 2)
 	{
-		for (int i = 1; cmd->token[i]; i++)
+		while (*++cmd->token)
 		{
-			echo_print_special_char(ignore_quotes(cmd->token[i]));
-			if (cmd->token[i + 1])
+			echo_print_special_char(ignore_quotes(*cmd->token));
+			if (*(cmd->token + 1))
 				ft_printf(" ");
 		}
 	}
 	else
 	{
-		for (int i = 1; cmd->token[i]; i++)
+		while (*++cmd->token)
 		{
-			cmd->token[i] = ignore_quotes(cmd->token[i]);
-			ft_printf("%s", cmd->token[i]);
-			if (cmd->token[i + 1])
+			*cmd->token = ignore_quotes(*cmd->token);
+			ft_printf("%s", *cmd->token);
+			if (*(cmd->token + 1))
 				ft_printf(" ");
 		}
 		ft_printf("\n");

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/07 16:35:33 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/07 18:55:12 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@
 # define STDOUT 1
 # define STDERR 2
 
-# define PROMPT C_CYAN" rapidshell > "C_RESET
-// # define PROMPT C_BOLD""C_REVERSE""C_UNDERLINE""C_BRED" Les pros du HTML >"C_RESET" "
+// # define PROMPT C_CYAN" rapidshell > "C_RESET
+# define PROMPT C_BOLD""C_REVERSE""C_UNDERLINE""C_BRED" Les pros du HTML >"C_RESET" "
 
 typedef enum s_token
 {
@@ -102,18 +102,19 @@ typedef enum state
 	OPTIONS_ERROR
 }	t_state;
 
-typedef enum s_redirectiontype {
-    NO_REDIRECTION,
-    INPUT_REDIRECTION,
-    OUTPUT_REDIRECTION,
-    APPEND_REDIRECTION
-} t_redirectiontype;
+typedef enum s_redirectiontype
+{
+	NO_REDIRECTION,
+	INPUT_REDIRECTION,
+	OUTPUT_REDIRECTION,
+	APPEND_REDIRECTION
+}	t_redirectiontype;
 
 typedef struct s_redirection
 {
 	t_redirectiontype	type;
-	char			*filename;
-} t_redirection;
+	char				*filename;
+}	t_redirection;
 
 typedef struct s_env
 {
@@ -135,7 +136,7 @@ typedef struct s_cmd
 	bool			pipe;
 	bool			heredoc;
 	int				heredoc_fd;
-	int 			nbr_cmd;
+	int				nbr_cmd;
 	int				nbr_token;
 	int				nbr_pipe;
 	int				nbr_redirection;
@@ -149,33 +150,32 @@ typedef struct s_global
 	t_cmd	*cmd;
 }	t_global;
 
-
 /* FUNCTIONS */
-int	ft_strstart(char *str, char *start);
-void	ft_echo(t_cmd *cmd);
-t_token	*init_tokens_type(char **tokens);
-int ft_tablen(char **tab);
-void	ft_env(t_global *global);
-void	ft_pwd(t_cmd *cmd);
-void	ft_export(t_cmd *cmd);
-void	ft_cd(t_cmd *cmd);
-void	ft_unset(t_cmd *cmd);
-void	ft_exit(t_global *global);
-int parse_cmd(t_global *global, t_cmd *cmd);
-char	*epur_str(char *line);
+int			ft_strstart(char *str, char *start);
+void		ft_echo(t_cmd *cmd);
+t_token		*init_tokens_type(char **tokens);
+int			ft_tablen(char **tab);
+void		ft_env(t_global *global);
+void		ft_pwd(t_cmd *cmd);
+void		ft_export(t_cmd *cmd);
+void		ft_cd(t_cmd *cmd);
+void		ft_unset(t_cmd *cmd);
+void		ft_exit(t_global *global);
+int			parse_cmd(t_global *global, t_cmd *cmd);
+char		*epur_str(char *line);
 t_global	*init_global(char **envp);
-t_cmd	*init_cmds(char **tokens);
-int	count_redirection(t_token *type);
-int	count_pipe(t_token *type);
-int	count_cmd(t_token *type);
-t_state	check_errors(t_token *type, char **tokens);
-int	check_options_syntax(char *token);
-int	check_options_doublon(char *token);
-bool	check_token(char *line);
-t_state	validity_maker(t_token *type, char **tokens);
-char	*format_options(char *token);
+t_cmd		*init_cmds(char **tokens);
+int			count_redirection(t_token *type);
+int			count_pipe(t_token *type);
+int			count_cmd(t_token *type);
+t_state		check_errors(t_token *type, char **tokens);
+int			check_options_syntax(char *token);
+int			check_options_doublon(char *token);
+bool		check_token(char *line);
+t_state		validity_maker(t_token *type, char **tokens);
+char		*format_options(char *token);
 
 // remove when finish
-void	print_infos(t_cmd *cmd);
+void		print_infos(t_cmd *cmd);
 
 #endif
