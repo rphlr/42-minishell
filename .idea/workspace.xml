@@ -11,14 +11,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5211a871-721b-4de5-874c-d9cb5028d7a0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/mylib" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/minishell.h" beforeDir="false" afterPath="$PROJECT_DIR$/includes/minishell.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srcs/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/main.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srcs/signaux/child_process.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/signaux/child_process.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srcs/signaux/parent_process.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/signaux/parent_process.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srcs/signaux/signal.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/signaux/signal.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
