@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/07 17:39:06 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/10 14:40:07 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	execute(t_cmd *cmd)
 void	run_cmd(t_global *global)
 {
 	if (!ft_strcmp(global->cmd->token[0], "echo"))
-		ft_echo(global->cmd);
+		ft_echo(global);
 	else if (!ft_strcmp(global->cmd->token[0], "cd"))
 		ft_cd(global->cmd);
 	else if (!ft_strcmp(global->cmd->token[0], "pwd"))
@@ -69,21 +69,37 @@ void	run_cmd(t_global *global)
 		execute(global->cmd);
 }
 
+int	line_is_spaces(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (*line)
+	{
+		if (*line++ != ' ')
+			return (0);
+	}
+	return (1);
+}
+
 int	lsh_loop(t_global *global)
 {
 	char	*line;
+	char	**cmds;
 
 	while (1)
 	{
 		line = readline(PROMPT);
 		if (!check_token(line))
 			break ;
+		if (line_is_spaces(line))
+			continue ;
 		if (line && ft_strcmp(line, ""))
 			add_history(line);
-		line = epur_str(line);
+		cmds = parsed_line(line);
 		if (!ft_strcmp(line, ""))
 			continue ;
-		global->cmd = init_cmds(ft_split(line, ' '));
+		global->cmd = init_cmds(cmds);
 		if (!global->cmd)
 		{
 			global->exit_code = 258;

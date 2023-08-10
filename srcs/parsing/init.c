@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/07 17:06:12 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/10 14:08:00 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,56 @@ static char	**config_cmds(char **tokens, t_token *type)
 	if (j == 0)
 		cmd = NULL;
 	return (cmd);
+}
+
+t_token	*close_quote(char **tokens, t_token *type)
+{
+	int i = 0;
+	int j;
+	bool in_single_quote = false;
+	bool in_double_quote = false;
+
+	while (tokens[i])
+	{
+		if (type[i] == NOT_CLOSED_QUOTE)
+		{
+			in_single_quote = !in_single_quote;
+			if (!in_single_quote)
+			{
+				j = i - 1;
+				while (type[j] == NOT_CLOSED_QUOTE)
+					j--;
+				type[j] = CLOSED_QUOTE;
+				type[i] = WORD;
+				for (int k = j + 1; k <= i; k++)
+				{
+					strcat(tokens[j], tokens[k]);
+					tokens[k] = NULL;
+					type[k] = WORD;
+				}
+			}
+		}
+		else if (type[i] == NOT_CLOSED_DQUOTE)
+		{
+			in_double_quote = !in_double_quote;
+			if (!in_double_quote)
+			{
+				j = i - 1;
+				while (type[j] == NOT_CLOSED_DQUOTE)
+					j--;
+				type[j] = CLOSED_DQUOTE;
+				type[i] = WORD;
+				for (int k = j + 1; k <= i; k++)
+				{
+					strcat(tokens[j], tokens[k]);
+					tokens[k] = NULL;
+					type[k] = WORD;
+				}
+			}
+		}
+		i++;
+	}
+	return type;
 }
 
 t_cmd	*init_cmds(char **tokens)
@@ -102,6 +152,7 @@ t_global	*init_global(char **envp)
 	if (!global)
 		return (NULL);
 	global->exit_code = 0;
+	global->pid = getpid();
 	global->env = init_env(envp);
 	if (!global->env)
 		return (NULL);

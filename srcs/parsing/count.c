@@ -6,21 +6,11 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:38:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/07 16:20:43 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/10 14:08:27 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_tablen(char **tab)
-{
-	int	len;
-
-	len = 0;
-	while (*tab++)
-		len++;
-	return (len);
-}
 
 int	count_cmd(t_token *type)
 {

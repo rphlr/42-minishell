@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/07 18:55:12 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/10 18:03:45 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,15 @@ typedef enum s_token
 	DOLLAR,
 	TILDE,
 	COLON,
+	BS_NEWLINE,
+	BS_TAB,
+	BS_VERTICAL_TAB,
+	BS_BACKSPACE,
+	BS_CARRIAGE_RETURN,
+	BS_FORM_FEED,
+	BS_BELL,
+	BS_ESCAPE,
+	BS_BACKSLASH,
 	END
 }	t_token;
 
@@ -109,6 +118,15 @@ typedef enum s_redirectiontype
 	OUTPUT_REDIRECTION,
 	APPEND_REDIRECTION
 }	t_redirectiontype;
+
+typedef enum s_option
+{
+	NO_OPTION,
+	OPTION_N,
+	OPTION_E,
+	OPTION_NE,
+	INVALID_OPTION
+}	t_option;
 
 typedef struct s_redirection
 {
@@ -146,13 +164,13 @@ typedef struct s_cmd
 typedef struct s_global
 {
 	int		exit_code;
+	int 	pid;
 	t_env	*env;
 	t_cmd	*cmd;
 }	t_global;
 
 /* FUNCTIONS */
-int			ft_strstart(char *str, char *start);
-void		ft_echo(t_cmd *cmd);
+void		ft_echo(t_global *global);
 t_token		*init_tokens_type(char **tokens);
 int			ft_tablen(char **tab);
 void		ft_env(t_global *global);
@@ -174,6 +192,8 @@ int			check_options_doublon(char *token);
 bool		check_token(char *line);
 t_state		validity_maker(t_token *type, char **tokens);
 char		*format_options(char *token);
+t_token		*remove_double_option(char **tokens, t_token *type);
+char		**parsed_line(char *line);
 
 // remove when finish
 void		print_infos(t_cmd *cmd);

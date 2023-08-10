@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 09:02:47 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/07 17:21:13 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/10 17:05:50 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,34 @@ static void	detect_type(char **tokens, int i, t_token *type)
 			type[i] = WORD;
 		j++;
 	}
+}
+
+t_token	*remove_double_option(char **tokens, t_token *type)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (type[i] != END)
+	{
+		if (type[i] == OPTIONS)
+		{
+			while (type[i + 1] == OPTIONS)
+			{
+				tokens[i] = ft_strjoin(tokens[i],
+						ft_strtrim(tokens[i + 1], "-"));
+				j = i + 1;
+				while (type[j] != END)
+				{
+					tokens[j] = tokens[j + 1];
+					type[j] = type[j + 1];
+					j++;
+				}
+			}
+		}
+		i++;
+	}
+	return (type);
 }
 
 t_token	*init_tokens_type(char **tokens)
@@ -102,10 +130,32 @@ t_token	*init_tokens_type(char **tokens)
 			type[i] = TILDE;
 		else if (tokens[i][j] == '*')
 			type[i] = STAR;
+		else if (tokens[i][j] == '\\')
+		{
+			j++;
+			if (tokens[i][j] == 'n')
+				type[i] = BS_NEWLINE;
+			else if (tokens[i][j] == 't')
+				type[i] = BS_TAB;
+			else if (tokens[i][j] == 'v')
+				type[i] = BS_VERTICAL_TAB;
+			else if (tokens[i][j] == 'b')
+				type[i] = BS_BACKSPACE;
+			else if (tokens[i][j] == 'r')
+				type[i] = BS_CARRIAGE_RETURN;
+			else if (tokens[i][j] == 'f')
+				type[i] = BS_FORM_FEED;
+			else if (tokens[i][j] == 'a')
+				type[i] = BS_BELL;
+			else if (tokens[i][j] == 'e')
+				type[i] = BS_ESCAPE;
+			else if (tokens[i][j] == '\\')
+				type[i] = BS_BACKSLASH;
+		}
 		else if (tokens[i][j] == '\'')
 		{
 			j = 1;
-			while (tokens[i][j] != '\'')
+			while (tokens[i][j] != '\'' && tokens[i][j - 1] != '\\')
 			{
 				if (!tokens[i][j++])
 				{
@@ -119,7 +169,7 @@ t_token	*init_tokens_type(char **tokens)
 		else if (tokens[i][j] == '\"')
 		{
 			j = 1;
-			while (tokens[i][j] != '\"')
+			while (tokens[i][j] != '\"' && tokens[i][j - 1] != '\\')
 			{
 				if (!tokens[i][j++])
 				{
