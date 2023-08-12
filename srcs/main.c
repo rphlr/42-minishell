@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/12 16:22:36 by mvillarr         ###   ########.fr       */
+/*   Updated: 2023/08/12 16:50:51 by mvillarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,15 +84,6 @@ t_env	*init_env(char **envp)
   return (env);
 }
 
-void  shell_loop(t_shell *shell)
-{
-  while (TRUE)
-  {
-    signals(&shell->mirror_termios);
-
-  }
-}
-
 bool	check_args(char *line)
 {
 	if (!line || !ft_strcmp(line, "exit"))
@@ -135,6 +126,7 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	env = init_env(envp);
+        ft_signal();
 	if (!env)
 		return (1);
 	lsh_loop();

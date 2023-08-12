@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/16 18:27:11 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/12 16:46:47 by mvillarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,29 +63,10 @@ typedef struct s_global
 	t_cmd	*cmd;
 }	t_global;
 
-<<<<<<< HEAD
-typedef struct s_shell
-{
-        struct termios  mirror_termios;
-
-}       t_shell;
-
-int
-
 // *---* signals *---*
-//void	signal(void);
-//void    sg_manage(int num);
-//void    update_signal_handler(int num);
-//void    update_signal(void);
-=======
-// *---* signals *---*
-void	parent_signal(void);
-void	sigint_parent(int signum);
-void	ctr_c_signal_parent(void);
-void    child_signal(struct termios *mirror_termios);
-void    sigint_child(void);
-void    ctr_bl_signal(void);
-
->>>>>>> a325543f179d2ab4817cb1e367ff785b82942f09
+void  ft_signal(void);
+void  sg_manage(int num);
+void  update_signal_handler(int num);
+void  update_signal(void);
 
 #endif

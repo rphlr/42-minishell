@@ -58,7 +58,7 @@ CLEAR			= \033c
 CLEARLN			= \r\033[K
 
 # Sources
-SRCS			= ${shell find ${SRCSDIR} -maxdepth 1 -type f -name '*.c'}
+SRCS			= ${shell find ${SRCSDIR} -type f -name '*.c'}
 OBJS			= ${patsubst ${SRCSDIR}%,${OBJSDIR}%,${SRCS:%.c=%.o}}
 CFLAGS			= -Werror -Wall -Wextra #-g3 -fsanitize=address
 CC				= gcc
@@ -77,6 +77,9 @@ S_NAME			= echo "${RED}🧹 Cleaning program... 🧹${ENDCOLOR}"
 CHARG_LINE		= echo "${BG_G} ${ENDCOLOR}\c" && sleep 0.05
 BS_N			= echo "\n"
 
+# Folders
+OBJS_FOLDERS	= ${shell find ${SRCSDIR} -type d | sed "s|${SRCSDIR}|${OBJSDIR}|"}
+
 # ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 # 	@${MKDIR} ${OBJSDIR}
 # 	@${CC} ${CFLAGS} -c $< -o $@ -I $(HDRDIR) -I readline/include
@@ -89,14 +92,15 @@ all: $(NAME)
 
 # Build rule for object files
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
-			@${MKDIR} ${OBJSDIR}
-			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@ -I readline/include
+			@${MKDIR} ${OBJS_FOLDERS}
+#			brew reinstall readline
+			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@ -I ~/.brew/opt/readline/include
 
 # Linking rule
 ${NAME}: ${OBJS}
 			@${CHARG_LINE}
 			@${CHARG_LINE} ${C_LAST};
-			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME} -lreadline -L readline/lib
+			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME} -lreadline -L ~/.brew/opt/readline/lib
 			@${END_COMP}
 			@sleep 0.5
  

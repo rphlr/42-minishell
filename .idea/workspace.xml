@@ -11,33 +11,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5211a871-721b-4de5-874c-d9cb5028d7a0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/file" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/includes/minishell.h" beforeDir="false" afterPath="$PROJECT_DIR$/includes/minishell.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mylib" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/include/readline/chardefs.h" beforeDir="false" afterPath="$PROJECT_DIR$/readline/include/readline/chardefs.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/include/readline/history.h" beforeDir="false" afterPath="$PROJECT_DIR$/readline/include/readline/history.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/include/readline/keymaps.h" beforeDir="false" afterPath="$PROJECT_DIR$/readline/include/readline/keymaps.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/include/readline/readline.h" beforeDir="false" afterPath="$PROJECT_DIR$/readline/include/readline/readline.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/include/readline/rlconf.h" beforeDir="false" afterPath="$PROJECT_DIR$/readline/include/readline/rlconf.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/include/readline/rlstdc.h" beforeDir="false" afterPath="$PROJECT_DIR$/readline/include/readline/rlstdc.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/include/readline/rltypedefs.h" beforeDir="false" afterPath="$PROJECT_DIR$/readline/include/readline/rltypedefs.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/include/readline/tilde.h" beforeDir="false" afterPath="$PROJECT_DIR$/readline/include/readline/tilde.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/lib/libhistory.8.2.dylib" beforeDir="false" afterPath="$PROJECT_DIR$/readline/lib/libhistory.8.2.dylib" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/lib/libhistory.8.dylib" beforeDir="false" afterPath="$PROJECT_DIR$/readline/lib/libhistory.8.dylib" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/lib/libhistory.a" beforeDir="false" afterPath="$PROJECT_DIR$/readline/lib/libhistory.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/lib/libhistory.dylib" beforeDir="false" afterPath="$PROJECT_DIR$/readline/lib/libhistory.dylib" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/lib/libreadline.8.2.dylib" beforeDir="false" afterPath="$PROJECT_DIR$/readline/lib/libreadline.8.2.dylib" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/lib/libreadline.8.dylib" beforeDir="false" afterPath="$PROJECT_DIR$/readline/lib/libreadline.8.dylib" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/lib/libreadline.a" beforeDir="false" afterPath="$PROJECT_DIR$/readline/lib/libreadline.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/lib/libreadline.dylib" beforeDir="false" afterPath="$PROJECT_DIR$/readline/lib/libreadline.dylib" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/lib/pkgconfig/history.pc" beforeDir="false" afterPath="$PROJECT_DIR$/readline/lib/pkgconfig/history.pc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readline/lib/pkgconfig/readline.pc" beforeDir="false" afterPath="$PROJECT_DIR$/readline/lib/pkgconfig/readline.pc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srcs/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/main.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srcs/signaux/child_process.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/signaux/child_process.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srcs/signaux/parent_process.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/signaux/parent_process.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srcs/signaux/signal.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/signaux/signal.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -88,6 +65,7 @@
       <updated>1690302201292</updated>
       <workItem from="1690302203893" duration="1431000" />
       <workItem from="1690794007615" duration="7526000" />
+      <workItem from="1691852628810" duration="3816000" />
     </task>
     <servers />
   </component>

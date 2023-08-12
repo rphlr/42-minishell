@@ -10,18 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 
-void  signal(void)
+void  ft_signal(void)
 {
   struct sigaction  s;
 
   s.sa_handler = SIG_IGN;
   sigemptyset(&s.sa_mask);
   s.sa_flags = 0;
-  sigaction(SIGQUIT, &s, NULL); //ctr-\
+  sigaction(SIGQUIT, &s, NULL); //ctr-bck slash
 
   s.sa_handler = sg_manage;// function crl-c
   sigaction(SIGINT, &s, NULL);
