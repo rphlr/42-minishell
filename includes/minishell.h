@@ -72,9 +72,9 @@ typedef struct s_shell
 int
 
 // *---* signals *---*
-void	signal();
-void    sg_manage(int num);
-void    update_signal_handler(int num);
-void    update_signal(void);
+//void	signal(void);
+//void    sg_manage(int num);
+//void    update_signal_handler(int num);
+//void    update_signal(void);
 
 #endif

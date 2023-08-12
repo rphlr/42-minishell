@@ -84,6 +84,14 @@ t_env	*init_env(char **envp)
   return (env);
 }
 
+void  shell_loop(t_shell *shell)
+{
+  while (TRUE)
+  {
+    signals(&shell->mirror_termios);
+
+  }
+}
 
 bool	check_args(char *line)
 {
@@ -131,13 +139,4 @@ int	main(int ac, char **av, char **envp)
     return (1);
   lsh_loop();
   return (0);
-}
-
-void  shell_loop(t_shell *shell)
-{
-  while (TRUE)
-  {
-      signals(&shell->mirror_termios);
-
-  }
 }
