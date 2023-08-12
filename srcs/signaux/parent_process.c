@@ -6,7 +6,7 @@
 /*   By: mvillarr <mvillarr@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 10:39:31 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/07/31 10:59:34 by mvillarr         ###   ########.fr       */
+/*   Updated: 2023/08/12 16:31:02 by mvillarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 // This function is used to set up signal handling for the parent process.
 // It calls two other functions: ctr_c_signal_parent and sigint_parent.
+
 //void	parent_signal(void)
 //{
 //	ctr_c_signal_parent();
@@ -27,6 +28,7 @@
 // line, and replaces the current line with an empty string using
 // rl_replace_line. These last two functions are part of the readline library,
 // which is used for handling input from the user.
+
 //void	sigint_parent(int signum)
 //{
 //	if (signum == SIGINT)
@@ -45,6 +47,7 @@
 // restarted. The sigemptyset function is used to initialize the signal set to
 // be empty, and sigaction is used to change the action taken by the process on
 // receipt of the specific signal.
+
 //void	ctr_c_signal_parent(void)
 //{
 //	struct sigaction	ctr_c;
@@ -54,3 +57,4 @@
 //	sigemptyset(&ctr_c.sa_mask);
 //        sigaction(SIGINT, &ctr_c, NULL);
 //}
+

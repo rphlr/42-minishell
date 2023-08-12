@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/16 18:30:27 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/12 16:22:36 by mvillarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,13 +130,14 @@ void	lsh_loop(void)
 
 int	main(int ac, char **av, char **envp)
 {
-  t_env	*env;
+	t_env	*env;
 
-  (void)ac;
-  (void)av;
-  env = init_env(envp);
-  if (!env)
-    return (1);
-  lsh_loop();
-  return (0);
+	(void)ac;
+	(void)av;
+	env = init_env(envp);
+	if (!env)
+		return (1);
+	lsh_loop();
+	return (0);
 }
+

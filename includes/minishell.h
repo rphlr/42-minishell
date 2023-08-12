@@ -63,6 +63,7 @@ typedef struct s_global
 	t_cmd	*cmd;
 }	t_global;
 
+<<<<<<< HEAD
 typedef struct s_shell
 {
         struct termios  mirror_termios;
@@ -76,5 +77,15 @@ int
 //void    sg_manage(int num);
 //void    update_signal_handler(int num);
 //void    update_signal(void);
+=======
+// *---* signals *---*
+void	parent_signal(void);
+void	sigint_parent(int signum);
+void	ctr_c_signal_parent(void);
+void    child_signal(struct termios *mirror_termios);
+void    sigint_child(void);
+void    ctr_bl_signal(void);
+
+>>>>>>> a325543f179d2ab4817cb1e367ff785b82942f09
 
 #endif

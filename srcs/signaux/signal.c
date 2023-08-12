@@ -6,7 +6,7 @@
 /*   By: mvillarr <mvillarr@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/12 13:03:26 by mvillarr         ###   ########.fr       */
+/*   Updated: 2023/08/12 16:23:37 by mvillarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,25 +66,3 @@ void  update_signal(void)
   sigaction(SIGINT, &s, NULL); //crt C
 }
 
-
-
-// SIGINT is the interrupt signal and is raised when you press Ctrl+C.
-// Its default behavior is to terminate the process. The SIGINT signal can be
-// dis-positioned, which means one can change the default behavior (by calling
-// sighandler, or setting it SIG_IGN).
-//void	signal_use(void)
-//{
-//	signal(SIGQUIT, pass);
-//	signal(SIGINT, prompt_calling);
-//}
-
-// the function prompt calling ignores the actual prompt that we put before
-// doing ctr+C, it also offers a new empty line to put a new prompt in.
-//void	promt_calling(int key)
-//{
-//	(void)key;
-//	rl_replace_line("", 0);
-//	rl_on_new_line();
-//	ft_printf("\n");
-//	rl_redisplay();
-//}

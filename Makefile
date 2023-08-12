@@ -77,28 +77,28 @@ S_NAME			= echo "${RED}🧹 Cleaning program... 🧹${ENDCOLOR}"
 CHARG_LINE		= echo "${BG_G} ${ENDCOLOR}\c" && sleep 0.05
 BS_N			= echo "\n"
 
-${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
-	@${MKDIR} ${OBJSDIR}
-	@${CC} ${CFLAGS} -c $< -o $@ -I $(HDRDIR) -I readline/include
+# ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
+# 	@${MKDIR} ${OBJSDIR}
+# 	@${CC} ${CFLAGS} -c $< -o $@ -I $(HDRDIR) -I readline/include
 
-$(NAME): $(OBJS)
-	# make -C libft
-	$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L readline/lib
+# $(NAME): $(OBJS)
+# 	# make -C libft
+# 	$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L readline/lib
 
 all: $(NAME)
 
-# # Build rule for object files
-# ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
-# 			@${MKDIR} ${OBJSDIR}
-# 			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@
+# Build rule for object files
+${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
+			@${MKDIR} ${OBJSDIR}
+			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@ -I readline/include
 
-# # Linking rule
-# ${NAME}: ${OBJS}
-# 			@${CHARG_LINE}
-# 			@${CHARG_LINE} ${C_LAST};
-# 			@${CC} ${CFLAGS} ${OBJS} -Lmylib -o ${NAME} -I ~/.brew/opt/readline/include -L ~/.brew/opt/readline/lib -lreadline
-# 			@${END_COMP}
-# 			@sleep 0.5
+# Linking rule
+${NAME}: ${OBJS}
+			@${CHARG_LINE}
+			@${CHARG_LINE} ${C_LAST};
+			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME} -lreadline -L readline/lib
+			@${END_COMP}
+			@sleep 0.5
  
 # Run the program
 run:	clear fast
