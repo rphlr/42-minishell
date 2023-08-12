@@ -12,7 +12,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5211a871-721b-4de5-874c-d9cb5028d7a0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/includes/minishell.h" beforeDir="false" afterPath="$PROJECT_DIR$/includes/minishell.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srcs/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/main.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srcs/signaux/signal.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/signaux/signal.c" afterDir="false" />
@@ -65,7 +64,7 @@
       <updated>1690302201292</updated>
       <workItem from="1690302203893" duration="1431000" />
       <workItem from="1690794007615" duration="7526000" />
-      <workItem from="1691852628810" duration="3816000" />
+      <workItem from="1691852628810" duration="7725000" />
     </task>
     <servers />
   </component>

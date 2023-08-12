@@ -13,6 +13,22 @@
 #include "minishell.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <termios.h>
+
+
+// clean ctr-c dans le terminal
+void  set_termios(void)
+{
+  static struct termios  term;
+
+  tcgetattr(0, &term);
+  term.c_lflag = term.c_lflag & ~ECHOCTL;
+  tcsetattr(0, 0, &term);
+
+  //c_lflag = 1011 0001      1011 0001
+  //ECHOCTL = 0000 0001 ~ -> 1111 1110  &
+  //  0000 0001      1011 0000
+}
 
 void  ft_signal(void)
 {

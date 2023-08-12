@@ -68,5 +68,6 @@ void  ft_signal(void);
 void  sg_manage(int num);
 void  update_signal_handler(int num);
 void  update_signal(void);
+void  set_termios(void);
 
 #endif
