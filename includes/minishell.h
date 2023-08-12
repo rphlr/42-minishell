@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/10 18:03:45 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/12 12:20:39 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,6 @@ typedef enum s_option
 {
 	NO_OPTION,
 	OPTION_N,
-	OPTION_E,
-	OPTION_NE,
 	INVALID_OPTION
 }	t_option;
 
