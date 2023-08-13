@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/12 21:27:38 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/13 17:04:27 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@
 // ❌: Handle environment variables ($ followed by characters)
 // ❌: Handle $? (exit code of the previous program)
 // ❌: Handle ctrl-C ctrl-D ctrl-\ correctly
-// ❌: Implement echo with option ’-n’
-// ❌: Implement cd with only a relative or absolute path
-// ❌: Implement pwd without any options
-// ❌: Implement export without any options
-// ❌: Implement unset without any options
-// ❌: Implement env without any options and any arguments
+// ✅: Implement echo with option ’-n’
+// ✅: Implement cd with only a relative or absolute path
+// ✅: Implement pwd without any options
+// ✅: Implement export without any options
+// ✅: Implement unset without any options
+// ✅: Implement env without any options and any arguments
 // ✅: Implement exit without any options
 // ✅: exit
 // BONUS
@@ -54,7 +54,7 @@ void	run_cmd(t_global *global)
 	if (!ft_strcmp(global->cmd->token[0], "echo"))
 		ft_echo(global);
 	else if (!ft_strcmp(global->cmd->token[0], "cd"))
-		ft_cd(global->cmd);
+		ft_cd(global);
 	else if (!ft_strcmp(global->cmd->token[0], "pwd"))
 		ft_pwd(global->cmd);
 	else if (!ft_strcmp(global->cmd->token[0], "export"))
@@ -79,11 +79,42 @@ int	line_is_spaces(char *line)
 	return (1);
 }
 
+char	*rm_newline(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == '\n')
+		{
+			line[i] = '\0';
+			break ;
+		}
+		i++;
+	}
+	return (line);
+}
+
 int	lsh_loop(t_global *global)
 {
 	char	*line;
 	char	**cmds;
+	int		history_fd;
 
+	history_fd = open(".minishell_history", O_CREAT | O_RDWR, 0644);
+	if (history_fd == -1)
+		ft_printf("minishell: can't open history file\n");
+	else
+	{
+		line = get_next_line(history_fd);
+		while (line)
+		{
+			line = rm_newline(line);
+			add_history(line);
+			line = get_next_line(history_fd);
+		}
+	}
 	while (1)
 	{
 		line = readline(PROMPT);
@@ -92,7 +123,10 @@ int	lsh_loop(t_global *global)
 		if (line_is_spaces(line))
 			continue ;
 		if (line && ft_strcmp(line, ""))
+		{
 			add_history(line);
+			ft_putendl_fd(line, history_fd);
+		}
 		cmds = parsed_line(line);
 		if (!ft_strcmp(line, ""))
 			continue ;

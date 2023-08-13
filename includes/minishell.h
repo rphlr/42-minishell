@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/12 21:25:21 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/13 17:04:11 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ int			ft_tablen(char **tab);
 void		ft_env(t_global *global);
 void		ft_pwd(t_cmd *cmd);
 void		ft_export(t_global *global, t_cmd *cmd);
-void		ft_cd(t_cmd *cmd);
+void		ft_cd(t_global *global);
 void		ft_unset(t_global *global, t_cmd *cmd);
 void		ft_exit(t_global *global);
 int			parse_cmd(t_global *global, t_cmd *cmd);
@@ -190,6 +190,7 @@ t_state		validity_maker(t_token *type, char **tokens);
 char		*format_options(char *token);
 t_token		*remove_double_option(char **tokens, t_token *type);
 char		**parsed_line(char *line);
+char		*get_env_value(char *name, t_global *global);
 
 // remove when finish
 void		print_infos(t_cmd *cmd);

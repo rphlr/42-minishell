@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:42:55 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/12 17:35:54 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/13 17:02:24 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	parse_cmd(t_global *global, t_cmd *cmd)
 			*token_ptr = temp;
 		else if ((*token_ptr)[0] == '$')
 		{
-			temp = getenv(*token_ptr + 1);
+			temp = get_env_value(*token_ptr + 1, global);
 			if (temp)
 				*token_ptr = ft_strdup(temp);
 		}

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:41:30 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 11:11:38 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/13 14:11:30 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,27 +17,17 @@ static void remove_env_item(t_env **head, char *name)
     t_env *current = *head;
     t_env *prev = NULL;
 
-    while (current != NULL && strcmp(current->name, name) != 0)
+    while (current && ft_strcmp(current->name, name) != 0)
     {
         prev = current;
         current = current->next;
     }
-
-    if (current == NULL) // L'élément n'a pas été trouvé
+    if (!current)
         return;
-
-    if (prev == NULL) // L'élément à supprimer est le premier élément
-    {
+    if (!prev)
         *head = current->next;
-    }
     else
-    {
         prev->next = current->next;
-    }
-
-    // free(current->name);
-    // free(current->value);
-    // free(current);
 }
 
 void	ft_unset(t_global *global, t_cmd *cmd)

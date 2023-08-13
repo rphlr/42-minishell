@@ -6,21 +6,33 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 11:05:48 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/13 16:26:25 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void extract_name_value(char *token, char **name, char **value)
+void	extract_name_value(char *token, char **name, char **value)
 {
-	*name = strtok(token, "=");
-	*value = strtok(NULL, "=");
+	*name = ft_strtok(token, "=");
+	*value = ft_strtok(NULL, "=");
+	if (!*name || !*value)
+	{
+		*name = token;
+		*value = "";
+	}
+	else if (ft_strchr(*name, '='))
+	{
+		*name = NULL;
+		*value = NULL;
+	}
 }
 
-static t_env *new_env_item(char *name, char *value)
+static t_env	*new_env_item(char *name, char *value)
 {
-	t_env *new_item = (t_env *)ft_gc_malloc(sizeof(t_env));
+	t_env	*new_item;
+
+	new_item = (t_env *)ft_gc_malloc(sizeof(t_env));
 	if (!new_item)
 		return (NULL);
 	new_item->name = strdup(name);
@@ -32,39 +44,58 @@ static t_env *new_env_item(char *name, char *value)
 
 void	ft_export(t_global *global, t_cmd *cmd)
 {
+	char	*name;
+	char	*value;
+	t_env	*new_item;
+	t_env	*current;
+	int		i;
+
 	if (cmd->nbr_token < 2)
 	{
-		// Handle error: Not enough tokens for export command
-		return;
+		ft_env(global);
+		return ;
 	}
-
-	char *name = NULL;
-	char *value = NULL;
-	extract_name_value(cmd->token[1], &name, &value);
-
-	if (!name || !value)
+	name = NULL;
+	value = NULL;
+	i = 1;
+	while (cmd->token[i])
 	{
-		// Handle error: Invalid export format
-		return;
-	}
-
-	t_env *new_item = new_env_item(name, value);
-	if (!new_item)
-	{
-		// Handle error: Memory allocation failed
-		return;
-	}
-
-	// Add the new item to the end of the env list
-	if (!global->env)
-	{
-		global->env = new_item;
-	}
-	else
-	{
-		t_env *current = global->env;
-		while (current->next)
+		if (cmd->type[i] == OPTIONS)
+		{
+			if (!ft_strcmp(cmd->token[i], "-"))
+				ft_env(global);
+			else
+				ft_printf("minishell: export: options not implemented\n");
+			break ;
+		}
+		extract_name_value(cmd->token[i], &name, &value);
+		if (!name || !value)
+		{
+			ft_printf("minishell: export: bad assignment\n");
+			return ;
+		}
+		current = global->env;
+		while (current)
+		{
+			if (!ft_strcmp(current->name, name))
+			{
+				current->value = ft_strdup(value);
+				return ;
+			}
 			current = current->next;
-		current->next = new_item;
+		}
+		new_item = new_env_item(name, value);
+		if (!new_item)
+			return ;
+		if (!global->env)
+			global->env = new_item;
+		else
+		{
+			current = global->env;
+			while (current->next)
+				current = current->next;
+			current->next = new_item;
+		}
+		i++;
 	}
 }
