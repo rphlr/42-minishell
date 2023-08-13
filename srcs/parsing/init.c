@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 10:49:51 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/13 11:42:34 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,65 +120,52 @@ t_cmd	*init_cmds(char **tokens)
 
 t_env	*init_env(char **envp)
 {
-	t_env	*env;
+	t_env	*head = NULL;
+	t_env	*current = NULL;
 
-	env = ft_gc_malloc(sizeof(t_env));
-	if (!env)
-		return (NULL);
 	while (*envp)
 	{
+		t_env *new_item = ft_gc_malloc(sizeof(t_env));
+		if (!new_item)
+			return (NULL);
+
 		if (!ft_strncmp(*envp, "PATH=", 5))
 		{
-			env->name = ft_strdup("PATH");
-			env->value = ft_strdup(*envp + 5);
-			env->is_env = true;
-			// env->path = ft_split(*envp + 5, ':');
+			new_item->name = ft_strdup("PATH");
+			new_item->value = ft_strdup(*envp + 5);
+			new_item->is_env = true;
+			// new_item->path = ft_split(*envp + 5, ':');
 		}
 		else if (!ft_strncmp(*envp, "HOME=", 5))
 		{
-			env->name = ft_strdup("HOME");
-			env->value = ft_strdup(*envp + 5);
-			env->is_env = true;
+			new_item->name = ft_strdup("HOME");
+			new_item->value = ft_strdup(*envp + 5);
+			new_item->is_env = true;
 		}
-		else if (!ft_strncmp(*envp, "PWD=", 4))
+		// ... [Répétez pour les autres variables d'environnement]
+		else
 		{
-			env->name = ft_strdup("PWD");
-			env->value = ft_strdup(*envp + 4);
-			env->is_env = true;
+			new_item->name = ft_strndup(*envp, ft_strchr(*envp, '=') - *envp);
+			new_item->value = ft_strdup(ft_strchr(*envp, '=') + 1);
+			new_item->is_env = false;
 		}
-		else if (!ft_strncmp(*envp, "USER=", 5))
+
+		new_item->next = NULL;
+
+		if (!head)
 		{
-			env->name = ft_strdup("USER");
-			env->value = ft_strdup(*envp + 5);
-			env->is_env = true;
-		}
-		else if (!ft_strncmp(*envp, "SHELL=", 6))
-		{
-			env->name = ft_strdup("SHELL");
-			env->value = ft_strdup(*envp + 6);
-			env->is_env = true;
-		}
-		else if (!ft_strncmp(*envp, "SHLVL=", 6))
-		{
-			env->name = ft_strdup("SHLVL");
-			env->value = ft_strdup(*envp + 6);
-			env->is_env = true;
-		}
-		else if (!ft_strncmp(*envp, "OLDPWD=", 7))
-		{
-			env->name = ft_strdup("OLDPWD");
-			env->value = ft_strdup(*envp + 7);
-			env->is_env = true;
+			head = new_item;
+			current = head;
 		}
 		else
 		{
-			env->name = ft_strndup(*envp, ft_strchr(*envp, '=') - *envp);
-			env->value = ft_strdup(ft_strchr(*envp, '=') + 1);
-			env->is_env = false;
+			current->next = new_item;
+			current = new_item;
 		}
+
 		envp++;
 	}
-	return (env);
+	return (head);
 }
 
 t_global	*init_global(char **envp)
