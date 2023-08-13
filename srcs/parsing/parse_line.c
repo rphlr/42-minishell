@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 14:32:35 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/12 16:38:10 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/12 20:59:38 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,8 @@
 int	count_substrings(char *line)
 {
 	int		count;
-	char	*temp_line;
 
 	count = 0;
-	temp_line = line;
 	while (*line)
 	{
 		if (*line == '"' || *line == '\'')

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/12 13:22:39 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/12 21:27:38 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ void	run_cmd(t_global *global)
 	else if (!ft_strcmp(global->cmd->token[0], "pwd"))
 		ft_pwd(global->cmd);
 	else if (!ft_strcmp(global->cmd->token[0], "export"))
-		ft_export(global->cmd);
+		ft_export(global, global->cmd);
 	else if (!ft_strcmp(global->cmd->token[0], "unset"))
-		ft_unset(global->cmd);
+		ft_unset(global, global->cmd);
 	else if (!ft_strcmp(global->cmd->token[0], "env"))
 		ft_env(global);
 	else if (!ft_strcmp(global->cmd->token[0], "exit"))
@@ -71,9 +71,6 @@ void	run_cmd(t_global *global)
 
 int	line_is_spaces(char *line)
 {
-	int	i;
-
-	i = 0;
 	while (*line)
 	{
 		if (*line++ != ' ')
