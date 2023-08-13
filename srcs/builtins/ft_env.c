@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:42:00 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 10:57:00 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/13 11:44:49 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,8 @@ void	ft_env(t_global *global)
 	tmp = global->env;
 	while (tmp)
 	{
-		printf("Name: %s\n", tmp->name);
-		printf("Value: %s\n", tmp->value);
-		printf("Is_env: %s\n", tmp->is_env ? "true" : "false");
-		printf("------------------\n");
+		printf("%s=%s\n", tmp->name, tmp->value);
+		// printf("Value: %s\n", tmp->value);
 		tmp = tmp->next;
 	}
 	// if (global->env->user)
