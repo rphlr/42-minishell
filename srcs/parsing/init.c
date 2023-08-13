@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 11:42:34 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/13 17:11:59 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,14 @@ static char	**config_cmds(char **tokens, t_token *type)
 
 t_token	*close_quote(char **tokens, t_token *type)
 {
-	int i = 0;
-	int j;
-	bool in_single_quote = false;
-	bool in_double_quote = false;
+	int		i;
+	int		j;
+	bool	in_single_quote;
+	bool	in_double_quote;
 
+	i = 0;
+	in_single_quote = false;
+	in_double_quote = false;
 	while (tokens[i])
 	{
 		if (type[i] == NOT_CLOSED_QUOTE)
@@ -88,7 +91,7 @@ t_token	*close_quote(char **tokens, t_token *type)
 		}
 		i++;
 	}
-	return type;
+	return (type);
 }
 
 t_cmd	*init_cmds(char **tokens)
@@ -120,15 +123,17 @@ t_cmd	*init_cmds(char **tokens)
 
 t_env	*init_env(char **envp)
 {
-	t_env	*head = NULL;
-	t_env	*current = NULL;
+	t_env	*head;
+	t_env	*current;
+	t_env	*new_item;
 
+	head = NULL;
+	current = NULL;
 	while (*envp)
 	{
-		t_env *new_item = ft_gc_malloc(sizeof(t_env));
+		new_item = ft_gc_malloc(sizeof(t_env));
 		if (!new_item)
 			return (NULL);
-
 		if (!ft_strncmp(*envp, "PATH=", 5))
 		{
 			new_item->name = ft_strdup("PATH");
@@ -149,9 +154,7 @@ t_env	*init_env(char **envp)
 			new_item->value = ft_strdup(ft_strchr(*envp, '=') + 1);
 			new_item->is_env = false;
 		}
-
 		new_item->next = NULL;
-
 		if (!head)
 		{
 			head = new_item;
@@ -162,7 +165,6 @@ t_env	*init_env(char **envp)
 			current->next = new_item;
 			current = new_item;
 		}
-
 		envp++;
 	}
 	return (head);

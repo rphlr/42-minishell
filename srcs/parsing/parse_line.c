@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 14:32:35 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/12 20:59:38 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/13 17:12:09 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	count_substrings(char *line)
 {
-	int		count;
+	int	count;
 
 	count = 0;
 	while (*line)
@@ -89,8 +89,8 @@ char	**parsed_line(char *line)
 	index = 0;
 	while (*line)
 	{
-		if ((*line == '"' || *line == '\'') && (line == temp_line
-				|| *(line - 1) != '\\'))
+		if ((*line == '"' || *line == '\'') && (line == temp_line || *(line
+				- 1) != '\\'))
 			result[index++] = extract_quoted_string(&line);
 		else if (*line != ' ')
 			result[index++] = extract_unquoted_string(&line);

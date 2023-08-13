@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/09 16:29:12 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/13 17:11:57 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ static t_state	*get_error_table(void)
 }
 
 static t_state	check_token_errors(t_token *type, char **tokens,
-	t_state *error_table)
+		t_state *error_table)
 {
 	while (*type != END)
 	{
-		if (*type >= PIPE && *type <= SEMICOLON
-			&& (*(type + 1) == *type || *(type + 1) == END))
+		if (*type >= PIPE && *type <= SEMICOLON && (*(type + 1) == *type
+				|| *(type + 1) == END))
 			return (error_table[*type]);
 		if (*type == OPTIONS)
 		{
@@ -67,10 +67,9 @@ t_state	validity_maker(t_token *type, char **tokens)
 		return (token_check_result);
 	while (*type != END)
 	{
-		nbr_quote += (*type == NOT_CLOSED_QUOTE) + 2 * (*type
-				== CLOSED_QUOTE);
-		nbr_dquote += (*type == NOT_CLOSED_DQUOTE) + 2 * (*type
-				== CLOSED_DQUOTE);
+		nbr_quote += (*type == NOT_CLOSED_QUOTE) + 2 * (*type == CLOSED_QUOTE);
+		nbr_dquote += (*type == NOT_CLOSED_DQUOTE) + 2
+			* (*type == CLOSED_DQUOTE);
 		type++;
 		tokens++;
 	}

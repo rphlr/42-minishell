@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 09:02:47 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/10 17:05:50 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/13 17:12:11 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ t_token	*remove_double_option(char **tokens, t_token *type)
 		{
 			while (type[i + 1] == OPTIONS)
 			{
-				tokens[i] = ft_strjoin(tokens[i],
-						ft_strtrim(tokens[i + 1], "-"));
+				tokens[i] = ft_strjoin(tokens[i], ft_strtrim(tokens[i + 1],
+						"-"));
 				j = i + 1;
 				while (type[j] != END)
 				{
@@ -120,7 +120,7 @@ t_token	*init_tokens_type(char **tokens)
 		}
 		else if (!ft_strcmp(tokens[i], ";"))
 			type[i] = SEMICOLON;
-		else if (!ft_strcmp(tokens[i], ":" ))
+		else if (!ft_strcmp(tokens[i], ":"))
 			type[i] = COLON;
 		else if (tokens[i][j] == '&')
 			type[i] = AND;
