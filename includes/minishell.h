@@ -22,9 +22,11 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/signal.h>
 # include <fcntl.h>
 # include <errno.h>
 # include <string.h>
+# include <termios.h>
 # include "../mylib/includes/mylib.h"
 
 // Colors definition
@@ -194,5 +196,12 @@ char		*get_env_value(char *name, t_global *global);
 
 // remove when finish
 void		print_infos(t_cmd *cmd);
+
+// *---* signals *---*
+void  ft_signal(void);
+void  sg_manage(int num);
+void  update_signal_handler(int num);
+void  update_signal(void);
+void  set_termios(void);
 
 #endif

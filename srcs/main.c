@@ -155,5 +155,7 @@ int	main(int ac, char **av, char **envp)
 	if (!global)
 		return (1);
 	err_code = lsh_loop(global);
-	return (err_code);
+  set_termios();
+  ft_signal();
+	exit (err_code);
 }
