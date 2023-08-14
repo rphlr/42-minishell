@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/16 18:27:11 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/12 16:46:47 by mvillarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,11 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/signal.h>
 # include <fcntl.h>
 # include <errno.h>
 # include <string.h>
+# include <termios.h>
 # include "../mylib/includes/mylib.h"
 
 # define STDIN 0
@@ -60,5 +62,12 @@ typedef struct s_global
 	t_env	*env;
 	t_cmd	*cmd;
 }	t_global;
+
+// *---* signals *---*
+void  ft_signal(void);
+void  sg_manage(int num);
+void  update_signal_handler(int num);
+void  update_signal(void);
+void  set_termios(void);
 
 #endif

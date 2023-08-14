@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/07/16 18:30:27 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/12 16:50:51 by mvillarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,50 +41,48 @@
 // BONUS: Implement && and ||
 // BONUS: Implement Wilcard * (globbing)
 
-t_env	*init_env(char **envp)
-{
-	t_env	*env;
-	int		i;
-
-	i = -1;
-	env = ft_gc_malloc(sizeof(t_env));
-	if (!env)
-		return (NULL);
-	while (envp[++i])
-	{
-		if (!ft_strncmp(envp[i], "PATH=", 5))
-			env->path = ft_split(envp[i] + 5, ':');
-		else if (!ft_strncmp(envp[i], "HOME=", 5))
-			env->home = ft_strdup(envp[i] + 5);
-		else if (!ft_strncmp(envp[i], "PWD=", 4))
-			env->pwd = ft_strdup(envp[i] + 4);
-		else if (!ft_strncmp(envp[i], "USER=", 5))
-			env->user = ft_strdup(envp[i] + 5);
-		else if (!ft_strncmp(envp[i], "SHELL=", 6))
-			env->shell = ft_strdup(envp[i] + 6);
-		else if (!ft_strncmp(envp[i], "OLDPWD=", 7))
-			env->oldpwd = ft_strdup(envp[i] + 7);
-	}
-	return (env);
-}
-
 t_cmd	*init_cmds(char **cmds)
 {
-	t_cmd	*cmd;
+  t_cmd	*cmd;
 
-	cmd = ft_gc_malloc(sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	cmd->args = cmds;
-	cmd->cmd = NULL;
-	cmd->redir_in = NULL;
-	cmd->redir_out = NULL;
-	cmd->redir_append = NULL;
-	cmd->pipe = NULL;
-	cmd->next = NULL;
-	return (cmd);
+  cmd = ft_gc_malloc(sizeof(t_cmd));
+  if (!cmd)
+    return (NULL);
+  cmd->args = cmds;
+  cmd->cmd = NULL;
+  cmd->redir_in = NULL;
+  cmd->redir_out = NULL;
+  cmd->redir_append = NULL;
+  cmd->pipe = NULL;
+  cmd->next = NULL;
+  return (cmd);
 }
 
+t_env	*init_env(char **envp)
+{
+  t_env	*env;
+  int i;
+
+  i = -1;
+  env = ft_gc_malloc(sizeof(t_env));
+  if (!env)
+    return (NULL);  while (envp[++i])
+  {
+    if (!ft_strncmp(envp[i], "PATH=", 5))
+      env->path = ft_split(envp[i] + 5, ':');
+    else if (!ft_strncmp(envp[i], "HOME=", 5))
+      env->home = ft_strdup(envp[i] + 5);
+    else if (!ft_strncmp(envp[i], "PWD=", 4))
+      env->pwd = ft_strdup(envp[i] + 4);
+    else if (!ft_strncmp(envp[i], "USER=", 5))
+      env->user = ft_strdup(envp[i] + 5);
+    else if (!ft_strncmp(envp[i], "SHELL=", 6))
+      env->shell = ft_strdup(envp[i] + 6);
+    else if (!ft_strncmp(envp[i], "OLDPWD=", 7))
+      env->oldpwd = ft_strdup(envp[i] + 7);
+  }
+  return (env);
+}
 
 bool	check_args(char *line)
 {
@@ -95,10 +93,6 @@ bool	check_args(char *line)
 		return false;
 	}
 	return true;
-	// else if ()
-	// {
-
-	// }
 }
 
 bool	check_exit_args(char *arg)
@@ -169,8 +163,17 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	env = init_env(envp);
+        set_termios();
+        ft_signal();
 	if (!env)
 		return (1);
+<<<<<<< HEAD
 	int err_code = lsh_loop();
 	exit (err_code);
 }
+=======
+	lsh_loop();
+	return (0);
+}
+
+>>>>>>> origin/maria
