@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/08/13 14:42:54 by rrouille         ###   ########.fr        #
+#    Updated: 2023/08/14 15:50:57 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,12 +70,21 @@ MKDIR			= mkdir -p
 OS				:= ${shell uname}
 
 # Progress bar messages
-START			= echo "${YELLOW}\n🚀 Start of program compilation 🚀${ENDCOLOR}"
-END_COMP		= echo "${GREEN}\n\n✅ Compilation completed successfully! ✅${ENDCOLOR}"
-S_OBJS			= echo "${RED}🧹 Cleaning objects... 🧹${ENDCOLOR}"
-S_NAME			= echo "${RED}🧹 Cleaning program... 🧹${ENDCOLOR}"
-CHARG_LINE		= echo "${BG_G} ${ENDCOLOR}\c" && sleep 0.05
-BS_N			= echo "\n"
+START			= ${ECHO} "${YELLOW}\n🚀 Start of program compilation 🚀${ENDCOLOR}"
+END_COMP		= ${ECHO} "${GREEN}\n\n✅ Compilation completed successfully! ✅${ENDCOLOR}"
+S_OBJS			= ${ECHO} "${RED}🧹 Cleaning objects... 🧹${ENDCOLOR}"
+S_NAME			= ${ECHO} "${RED}🧹 Cleaning program... 🧹${ENDCOLOR}"
+CHARG_LINE		= ${ECHO} "${BG_G} ${ENDCOLOR}\c" && sleep 0.05
+BS_N			= ${ECHO} "\n"
+
+# If using Linux echo command must be `echo -e`
+ifeq ($(OS),Linux)
+	ECHO = echo -e
+else ifeq ($(OS),Darwin) # Darwin est le nom de retour de `uname` pour macOS
+	ECHO = echo
+else
+	$(error OS not supported)
+endif
 
 # Folders
 OBJS_FOLDERS	= ${shell find ${SRCSDIR} -type d | sed "s|${SRCSDIR}|${OBJSDIR}|"}
@@ -105,10 +114,10 @@ ${NAME}: ${OBJS}
  
 # Run the program
 run:	clear fast
-			@echo "${GREEN}🔧 Operations completed: 🔧${ENDCOLOR}"
+			@${ECHO} "${GREEN}🔧 Operations completed: 🔧${ENDCOLOR}"
 			@./${NAME} ${ARGS}
 r:		clear fast
-			@echo "${GREEN}🔧 Operations completed: 🔧${ENDCOLOR}"
+			@${ECHO} "${GREEN}🔧 Operations completed: 🔧${ENDCOLOR}"
 			@./${NAME} ${ARGS}
 
 ###############################################################################
@@ -117,20 +126,20 @@ r:		clear fast
 
 # Clean object files and executable
 clean:
-			@echo "${CLEAR}\c"
+			@${ECHO} "${CLEAR}\c"
 			@${S_OBJS}
 			@${RM} objs/ mylib/ .minishell_history
 			@sleep 0.3
-			@echo "${CLEAR}\c"
-			@echo "${GREEN}✅ Simple clean completed! ✨\n"
+			@${ECHO} "${CLEAR}\c"
+			@${ECHO} "${GREEN}✅ Simple clean completed! ✨\n"
 
 # Clean everything
 fclean: clean
 			@${S_NAME}
 			@${RM} ${NAME}
 			@sleep 0.3
-			@echo "${CLEAR}\c"
-			@echo "${GREEN}✅ Deep clean completed! ✨"
+			@${ECHO} "${CLEAR}\c"
+			@${ECHO} "${GREEN}✅ Deep clean completed! ✨"
 
 ###############################################################################
 #                  ↓↓↓↓↓           UTILITIES           ↓↓↓↓↓                  #
@@ -138,7 +147,7 @@ fclean: clean
 
 # Drawings
 draw_begining:
-			@echo "${CLEAR}${CYAN}\c"
+			@${ECHO} "${CLEAR}${CYAN}\c"
 			@cat ascii_art/prog_name | \
 				while IFS= read -r line; do \
 					printf '%s\n' "$$line"; \
@@ -146,10 +155,10 @@ draw_begining:
 				done; \
 				printf '%s' "$$line"
 			@sleep 0.7
-			@echo "${CLEAR}"
+			@${ECHO} "${CLEAR}"
 
 draw_bonus:
-			@echo "${CLEAR}${BLUE}\c"
+			@${ECHO} "${CLEAR}${BLUE}\c"
 			@cat ascii_art/bonus | \
 				while IFS= read -r line; do \
 					printf '%s\n' "$$line"; \
@@ -157,10 +166,10 @@ draw_bonus:
 				done; \
 				printf '%s' "$$line"
 			@sleep 0.3
-			@echo "${ENDCOLOR}"
+			@${ECHO} "${ENDCOLOR}"
 
 draw_ready:
-			@echo "${CLEAR}${GREEN}${BOLD}\c"
+			@${ECHO} "${CLEAR}${GREEN}${BOLD}\c"
 			@cat ascii_art/prog_ready | \
 				while IFS= read -r line; do \
 					printf '%s\n' "$$line"; \
@@ -168,50 +177,50 @@ draw_ready:
 				done; \
 				printf '%s' "$$line"
 			@sleep 0.3
-			@echo "${ENDCOLOR}"
+			@${ECHO} "${ENDCOLOR}"
 			@make help PRINT_SCREEN=NO
 
 draw_run:
 			@for i in 1 2 3; do \
-				echo "${CLEAR}${BLUE}${BOLD}\c"; \
+				${ECHO} "${CLEAR}${BLUE}${BOLD}\c"; \
 				cat "ascii_art/prog_running_$$i"; \
-				echo "${ENDCOLOR}"; \
+				${ECHO} "${ENDCOLOR}"; \
 				sleep 0.3; \
 			done
 
 draw_help:
-			@echo "${GRAY}${BOLD}\c"
+			@${ECHO} "${GRAY}${BOLD}\c"
 			@cat ascii_art/help_me | \
 				while IFS= read -r line; do \
 					printf '%s\n' "$$line"; \
 				done; \
 				printf '%s' "$$line"
-			@echo "${ENDCOLOR}"
+			@${ECHO} "${ENDCOLOR}"
 
 draw_norm_yes:
-			@echo "${CLEAR}${GREEN}${BOLD}\c"
+			@${ECHO} "${CLEAR}${GREEN}${BOLD}\c"
 			@cat ascii_art/obama
-			@echo "${ENDCOLOR}"
+			@${ECHO} "${ENDCOLOR}"
 
 draw_norm_no:
-			@echo "${CLEAR}${RED}${BOLD}\c"
+			@${ECHO} "${CLEAR}${RED}${BOLD}\c"
 			@cat ascii_art/obama_sad
-			@echo "${ENDCOLOR}"
+			@${ECHO} "${ENDCOLOR}"
 
 # Build mylib dependency
 lib:	clear
 			@if [ "${FAST_MODE}" = "NO" ]; then \
 				if [ -d mylib ]; then \
-					echo "${GREEN}🎉 Program already exists, updating it. 🔄\n${RESET}"; \
+					${ECHO} "${GREEN}🎉 Program already exists, updating it. 🔄\n${RESET}"; \
 					git -C mylib pull; \
-					echo ""; \
+					${ECHO} ""; \
 					make -C mylib; \
-					echo "\c"; \
+					${ECHO} "\c"; \
 					sleep 0.3; \
 				else \
 					git clone https://github.com/rphlr/mylib --quiet; \
 					make -C mylib; \
-					echo "\c"; \
+					${ECHO} "\c"; \
 					sleep 0.3; \
 					${START}; \
 				fi; \
@@ -228,7 +237,7 @@ lib:	clear
 # Build rule for help function
 help:
 			@if [ "${PRINT_SCREEN}" = "YES" ]; then \
-				echo "${CLEAR}\c"; \
+				${ECHO} "${CLEAR}\c"; \
 				$(MAKE) draw_help; \
 				for i in 3 2 1 0; do \
 					printf '\r${BLUE}Help will be shown in: %d${ENDCOLOR}' "$$i"; \
@@ -236,13 +245,13 @@ help:
 					printf '${CLEARLN}'; \
 				done; \
 			fi
-			@echo "${GRAY}🏃 Run ${ITALIC}\`./${NAME}\`${ENDCOLOR}${GRAY} to see the program in action.${ENDCOLOR}${GRAY}"
-			@echo "${BOLD}${UNDERLINE}💡 TIPS: 💡${ENDCOLOR}${GRAY}"
-			@echo "\t- You can also use ${ITALIC}\`make run\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make r\`${ENDCOLOR}${GRAY} to try it out."
-			@echo "\t- Check for memory leaks with ${ITALIC}\`make leaks\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make l\`${ENDCOLOR}${GRAY}."
-			@echo "\t- Check the 42 norm with ${ITALIC}\`make norm\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make n\`${ENDCOLOR}${GRAY}."
-			@echo ""
-			@echo "${YELLOW}🌟 Use ${ITALIC}\`make help\`${ENDCOLOR}${YELLOW} or ${ITALIC}\`make h\`${ENDCOLOR}${YELLOW} to display these helpful tips. 🚀${ENDCOLOR}"
+			@${ECHO} "${GRAY}🏃 Run ${ITALIC}\`./${NAME}\`${ENDCOLOR}${GRAY} to see the program in action.${ENDCOLOR}${GRAY}"
+			@${ECHO} "${BOLD}${UNDERLINE}💡 TIPS: 💡${ENDCOLOR}${GRAY}"
+			@${ECHO} "\t- You can also use ${ITALIC}\`make run\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make r\`${ENDCOLOR}${GRAY} to try it out."
+			@${ECHO} "\t- Check for memory leaks with ${ITALIC}\`make leaks\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make l\`${ENDCOLOR}${GRAY}."
+			@${ECHO} "\t- Check the 42 norm with ${ITALIC}\`make norm\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make n\`${ENDCOLOR}${GRAY}."
+			@${ECHO} ""
+			@${ECHO} "${YELLOW}🌟 Use ${ITALIC}\`make help\`${ENDCOLOR}${YELLOW} or ${ITALIC}\`make h\`${ENDCOLOR}${YELLOW} to display these helpful tips. 🚀${ENDCOLOR}"
 h:		help
 
 # Norminette
@@ -255,37 +264,37 @@ n:		norm
 fast: FAST_MODE := YES
 
 fast: lib ${OBJS}
-			@$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L ~/.brew/opt/readline/lib
+			@$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L readline/lib
 			
 f: fast
 
 # Leaks
 leaks:	clear fast
-			@echo "${CLEAR}\c"
+			@${ECHO} "${CLEAR}\c"
 			@leaks -atExit -- ./${NAME} ${ARGS}
 l:		clear fast
-			@echo "${CLEAR}\c"
+			@${ECHO} "${CLEAR}\c"
 			@leaks -atExit -- ./${NAME} ${ARGS}
 
 # Run the program with lldb
 lldb:	clear fast
-			@echo "${CLEAR}\c"
+			@${ECHO} "${CLEAR}\c"
 			@lldb ./${NAME} ${ARGS}
-			@echo "${CLEAR}"
+			@${ECHO} "${CLEAR}"
 
 # Push the files to Git
 git: fclean
-			@echo "${CLEAR}\c"
+			@${ECHO} "${CLEAR}\c"
 			@git add .
-			@echo "${CYAN}✅ Added files to git! 📁"
+			@${ECHO} "${CYAN}✅ Added files to git! 📁"
 			@if [ -z "${ARGS}" ]; then \
 				git commit -m "💻 Auto-commit"; \
 			else \
 				git commit -m "${ARGS}"; \
 			fi
-			@echo "${BLUE}✅ Changes committed! ✔️"
+			@${ECHO} "${BLUE}✅ Changes committed! ✔️"
 			@git push
-			@echo "${GREEN}✅ All changes are now on GitHub! 🚀${ENDCOLOR}"
+			@${ECHO} "${GREEN}✅ All changes are now on GitHub! 🚀${ENDCOLOR}"
 
 # Dummy target to prevent arguments with dashes from being interpreted as targets
 %:
@@ -293,7 +302,7 @@ git: fclean
 
 # Clear the screen
 clear:
-			@echo "${CLEAR}\c"
+			@${ECHO} "${CLEAR}\c"
 
 # Rebuild the program
 re: fclean all

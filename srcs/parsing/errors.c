@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 17:11:57 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/14 15:49:01 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static t_state	check_token_errors(t_token *type, char **tokens,
 				return (OPTIONS_ERROR);
 			if (check_options_doublon(*tokens))
 				// *tokens = format_options(*tokens);
-				;
+				continue ;
 		}
 		type++;
 		tokens++;
