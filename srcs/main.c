@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 17:04:27 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/14 16:51:39 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,9 @@ int	main(int ac, char **av, char **envp)
 	global = init_global(envp);
 	if (!global)
 		return (1);
+	set_termios();
+	ft_signal();
 	err_code = lsh_loop(global);
 	return (err_code);
 }
+

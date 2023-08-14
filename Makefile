@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/08/14 15:50:57 by rrouille         ###   ########.fr        #
+#    Updated: 2023/08/14 16:52:01 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -89,6 +89,9 @@ endif
 # Folders
 OBJS_FOLDERS	= ${shell find ${SRCSDIR} -type d | sed "s|${SRCSDIR}|${OBJSDIR}|"}
 
+# Folders
+OBJS_FOLDERS	= ${shell find ${SRCSDIR} -type d | sed "s|${SRCSDIR}|${OBJSDIR}|"}
+
 # ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 # 	@${MKDIR} ${OBJSDIR}
 # 	@${CC} ${CFLAGS} -c $< -o $@ -I $(HDRDIR) -I readline/include
@@ -108,7 +111,7 @@ ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 ${NAME}: ${OBJS}
 			@${CHARG_LINE}
 			@${CHARG_LINE} ${C_LAST};
-			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME} -lreadline -L readline/lib
+			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME} -lreadline -L ~/.brew/opt/readline/lib
 			@${END_COMP}
 			@sleep 0.5
  
