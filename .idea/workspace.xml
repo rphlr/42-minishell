@@ -10,7 +10,30 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5211a871-721b-4de5-874c-d9cb5028d7a0" name="Changes" comment="" />
+    <list default="true" id="5211a871-721b-4de5-874c-d9cb5028d7a0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/srcs/builtins/ft_cd.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/builtins/ft_echo.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/builtins/ft_env.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/builtins/ft_exit.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/builtins/ft_export.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/builtins/ft_pwd.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/builtins/ft_unset.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/parsing/checks.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/parsing/clean_line.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/parsing/command_parsing.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/parsing/count.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/parsing/errors.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/parsing/init.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/parsing/options.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/parsing/parse_line.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/parsing/tokenisation.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srcs/print_infos___remove_when_finish.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/en.subject.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/en.subject.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/minishell.h" beforeDir="false" afterPath="$PROJECT_DIR$/includes/minishell.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srcs/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/main.c" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
