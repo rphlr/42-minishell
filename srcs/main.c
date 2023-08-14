@@ -125,6 +125,7 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
+     //   sleep(10);
 	env = init_env(envp);
         set_termios();
         ft_signal();
