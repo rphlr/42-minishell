@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 09:02:47 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/15 17:16:20 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/15 18:04:04 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_token	*remove_double_option(char **tokens, t_token *type)
 			while (type[i + 1] == OPTIONS)
 			{
 				tokens[i] = ft_strjoin(tokens[i], ft_strtrim(tokens[i + 1],
-						"-"));
+							"-"));
 				j = i + 1;
 				while (type[j] != END)
 				{

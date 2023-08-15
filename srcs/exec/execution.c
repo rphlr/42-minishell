@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/15 17:12:59 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/15 18:01:08 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static char	**env_to_char(t_global *global)
 static char	*get_path(char *command, char **paths)
 {
 	char	*path;
+
 	while (*paths)
 	{
 		path = ft_strjoin(*paths, "/");
@@ -50,14 +51,34 @@ static void	execute_pipe(t_global *global, char **paths)
 	ft_printf("execute_pipe\n");
 }
 
+static void	pid_working(char *path, char **paths, t_global *global)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (!pid)
+	{
+		if (execve(path, global->cmd->token, paths) == -1)
+		{
+			ft_printf("minishell: %s: %s\n", *global->cmd->token,
+				strerror(errno));
+			global->exit_code = 126;
+		}
+	}
+	else if (pid == -1)
+	{
+		ft_printf("minishell: %s: %s\n", *global->cmd->token, strerror(errno));
+		global->exit_code = 126;
+	}
+	else
+		waitpid(pid, &global->exit_code, 0);
+}
+
 void	execute(t_global *global)
 {
 	char	*path;
 	char	**paths;
-	int		i;
-	pid_t	pid;
 
-	i = 0;
 	paths = env_to_char(global);
 	if (!paths)
 	{
@@ -76,20 +97,5 @@ void	execute(t_global *global)
 		execute_pipe(global, paths);
 		return ;
 	}
-	pid = fork();
-	if (!pid)
-	{
-		if (execve(path, global->cmd->token, paths) == -1)
-		{
-			ft_printf("minishell: %s: %s\n", *global->cmd->token, strerror(errno));
-			global->exit_code = 126;
-		}
-	}
-	else if (pid == -1)
-	{
-		ft_printf("minishell: %s: %s\n", *global->cmd->token, strerror(errno));
-		global->exit_code = 126;
-	}
-	else
-		waitpid(pid, &global->exit_code, 0);
+	pid_working(path, paths, global);
 }

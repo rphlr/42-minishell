@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:39:22 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/15 17:14:01 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/15 18:16:38 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ t_state	check_token_errors(t_token *type, char **tokens,
 			if (check_options_syntax(*tokens))
 				return (OPTIONS_ERROR);
 			if (check_options_doublon(*tokens))
-				// *tokens = format_options(*tokens);
 				continue ;
 		}
 		type++;
@@ -96,21 +95,24 @@ t_state	check_errors(t_token *type, char **tokens)
 	else if (state == OUTPUT_ERROR)
 	{
 		if (!ft_strcmp(tokens[0], ">"))
-			ft_printf("minishell: syntax error near unexpected token `newline'\n");
+			ft_printf(\
+			"minishell: syntax error near unexpected token `newline'\n");
 		else
 			ft_printf("minishell: syntax error near unexpected token `>'\n");
 	}
 	else if (state == APPEND_ERROR)
 	{
 		if (!ft_strcmp(tokens[0], ">>"))
-			ft_printf("minishell: syntax error near unexpected token `newline'\n");
+			ft_printf(\
+			"minishell: syntax error near unexpected token `newline'\n");
 		else
 			ft_printf("minishell: syntax error near unexpected token `>>'\n");
 	}
 	else if (state == HEREDOC_ERROR)
 	{
 		if (!ft_strcmp(tokens[0], "<<"))
-			ft_printf("minishell: syntax error near unexpected token `newline'\n");
+			ft_printf(\
+			"minishell: syntax error near unexpected token `newline'\n");
 		else
 			ft_printf("minishell: syntax error near unexpected token `<<'\n");
 	}
