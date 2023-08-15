@@ -6,13 +6,13 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 16:26:25 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/15 17:12:31 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	extract_name_value(char *token, char **name, char **value)
+static void	extract_name_value(char *token, char **name, char **value)
 {
 	*name = ft_strtok(token, "=");
 	*value = ft_strtok(NULL, "=");
@@ -35,8 +35,8 @@ static t_env	*new_env_item(char *name, char *value)
 	new_item = (t_env *)ft_gc_malloc(sizeof(t_env));
 	if (!new_item)
 		return (NULL);
-	new_item->name = strdup(name);
-	new_item->value = strdup(value);
+	new_item->name = ft_strdup(name);
+	new_item->value = ft_strdup(value);
 	new_item->is_env = true;
 	new_item->next = NULL;
 	return (new_item);

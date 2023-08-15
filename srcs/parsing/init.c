@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 17:11:59 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/15 17:15:24 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,59 +39,6 @@ static char	**config_cmds(char **tokens, t_token *type)
 	if (j == 0)
 		cmd = NULL;
 	return (cmd);
-}
-
-t_token	*close_quote(char **tokens, t_token *type)
-{
-	int		i;
-	int		j;
-	bool	in_single_quote;
-	bool	in_double_quote;
-
-	i = 0;
-	in_single_quote = false;
-	in_double_quote = false;
-	while (tokens[i])
-	{
-		if (type[i] == NOT_CLOSED_QUOTE)
-		{
-			in_single_quote = !in_single_quote;
-			if (!in_single_quote)
-			{
-				j = i - 1;
-				while (type[j] == NOT_CLOSED_QUOTE)
-					j--;
-				type[j] = CLOSED_QUOTE;
-				type[i] = WORD;
-				for (int k = j + 1; k <= i; k++)
-				{
-					strcat(tokens[j], tokens[k]);
-					tokens[k] = NULL;
-					type[k] = WORD;
-				}
-			}
-		}
-		else if (type[i] == NOT_CLOSED_DQUOTE)
-		{
-			in_double_quote = !in_double_quote;
-			if (!in_double_quote)
-			{
-				j = i - 1;
-				while (type[j] == NOT_CLOSED_DQUOTE)
-					j--;
-				type[j] = CLOSED_DQUOTE;
-				type[i] = WORD;
-				for (int k = j + 1; k <= i; k++)
-				{
-					strcat(tokens[j], tokens[k]);
-					tokens[k] = NULL;
-					type[k] = WORD;
-				}
-			}
-		}
-		i++;
-	}
-	return (type);
 }
 
 t_cmd	*init_cmds(char **tokens)
@@ -134,21 +81,7 @@ t_env	*init_env(char **envp)
 		new_item = ft_gc_malloc(sizeof(t_env));
 		if (!new_item)
 			return (NULL);
-		if (!ft_strncmp(*envp, "PATH=", 5))
-		{
-			new_item->name = ft_strdup("PATH");
-			new_item->value = ft_strdup(*envp + 5);
-			new_item->is_env = true;
-			// new_item->path = ft_split(*envp + 5, ':');
-		}
-		else if (!ft_strncmp(*envp, "HOME=", 5))
-		{
-			new_item->name = ft_strdup("HOME");
-			new_item->value = ft_strdup(*envp + 5);
-			new_item->is_env = true;
-		}
-		// ... [Répétez pour les autres variables d'environnement]
-		else
+		if (ft_strchr(*envp, '='))
 		{
 			new_item->name = ft_strndup(*envp, ft_strchr(*envp, '=') - *envp);
 			new_item->value = ft_strdup(ft_strchr(*envp, '=') + 1);

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 17:04:27 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/15 17:16:35 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@
 // ✅: read input
 // ✅: parse input
 // ❌: Search and launch the right executable (based on the PATH variable
-//		 or by using relative or absolute path)
+//			or by using relative or absolute path)
 // ❌: display output
 // ✅: loop
 // ✅: Have a working history
 // ❌: Do not use more than one global variable, think about it and be ready
-//		 to explain why you do it.
+//			to explain why you do it.
 // ❌: Do not interpret unclosed quotes or unspecified special characters
-//		 like \ (eg with $’\n’)
+//			like \ (eg with $’\n’)
 // ❌: Handle ' and " (quotes) correctly
 // ❌: Handle redirections > >> < <<
 // ❌: Handle pipes | correctly
@@ -41,15 +41,8 @@
 // BONUS
 // ✅: Detect Wilcard * (globbing)
 // ✅: Detect && and ||
-// BONUS: Implement && and ||
-// BONUS: Implement Wilcard * (globbing)
 
-void	execute(t_cmd *cmd)
-{
-	(void) cmd;
-}
-
-void	run_cmd(t_global *global)
+static void	run_cmd(t_global *global)
 {
 	if (!ft_strcmp(global->cmd->token[0], "echo"))
 		ft_echo(global);
@@ -66,10 +59,10 @@ void	run_cmd(t_global *global)
 	else if (!ft_strcmp(global->cmd->token[0], "exit"))
 		ft_exit(global);
 	else
-		execute(global->cmd);
+		execute(global);
 }
 
-int	line_is_spaces(char *line)
+static int	line_is_spaces(char *line)
 {
 	while (*line)
 	{
@@ -79,7 +72,7 @@ int	line_is_spaces(char *line)
 	return (1);
 }
 
-char	*rm_newline(char *line)
+static char	*rm_newline(char *line)
 {
 	int	i;
 
@@ -96,7 +89,7 @@ char	*rm_newline(char *line)
 	return (line);
 }
 
-int	lsh_loop(t_global *global)
+static int	lsh_loop(t_global *global)
 {
 	char	*line;
 	char	**cmds;
@@ -155,7 +148,7 @@ int	main(int ac, char **av, char **envp)
 	if (!global)
 		return (1);
 	err_code = lsh_loop(global);
-  set_termios();
-  ft_signal();
-	exit (err_code);
+	set_termios();
+	ft_signal();
+	exit(err_code);
 }

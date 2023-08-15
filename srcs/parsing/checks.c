@@ -6,11 +6,63 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:39:22 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 17:11:44 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/15 17:14:01 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	check_options_doublon(char *token)
+{
+	char	*start;
+	char	*compare;
+
+	start = token;
+	while (*start)
+	{
+		compare = start + 1;
+		while (*compare)
+		{
+			if (*start == *compare)
+				return (1);
+			compare++;
+		}
+		start++;
+	}
+	return (0);
+}
+
+int	check_options_syntax(char *token)
+{
+	while (*++token)
+	{
+		if (!ft_isalpha(*token) && !ft_isdigit(*token))
+			return (1);
+	}
+	return (0);
+}
+
+t_state	check_token_errors(t_token *type, char **tokens,
+		t_state *error_table)
+{
+	while (*type != END)
+	{
+		if (*type >= PIPE && *type <= SEMICOLON && (*(type + 1) == *type
+				|| *(type + 1) == END))
+			return (error_table[*type]);
+		if (*type == OPTIONS)
+		{
+			if (check_options_syntax(*tokens))
+				return (OPTIONS_ERROR);
+			if (check_options_doublon(*tokens))
+				// *tokens = format_options(*tokens);
+				continue ;
+		}
+		type++;
+		tokens++;
+	}
+	return (VALID);
+}
 
 bool	check_token(char *line)
 {
@@ -26,7 +78,7 @@ t_state	check_errors(t_token *type, char **tokens)
 {
 	t_state	state;
 
-	state = validity_maker(type, tokens);
+	state = ft_error(type, tokens);
 	if (state == QUOTE_ERROR)
 		ft_printf("minishell: quote error\n");
 	else if (state == DQUOTE_ERROR)
