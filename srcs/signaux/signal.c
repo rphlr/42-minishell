@@ -19,6 +19,9 @@
 //ECHOCTL = 0000 0001 ~ -> 1111 1110  &
 //          0000 0001      1011 0000
 // clean ctr-c dans le terminal
+/* struct sigaction s is a structure that specifies the action to be associated
+ with specific signals. It's used to define a signal handler with the
+ sigaction system call. */
 void	set_termios(void)
 {
 	static struct termios	term;
@@ -60,9 +63,9 @@ void	sigint_manage(int num)
 	}
 }
 
-/*
-
- */
+/* It handles both SIGINT and SIGQUIT. For SIGINT, it behaves similarly to
+ sigint_manage, but for SIGQUIT, it writes "quitting minishell\n"
+ to the terminal.*/
 void	update_signal_handler(int num)
 {
 	(void)num;
@@ -78,6 +81,9 @@ void	update_signal_handler(int num)
 	}
 }
 
+/* This function is similar to ft_signal, but it sets up the signal handling
+ using update_signal_handler instead of sg_manage. It's also handling both
+ SIGQUIT and SIGINT. */
 void	update_signal(void)
 {
 	struct sigaction	s;

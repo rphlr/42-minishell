@@ -47,6 +47,8 @@
 void	execute(t_cmd *cmd)
 {
 	(void) cmd;
+
+
 }
 
 void	run_cmd(t_global *global)
@@ -156,8 +158,6 @@ int	main(int ac, char **av, char **envp)
         global = init_global(envp);
 	if (!global)
 		return (1);
-	set_termios();
-	ft_signal();
 	err_code = lsh_loop(global);
 	return (err_code);
 }
