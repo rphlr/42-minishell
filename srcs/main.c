@@ -29,7 +29,7 @@
 // ❌: Handle pipes | correctly
 // ❌: Handle environment variables ($ followed by characters)
 // ❌: Handle $? (exit code of the previous program)
-// ❌: Handle ctrl-C ctrl-D ctrl-\ correctly
+// ✅: Handle ctrl-C ctrl-D ctrl-\ correctly
 // ✅: Implement echo with option ’-n’
 // ✅: Implement cd with only a relative or absolute path
 // ✅: Implement pwd without any options

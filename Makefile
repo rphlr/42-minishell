@@ -105,7 +105,7 @@ all: $(NAME)
 # Build rule for object files
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 			@${MKDIR} ${OBJS_FOLDERS}
-			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@ -I readline/include
+			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@ -I ~/.brew/opt/readline/include
 
 # Linking rule
 ${NAME}: ${OBJS}
@@ -261,13 +261,13 @@ h:		help
 norm:
 			@norminette ${SRCSDIR} >/dev/null 2>&1 && norminette ${HDRDIR} >/dev/null 2>&1 && $(MAKE) draw_norm_yes || $(MAKE) draw_norm_no && norminette ${SRCSDIR} && norminette ${HDRDIR}
 
-n:		norm
+n:		norm~
 
 # fast
 fast: FAST_MODE := YES
 
 fast: lib ${OBJS}
-			@$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L readline/lib
+			@$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L ~/.brew/opt/readline/lib
 			
 f: fast
 
