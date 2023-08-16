@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 13:34:42 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 14:43:40 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,6 @@ typedef struct s_line
 typedef struct s_global
 {
 	int					exit_code;
-	int					pid;
 	t_env				*env;
 	t_line				*line;
 }						t_global;

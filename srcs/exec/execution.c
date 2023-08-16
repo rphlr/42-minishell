@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 13:56:31 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 14:35:44 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,10 @@ static void	pid_working(char *path, char **paths, t_global *global)
 		global->exit_code = 126;
 	}
 	else
+	{
 		waitpid(pid, &global->exit_code, 0);
+		global->exit_code = WEXITSTATUS(global->exit_code);
+	}
 }
 
 static void	execute(t_global *global)
@@ -136,5 +139,9 @@ void	run_cmd(t_global *global)
 	else if (!ft_strcmp(global->line->token[0], "exit"))
 		ft_exit(global);
 	else
+	{
 		execute(global);
+		return ;
+	}
+	global->exit_code = 0;
 }

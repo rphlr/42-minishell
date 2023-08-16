@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 14:00:50 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 14:43:29 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,6 @@ t_global	*init_global(char **envp)
 	if (!global)
 		return (NULL);
 	global->exit_code = 0;
-	global->pid = getpid();
 	global->env = init_env(envp);
 	if (!global->env)
 		return (NULL);

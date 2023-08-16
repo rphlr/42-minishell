@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 07:34:38 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 10:29:12 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 14:44:22 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,6 @@ static void	echo_print(char *str, t_global *global)
 			str++;
 			if (*str == '?')
 				ft_printf("%d", global->exit_code);
-			else if (*str == '$')
-				ft_printf("%d", global->pid);
 			else if ((*str >= 'a' && *str <= 'z') || (*str >= 'A'
 					&& *str <= 'Z') || (*str >= '0' && *str <= '9')
 				|| *str == '_')
