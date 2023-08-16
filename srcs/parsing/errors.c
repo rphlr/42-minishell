@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/14 15:49:01 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/15 17:06:20 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,29 +30,7 @@ static t_state	*get_error_table(void)
 	return (error_table);
 }
 
-static t_state	check_token_errors(t_token *type, char **tokens,
-		t_state *error_table)
-{
-	while (*type != END)
-	{
-		if (*type >= PIPE && *type <= SEMICOLON && (*(type + 1) == *type
-				|| *(type + 1) == END))
-			return (error_table[*type]);
-		if (*type == OPTIONS)
-		{
-			if (check_options_syntax(*tokens))
-				return (OPTIONS_ERROR);
-			if (check_options_doublon(*tokens))
-				// *tokens = format_options(*tokens);
-				continue ;
-		}
-		type++;
-		tokens++;
-	}
-	return (VALID);
-}
-
-t_state	validity_maker(t_token *type, char **tokens)
+t_state	ft_error(t_token *type, char **tokens)
 {
 	int		nbr_quote;
 	int		nbr_dquote;

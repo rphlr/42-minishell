@@ -6,119 +6,113 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 17:11:59 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 14:43:29 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	**config_cmds(char **tokens, t_token *type)
+static t_cmds	*init_cmds(char **tokens, t_token *type)
 {
+	t_cmds	*head;
+	t_cmds	*current;
+	t_cmds	*new_cmd;
+	char	*full_cmd;
+	char	*temp;
 	int		i;
-	int		j;
-	char	**cmd;
 
-	i = -1;
-	j = 0;
-	cmd = ft_gc_malloc(sizeof(char *) * (ft_tablen(tokens) + 1));
-	if (!cmd)
-		return (NULL);
-	while (type[++i] != END || type[i] == PIPE)
-	{
-		if (type[i] != END && type[i] != PIPE)
-		{
-			if (!i || type[i - 1] == PIPE)
-				cmd[j++] = ft_strdup(tokens[i]);
-			else
-			{
-				cmd[j - 1] = ft_strjoin(cmd[j - 1], " ");
-				cmd[j - 1] = ft_strjoin(cmd[j - 1], tokens[i]);
-			}
-		}
-	}
-	if (j == 0)
-		cmd = NULL;
-	return (cmd);
-}
-
-t_token	*close_quote(char **tokens, t_token *type)
-{
-	int		i;
-	int		j;
-	bool	in_single_quote;
-	bool	in_double_quote;
-
+	head = NULL;
+	current = NULL;
 	i = 0;
-	in_single_quote = false;
-	in_double_quote = false;
-	while (tokens[i])
+	while (tokens[i] != NULL)
 	{
-		if (type[i] == NOT_CLOSED_QUOTE)
+		full_cmd = ft_strdup(tokens[i]);
+		while (tokens[i + 1] != NULL && type[i + 1] != PIPE)
 		{
-			in_single_quote = !in_single_quote;
-			if (!in_single_quote)
-			{
-				j = i - 1;
-				while (type[j] == NOT_CLOSED_QUOTE)
-					j--;
-				type[j] = CLOSED_QUOTE;
-				type[i] = WORD;
-				for (int k = j + 1; k <= i; k++)
-				{
-					strcat(tokens[j], tokens[k]);
-					tokens[k] = NULL;
-					type[k] = WORD;
-				}
-			}
+			i++;
+			temp = full_cmd;
+			full_cmd = ft_strjoin(temp, tokens[i]);
+			if (tokens[i + 1] != NULL && type[i + 1] != PIPE)
+				full_cmd = ft_strjoin(full_cmd, " ");
 		}
-		else if (type[i] == NOT_CLOSED_DQUOTE)
+		new_cmd = (t_cmds *)ft_gc_malloc(sizeof(t_cmds));
+		if (!new_cmd)
+			return (NULL);
+		new_cmd->cmd = full_cmd;
+		new_cmd->input = NULL;
+		new_cmd->output = NULL;
+		new_cmd->next = NULL;
+		if (head == NULL)
 		{
-			in_double_quote = !in_double_quote;
-			if (!in_double_quote)
-			{
-				j = i - 1;
-				while (type[j] == NOT_CLOSED_DQUOTE)
-					j--;
-				type[j] = CLOSED_DQUOTE;
-				type[i] = WORD;
-				for (int k = j + 1; k <= i; k++)
-				{
-					strcat(tokens[j], tokens[k]);
-					tokens[k] = NULL;
-					type[k] = WORD;
-				}
-			}
+			head = new_cmd;
+			current = head;
+		}
+		else
+		{
+			current->next = new_cmd;
+			current = new_cmd;
 		}
 		i++;
+		while (tokens[i] != NULL && type[i] != PIPE)
+		{
+			if (type[i] == INPUT)
+			{
+				new_cmd->input = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
+				if (!new_cmd->input)
+					return (NULL);
+				new_cmd->input->type = INPUT_REDIRECTION;
+				new_cmd->input->filename = ft_strdup(tokens[i + 1]);
+				i += 2;
+			}
+			else if (type[i] == OUTPUT)
+			{
+				new_cmd->output = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
+				if (!new_cmd->output)
+					return (NULL);
+				new_cmd->output->type = OUTPUT_REDIRECTION;
+				new_cmd->output->filename = ft_strdup(tokens[i + 1]);
+				i += 2;
+			}
+			else if (type[i] == APPEND)
+			{
+				new_cmd->output = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
+				if (!new_cmd->output)
+					return (NULL);
+				new_cmd->output->type = APPEND_REDIRECTION;
+				new_cmd->output->filename = ft_strdup(tokens[i + 1]);
+				i += 2;
+			}
+			else
+				i++;
+		}
+		if (tokens[i] != NULL && type[i] == PIPE)
+			i++;
 	}
-	return (type);
+	return (head);
 }
 
-t_cmd	*init_cmds(char **tokens)
+t_line	*init_line(char **tokens)
 {
-	t_cmd	*cmd;
+	t_line	*line;
 	t_state	error_state;
 
-	cmd = ft_gc_malloc(sizeof(t_cmd));
-	if (!cmd)
+	line = ft_gc_malloc(sizeof(t_line));
+	if (!line)
 		return (NULL);
 	error_state = VALID;
-	cmd->token = tokens;
-	cmd->type = init_tokens_type(tokens);
-	error_state = check_errors(cmd->type, tokens);
+	line->token = tokens;
+	line->type = init_tokens_type(tokens);
+	error_state = check_errors(line->type, tokens);
 	if (error_state)
 		return (NULL);
-	cmd->cmd = config_cmds(tokens, cmd->type);
-	cmd->input = NULL;
-	cmd->output = NULL;
-	cmd->pipe = NULL;
-	cmd->heredoc = NULL;
-	cmd->nbr_cmd = count_cmd(cmd->type);
-	cmd->nbr_token = ft_tablen(tokens);
-	cmd->nbr_pipe = count_pipe(cmd->type);
-	cmd->nbr_redirection = count_redirection(cmd->type);
-	cmd->next = NULL;
-	return (cmd);
+	line->cmds = init_cmds(tokens, line->type);
+	line->pipe = NULL;
+	line->heredoc = NULL;
+	line->nbr_cmd = count_cmd(line->type);
+	line->nbr_token = ft_tablen(tokens);
+	line->nbr_pipe = count_pipe(line->type);
+	line->nbr_redirection = count_redirection(line->type);
+	return (line);
 }
 
 t_env	*init_env(char **envp)
@@ -134,25 +128,10 @@ t_env	*init_env(char **envp)
 		new_item = ft_gc_malloc(sizeof(t_env));
 		if (!new_item)
 			return (NULL);
-		if (!ft_strncmp(*envp, "PATH=", 5))
-		{
-			new_item->name = ft_strdup("PATH");
-			new_item->value = ft_strdup(*envp + 5);
-			new_item->is_env = true;
-			// new_item->path = ft_split(*envp + 5, ':');
-		}
-		else if (!ft_strncmp(*envp, "HOME=", 5))
-		{
-			new_item->name = ft_strdup("HOME");
-			new_item->value = ft_strdup(*envp + 5);
-			new_item->is_env = true;
-		}
-		// ... [Répétez pour les autres variables d'environnement]
-		else
+		if (ft_strchr(*envp, '='))
 		{
 			new_item->name = ft_strndup(*envp, ft_strchr(*envp, '=') - *envp);
 			new_item->value = ft_strdup(ft_strchr(*envp, '=') + 1);
-			new_item->is_env = false;
 		}
 		new_item->next = NULL;
 		if (!head)
@@ -178,10 +157,9 @@ t_global	*init_global(char **envp)
 	if (!global)
 		return (NULL);
 	global->exit_code = 0;
-	global->pid = getpid();
 	global->env = init_env(envp);
 	if (!global->env)
 		return (NULL);
-	global->cmd = NULL;
+	global->line = NULL;
 	return (global);
 }

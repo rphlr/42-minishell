@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/14 16:51:39 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 15:01:59 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@
 // ✅: read input
 // ✅: parse input
 // ❌: Search and launch the right executable (based on the PATH variable
-//		 or by using relative or absolute path)
+//			or by using relative or absolute path)
 // ❌: display output
 // ✅: loop
 // ✅: Have a working history
 // ❌: Do not use more than one global variable, think about it and be ready
-//		 to explain why you do it.
+//			to explain why you do it.
 // ❌: Do not interpret unclosed quotes or unspecified special characters
-//		 like \ (eg with $’\n’)
+//			like \ (eg with $’\n’)
 // ❌: Handle ' and " (quotes) correctly
 // ❌: Handle redirections > >> < <<
 // ❌: Handle pipes | correctly
@@ -41,37 +41,8 @@
 // BONUS
 // ✅: Detect Wilcard * (globbing)
 // ✅: Detect && and ||
-// BONUS: Implement && and ||
-// BONUS: Implement Wilcard * (globbing)
 
-void	execute(t_cmd *cmd)
-{
-	(void) cmd;
-
-
-}
-
-void	run_cmd(t_global *global)
-{
-	if (!ft_strcmp(global->cmd->token[0], "echo"))
-		ft_echo(global);
-	else if (!ft_strcmp(global->cmd->token[0], "cd"))
-		ft_cd(global);
-	else if (!ft_strcmp(global->cmd->token[0], "pwd"))
-		ft_pwd(global->cmd);
-	else if (!ft_strcmp(global->cmd->token[0], "export"))
-		ft_export(global, global->cmd);
-	else if (!ft_strcmp(global->cmd->token[0], "unset"))
-		ft_unset(global, global->cmd);
-	else if (!ft_strcmp(global->cmd->token[0], "env"))
-		ft_env(global);
-	else if (!ft_strcmp(global->cmd->token[0], "exit"))
-		ft_exit(global);
-	else
-		execute(global->cmd);
-}
-
-int	line_is_spaces(char *line)
+static int	line_is_spaces(char *line)
 {
 	while (*line)
 	{
@@ -81,7 +52,7 @@ int	line_is_spaces(char *line)
 	return (1);
 }
 
-char	*rm_newline(char *line)
+static char	*rm_newline(char *line)
 {
 	int	i;
 
@@ -98,10 +69,10 @@ char	*rm_newline(char *line)
 	return (line);
 }
 
-int	lsh_loop(t_global *global)
+static int	lsh_loop(t_global *global)
 {
 	char	*line;
-	char	**cmds;
+	char	**tokens;
 	int		history_fd;
 
 	history_fd = open(".minishell_history", O_CREAT | O_RDWR, 0644);
@@ -129,18 +100,18 @@ int	lsh_loop(t_global *global)
 			add_history(line);
 			ft_putendl_fd(line, history_fd);
 		}
-		cmds = parsed_line(line);
+		tokens = parsed_line(line);
 		if (!ft_strcmp(line, ""))
 			continue ;
-		global->cmd = init_cmds(cmds);
-		if (!global->cmd)
+		global->line = init_line(tokens);
+		if (!global->line)
 		{
 			global->exit_code = 258;
 			continue ;
 		}
 		// print_infos(global->cmd); // delete this line when done
 		free(line);
-		parse_cmd(global, global->cmd);
+		parse_cmd(global, global->line);
 		run_cmd(global);
 	}
 	return (global->exit_code);
@@ -159,5 +130,5 @@ int	main(int ac, char **av, char **envp)
 	if (!global)
 		return (1);
 	err_code = lsh_loop(global);
-	return (err_code);
+	exit(err_code);
 }

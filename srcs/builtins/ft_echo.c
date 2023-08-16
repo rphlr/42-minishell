@@ -6,13 +6,13 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 07:34:38 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 17:02:38 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 14:44:22 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_option(char *str)
+static int	check_option(char *str)
 {
 	int	i;
 
@@ -26,21 +26,7 @@ int	check_option(char *str)
 	return (1);
 }
 
-char	*get_env_value(char *name, t_global *global)
-{
-	t_env	*tmp;
-
-	tmp = global->env;
-	while (tmp)
-	{
-		if (ft_strcmp(tmp->name, name) == 0)
-			return (tmp->value);
-		tmp = tmp->next;
-	}
-	return (NULL);
-}
-
-void	echo_print(char *str, t_global *global)
+static void	echo_print(char *str, t_global *global)
 {
 	int		in_single_quote;
 	int		in_double_quote;
@@ -105,8 +91,6 @@ void	echo_print(char *str, t_global *global)
 			str++;
 			if (*str == '?')
 				ft_printf("%d", global->exit_code);
-			else if (*str == '$')
-				ft_printf("%d", global->pid);
 			else if ((*str >= 'a' && *str <= 'z') || (*str >= 'A'
 					&& *str <= 'Z') || (*str >= '0' && *str <= '9')
 				|| *str == '_')
@@ -140,23 +124,23 @@ void	ft_echo(t_global *global)
 	int	newline;
 
 	newline = 1;
-	global->cmd->token++;
-	global->cmd->type++;
-	while (global->cmd->token && *global->cmd->type++ == OPTIONS)
+	global->line->token++;
+	global->line->type++;
+	while (global->line->token && *global->line->type++ == OPTIONS)
 	{
-		if (check_option(*global->cmd->token))
+		if (check_option(*global->line->token))
 		{
 			newline = 0;
-			global->cmd->token++;
+			global->line->token++;
 		}
 		else
 			break ;
 	}
-	while (*global->cmd->token)
+	while (*global->line->token)
 	{
-		echo_print(*global->cmd->token, global);
-		global->cmd->token++;
-		if (*global->cmd->token)
+		echo_print(*global->line->token, global);
+		global->line->token++;
+		if (*global->line->token)
 			ft_printf(" ");
 	}
 	if (newline)

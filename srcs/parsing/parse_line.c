@@ -6,13 +6,13 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 14:32:35 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 17:12:09 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 11:05:35 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	count_substrings(char *line)
+static int	count_substrings(char *line)
 {
 	int	count;
 
@@ -38,7 +38,7 @@ int	count_substrings(char *line)
 	return (count);
 }
 
-char	*extract_quoted_string(char **line_pointer)
+static char	*extract_quoted_string(char **line_pointer)
 {
 	char	*line;
 	char	quote;
@@ -61,7 +61,7 @@ char	*extract_quoted_string(char **line_pointer)
 	return (ft_strndup(start, line - start + 1));
 }
 
-char	*extract_unquoted_string(char **line_pointer)
+static char	*extract_unquoted_string(char **line_pointer)
 {
 	char	*line;
 	char	*start;
@@ -90,7 +90,7 @@ char	**parsed_line(char *line)
 	while (*line)
 	{
 		if ((*line == '"' || *line == '\'') && (line == temp_line || *(line
-				- 1) != '\\'))
+					- 1) != '\\'))
 			result[index++] = extract_quoted_string(&line);
 		else if (*line != ' ')
 			result[index++] = extract_unquoted_string(&line);

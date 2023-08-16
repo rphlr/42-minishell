@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
+#    By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/08/14 16:52:01 by rrouille         ###   ########.fr        #
+#    Updated: 2023/08/16 14:58:37 by mariavillar      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,6 +69,15 @@ MKDIR			= mkdir -p
 # Operating System
 OS				:= ${shell uname}
 
+# If using Linux echo command must be `echo -e`
+ifeq ($(OS),Linux)
+	ECHO = echo -e
+	RLDIR = /usr/local/lib
+else ifeq ($(OS),Darwin)
+	ECHO = echo
+	RLDIR = ~/.brew/opt/readline/lib/
+endif
+
 # Progress bar messages
 START			= ${ECHO} "${YELLOW}\n🚀 Start of program compilation 🚀${ENDCOLOR}"
 END_COMP		= ${ECHO} "${GREEN}\n\n✅ Compilation completed successfully! ✅${ENDCOLOR}"
@@ -77,41 +86,31 @@ S_NAME			= ${ECHO} "${RED}🧹 Cleaning program... 🧹${ENDCOLOR}"
 CHARG_LINE		= ${ECHO} "${BG_G} ${ENDCOLOR}\c" && sleep 0.05
 BS_N			= ${ECHO} "\n"
 
-# If using Linux echo command must be `echo -e`
-ifeq ($(OS),Linux)
-	ECHO = echo -e
-else ifeq ($(OS),Darwin) # Darwin est le nom de retour de `uname` pour macOS
-	ECHO = echo
-else
-	$(error OS not supported)
-endif
-
 # Folders
 OBJS_FOLDERS	= ${shell find ${SRCSDIR} -type d | sed "s|${SRCSDIR}|${OBJSDIR}|"}
 
 # Folders
 OBJS_FOLDERS	= ${shell find ${SRCSDIR} -type d | sed "s|${SRCSDIR}|${OBJSDIR}|"}
-
-# ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
-# 	@${MKDIR} ${OBJSDIR}
-# 	@${CC} ${CFLAGS} -c $< -o $@ -I $(HDRDIR) -I readline/include
-
-# $(NAME): $(OBJS)
-# 	# make -C libft
-# 	$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L readline/lib
 
 all: $(NAME)
+
+os:
+			@${ECHO} "${OS}"
 
 # Build rule for object files
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 			@${MKDIR} ${OBJS_FOLDERS}
+<<<<<<< HEAD
 			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@ -I ~/.brew/opt/readline/include
+=======
+			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@ -Ireadline/include/
+>>>>>>> main
 
 # Linking rule
 ${NAME}: ${OBJS}
 			@${CHARG_LINE}
 			@${CHARG_LINE} ${C_LAST};
-			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -o ${NAME} -lreadline -L ~/.brew/opt/readline/lib
+			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -L ${RLDIR} -lreadline -o ${NAME}
 			@${END_COMP}
 			@sleep 0.5
  
@@ -267,7 +266,7 @@ n:		norm~
 fast: FAST_MODE := YES
 
 fast: lib ${OBJS}
-			@$(CC) -o $(NAME) $(OBJS) mylib/objs/*/*.o -lreadline -L ~/.brew/opt/readline/lib
+			@$(CC) $(OBJS) mylib/objs/*/*.o -L ${RLDIR} -lreadline -o $(NAME)
 			
 f: fast
 
