@@ -161,4 +161,3 @@ int	main(int ac, char **av, char **envp)
 	err_code = lsh_loop(global);
 	return (err_code);
 }
-

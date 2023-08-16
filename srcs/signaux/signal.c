@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvillarr <mvillarr@student.42lausanne.ch>  +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/14 13:23:37 by mvillarr         ###   ########.fr       */
+/*   Updated: 2023/08/16 14:11:52 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

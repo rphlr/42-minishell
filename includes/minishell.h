@@ -184,7 +184,7 @@ t_cmd		*init_cmds(char **tokens);
 int			count_redirection(t_token *type);
 int			count_pipe(t_token *type);
 int			count_cmd(t_token *type);
-t_state		check_errors(t_token *type, char **tokens);
+t_state	check_errors(t_token *type, char **tokens);
 int			check_options_syntax(char *token);
 int			check_options_doublon(char *token);
 bool		check_token(char *line);
@@ -197,7 +197,7 @@ char		*get_env_value(char *name, t_global *global);
 // remove when finish
 void		print_infos(t_cmd *cmd);
 
-// *---* signals *---*
+/*s signals */
 void  ft_signal(void);
 void  sigint_manage(int num);
 void  update_signal_handler(int num);
