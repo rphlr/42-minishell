@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 13:21:07 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 13:34:42 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
+# include <termios.h>
 
 // Colors definition
 # define C_RED "\033[0;31m"

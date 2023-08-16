@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 10:31:45 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 13:56:31 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,12 @@ static char	*get_path(char *command, char **paths)
 {
 	char	*path;
 
+	if (command[0] == '.' || command[0] == '/')
+	{
+		if (access(command, F_OK) == 0)
+			return (command);
+		return (NULL);
+	}
 	while (*paths)
 	{
 		path = ft_strjoin(*paths, "/");
@@ -82,7 +88,7 @@ static void	execute(t_global *global)
 	paths = env_to_char(global);
 	if (!paths)
 	{
-		ft_printf("minishell: %s: command not found\n", *global->line->token);
+		ft_printf("minishell: %s: error while loading the path variable\n", *global->line->token);
 		global->exit_code = 127;
 		return ;
 	}
@@ -91,6 +97,7 @@ static void	execute(t_global *global)
 	{
 		ft_printf("minishell: %s: command not found\n", *global->line->token);
 		global->exit_code = 127;
+		return ;
 	}
 	if (global->line->nbr_cmd > 1)
 	{

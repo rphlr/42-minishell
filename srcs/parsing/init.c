@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 13:21:15 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 14:00:50 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ static t_cmds	*init_cmds(char **tokens, t_token *type)
 		}
 		if (tokens[i] != NULL && type[i] == PIPE)
 			i++;
-		ft_printf("cmd: %s\n", new_cmd->cmd);
 	}
 	return (head);
 }
