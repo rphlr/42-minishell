@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 14:48:22 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 15:05:19 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ static int	lsh_loop(t_global *global)
 			global->exit_code = 258;
 			continue ;
 		}
-		// print_infos(global->cmd); // delete this line when done
 		free(line);
 		parse_cmd(global, global->line);
 		run_cmd(global);
