@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/08/16 15:18:19 by rrouille         ###   ########.fr        #
+#    Updated: 2023/08/16 15:33:25 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -100,11 +100,7 @@ os:
 # Build rule for object files
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 			@${MKDIR} ${OBJS_FOLDERS}
-<<<<<<< HEAD
-			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@ -Ireadline/include/
-=======
-			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@ -I ~/.brew/opt/readline/include
->>>>>>> maria
+			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -L ${RLDIR} -lreadline -o ${NAME}
 
 # Linking rule
 ${NAME}: ${OBJS}
