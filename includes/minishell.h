@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/15 18:22:08 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 13:21:07 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,33 +138,36 @@ typedef struct s_env
 {
 	char				*name;
 	char				*value;
-	bool				is_env;
 	struct s_env		*next;
 }						t_env;
 
-typedef struct s_cmd
+typedef struct s_cmds
+{
+	char				*cmd;
+	t_redirection		*input; 
+	t_redirection		*output;
+	struct s_cmds		*next;
+}						t_cmds;
+
+typedef struct s_line
 {
 	char				**token;
 	t_token				*type;
-	char				**cmd;
-	t_redirection		*input;
-	t_redirection		*output;
+	t_cmds				*cmds;
 	bool				pipe;
 	bool				heredoc;
-	int					heredoc_fd;
 	int					nbr_cmd;
 	int					nbr_token;
 	int					nbr_pipe;
 	int					nbr_redirection;
-	struct s_cmd		*next;
-}						t_cmd;
+}						t_line;
 
 typedef struct s_global
 {
 	int					exit_code;
 	int					pid;
 	t_env				*env;
-	t_cmd				*cmd;
+	t_line				*line;
 }						t_global;
 
 /* FUNCTIONS */
@@ -172,10 +175,10 @@ typedef struct s_global
 void					ft_echo(t_global *global);
 char					*get_env_value(char *name, t_global *global);
 void					ft_env(t_global *global);
-void					ft_pwd(t_cmd *cmd);
-void					ft_export(t_global *global, t_cmd *cmd);
+void					ft_pwd(t_line *line);
+void					ft_export(t_global *global, t_line *line);
 void					ft_cd(t_global *global);
-void					ft_unset(t_global *global, t_cmd *cmd);
+void					ft_unset(t_global *global, t_line *line);
 void					ft_exit(t_global *global);
 
 // *---* parsing *---*
@@ -185,19 +188,19 @@ int						check_options_syntax(char *token);
 bool					check_token(char *line);
 t_state					check_errors(t_token *type, char **tokens);
 char					*epur_str(char *line);
-int						parse_cmd(t_global *global, t_cmd *cmd);
+int						parse_cmd(t_global *global, t_line *line);
 int						count_cmd(t_token *type);
 int						count_pipe(t_token *type);
 int						count_redirection(t_token *type);
 t_state					ft_error(t_token *type, char **tokens);
-t_cmd					*init_cmds(char **tokens);
+t_line					*init_line(char **tokens);
 t_global				*init_global(char **envp);
 char					*format_options(char *token);
 char					**parsed_line(char *line);
 t_token					*init_tokens_type(char **tokens);
 
 // *---* exec *---*
-void					execute(t_global *global);
+void	run_cmd(t_global *global);
 
 // *---* signals *---*
 void					ft_signal(void);
@@ -207,6 +210,6 @@ void					update_signal(void);
 void					set_termios(void);
 
 // remove when finish
-void					print_infos(t_cmd *cmd);
+void					print_infos(t_line *line);
 
 #endif

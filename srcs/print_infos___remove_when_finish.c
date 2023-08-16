@@ -6,86 +6,86 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:44:36 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/07 17:36:01 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 10:30:56 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_infos(t_cmd *cmd)
+void	print_infos(t_line *line)
 {
 	int	i;
 
 	ft_printf(C_RED""C_UNDERLINE""C_BOLD"TOKENS\n"C_RESET);
 	ft_printf(C_RED"Nombre de tokens\t= "C_RESET""C_GREEN"%d\n"C_RESET,\
-		cmd->nbr_token);
+		line->nbr_token);
 	ft_printf(C_RED"tokens reçus et traités\t= "C_RESET);
 	i = -1;
-	while (cmd->token[++i])
+	while (line->token[++i])
 	{
 		ft_printf(C_GREEN);
-		if (cmd->type[i + 1] == END)
-			ft_printf("%s", cmd->token[i]);
+		if (line->type[i + 1] == END)
+			ft_printf("%s", line->token[i]);
 		else
-			ft_printf("%s, ", cmd->token[i]);
+			ft_printf("%s, ", line->token[i]);
 	}
 	ft_printf("\n"C_RESET);
 	ft_printf(C_RED"Type de tokens\t\t= "C_RESET);
 	i = -1;
-	while (cmd->type[++i] != END)
+	while (line->type[++i] != END)
 	{
 		ft_printf(C_GREEN);
-		if (cmd->type[i] == WORD)
+		if (line->type[i] == WORD)
 			ft_printf("WORD");
-		else if (cmd->type[i] == DOLLAR)
+		else if (line->type[i] == DOLLAR)
 			ft_printf("DOLLAR");
-		else if (cmd->type[i] == TILDE)
+		else if (line->type[i] == TILDE)
 			ft_printf("TILDE");
-		else if (cmd->type[i] == STAR)
+		else if (line->type[i] == STAR)
 			ft_printf("STAR");
-		else if (cmd->type[i] == PIPE)
+		else if (line->type[i] == PIPE)
 			ft_printf("PIPE");
-		else if (cmd->type[i] == INPUT)
+		else if (line->type[i] == INPUT)
 			ft_printf("INPUT");
-		else if (cmd->type[i] == OUTPUT)
+		else if (line->type[i] == OUTPUT)
 			ft_printf("OUTPUT");
-		else if (cmd->type[i] == HEREDOC)
+		else if (line->type[i] == HEREDOC)
 			ft_printf("HEREDOC");
-		else if (cmd->type[i] == APPEND)
+		else if (line->type[i] == APPEND)
 			ft_printf("APPEND");
-		else if (cmd->type[i] == SEMICOLON)
+		else if (line->type[i] == SEMICOLON)
 			ft_printf("SEMICOLON");
-		else if (cmd->type[i] == COLON)
+		else if (line->type[i] == COLON)
 			ft_printf("COLON");
-		else if (cmd->type[i] == AND)
+		else if (line->type[i] == AND)
 			ft_printf("AND");
-		else if (cmd->type[i] == OR)
+		else if (line->type[i] == OR)
 			ft_printf("OR");
-		else if (cmd->type[i] == CLOSED_QUOTE)
+		else if (line->type[i] == CLOSED_QUOTE)
 			ft_printf("CLOSED_QUOTE");
-		else if (cmd->type[i] == NOT_CLOSED_QUOTE)
+		else if (line->type[i] == NOT_CLOSED_QUOTE)
 			ft_printf("NOT_CLOSED_QUOTE");
-		else if (cmd->type[i] == CLOSED_DQUOTE)
+		else if (line->type[i] == CLOSED_DQUOTE)
 			ft_printf("CLOSED_DQUOTE");
-		else if (cmd->type[i] == NOT_CLOSED_DQUOTE)
+		else if (line->type[i] == NOT_CLOSED_DQUOTE)
 			ft_printf("NOT_CLOSED_DQUOTE");
-		else if (cmd->type[i] == OPTIONS)
+		else if (line->type[i] == OPTIONS)
 			ft_printf("OPTION");
 		else
 			ft_printf("UNKNOWN");
-		if (cmd->type[i + 1] != END)
+		if (line->type[i + 1] != END)
 			ft_printf(", ");
 	}
 	ft_printf("\n"C_RESET);
 	ft_printf(C_RED""C_UNDERLINE""C_BOLD"\nCOMMANDES\n"C_RESET);
-	ft_printf(C_RED"Nombre de commandes\t= "C_RESET""C_GREEN"%d\n", cmd->nbr_cmd);
+	ft_printf(C_RED"Nombre de commandes\t= "C_RESET""C_GREEN"%d\n", line->nbr_cmd);
 	i = -1;
-	while (cmd->cmd[++i])
+	while (line->cmds->cmd[++i])
 	{
 		ft_printf(C_RED"Commande "C_RESET""C_GREEN"%d"C_RESET""C_RED"\t\t= "C_RESET, i + 1);
-		ft_printf(C_GREEN"%s\n"C_RESET, cmd->cmd[i]);
+		ft_printf(C_GREEN"%s\n"C_RESET, line->cmds->cmd[i]);
 	}
 	ft_printf(C_RED""C_UNDERLINE""C_BOLD"\nREDIRECTIONS\n"C_RESET);
-	ft_printf(C_RED"Nombre de pipes\t\t= "C_RESET""C_GREEN"%d\n"C_RESET, cmd->nbr_pipe);
-	ft_printf(C_RED"Nombre de redirections\t= "C_RESET""C_GREEN"%d\n"C_RESET, cmd->nbr_redirection);
+	ft_printf(C_RED"Nombre de pipes\t\t= "C_RESET""C_GREEN"%d\n"C_RESET, line->nbr_pipe);
+	ft_printf(C_RED"Nombre de redirections\t= "C_RESET""C_GREEN"%d\n"C_RESET, line->nbr_redirection);
 }

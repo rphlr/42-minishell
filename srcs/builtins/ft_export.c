@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/15 17:12:31 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 13:21:32 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,11 @@ static t_env	*new_env_item(char *name, char *value)
 		return (NULL);
 	new_item->name = ft_strdup(name);
 	new_item->value = ft_strdup(value);
-	new_item->is_env = true;
 	new_item->next = NULL;
 	return (new_item);
 }
 
-void	ft_export(t_global *global, t_cmd *cmd)
+void	ft_export(t_global *global, t_line *line)
 {
 	char	*name;
 	char	*value;
@@ -50,7 +49,7 @@ void	ft_export(t_global *global, t_cmd *cmd)
 	t_env	*current;
 	int		i;
 
-	if (cmd->nbr_token < 2)
+	if (line->nbr_token < 2)
 	{
 		ft_env(global);
 		return ;
@@ -58,17 +57,17 @@ void	ft_export(t_global *global, t_cmd *cmd)
 	name = NULL;
 	value = NULL;
 	i = 1;
-	while (cmd->token[i])
+	while (line->token[i])
 	{
-		if (cmd->type[i] == OPTIONS)
+		if (line->type[i] == OPTIONS)
 		{
-			if (!ft_strcmp(cmd->token[i], "-"))
+			if (!ft_strcmp(line->token[i], "-"))
 				ft_env(global);
 			else
 				ft_printf("minishell: export: options not implemented\n");
 			break ;
 		}
-		extract_name_value(cmd->token[i], &name, &value);
+		extract_name_value(line->token[i], &name, &value);
 		if (!name || !value)
 		{
 			ft_printf("minishell: export: bad assignment\n");

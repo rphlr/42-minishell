@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 07:34:38 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/15 17:11:41 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 10:29:12 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,23 +126,23 @@ void	ft_echo(t_global *global)
 	int	newline;
 
 	newline = 1;
-	global->cmd->token++;
-	global->cmd->type++;
-	while (global->cmd->token && *global->cmd->type++ == OPTIONS)
+	global->line->token++;
+	global->line->type++;
+	while (global->line->token && *global->line->type++ == OPTIONS)
 	{
-		if (check_option(*global->cmd->token))
+		if (check_option(*global->line->token))
 		{
 			newline = 0;
-			global->cmd->token++;
+			global->line->token++;
 		}
 		else
 			break ;
 	}
-	while (*global->cmd->token)
+	while (*global->line->token)
 	{
-		echo_print(*global->cmd->token, global);
-		global->cmd->token++;
-		if (*global->cmd->token)
+		echo_print(*global->line->token, global);
+		global->line->token++;
+		if (*global->line->token)
 			ft_printf(" ");
 	}
 	if (newline)

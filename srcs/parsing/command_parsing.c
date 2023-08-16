@@ -6,18 +6,18 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:42:55 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/15 17:02:32 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 10:25:15 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	parse_cmd(t_global *global, t_cmd *cmd)
+int	parse_cmd(t_global *global, t_line *line)
 {
 	char	**token_ptr;
 	char	*temp;
 
-	token_ptr = cmd->token;
+	token_ptr = line->token;
 	while (*token_ptr)
 	{
 		temp = NULL;

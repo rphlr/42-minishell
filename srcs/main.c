@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/15 17:16:35 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 10:55:06 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,26 +42,6 @@
 // ✅: Detect Wilcard * (globbing)
 // ✅: Detect && and ||
 
-static void	run_cmd(t_global *global)
-{
-	if (!ft_strcmp(global->cmd->token[0], "echo"))
-		ft_echo(global);
-	else if (!ft_strcmp(global->cmd->token[0], "cd"))
-		ft_cd(global);
-	else if (!ft_strcmp(global->cmd->token[0], "pwd"))
-		ft_pwd(global->cmd);
-	else if (!ft_strcmp(global->cmd->token[0], "export"))
-		ft_export(global, global->cmd);
-	else if (!ft_strcmp(global->cmd->token[0], "unset"))
-		ft_unset(global, global->cmd);
-	else if (!ft_strcmp(global->cmd->token[0], "env"))
-		ft_env(global);
-	else if (!ft_strcmp(global->cmd->token[0], "exit"))
-		ft_exit(global);
-	else
-		execute(global);
-}
-
 static int	line_is_spaces(char *line)
 {
 	while (*line)
@@ -92,7 +72,7 @@ static char	*rm_newline(char *line)
 static int	lsh_loop(t_global *global)
 {
 	char	*line;
-	char	**cmds;
+	char	**tokens;
 	int		history_fd;
 
 	history_fd = open(".minishell_history", O_CREAT | O_RDWR, 0644);
@@ -120,18 +100,18 @@ static int	lsh_loop(t_global *global)
 			add_history(line);
 			ft_putendl_fd(line, history_fd);
 		}
-		cmds = parsed_line(line);
+		tokens = parsed_line(line);
 		if (!ft_strcmp(line, ""))
 			continue ;
-		global->cmd = init_cmds(cmds);
-		if (!global->cmd)
+		global->line = init_line(tokens);
+		if (!global->line)
 		{
 			global->exit_code = 258;
 			continue ;
 		}
 		// print_infos(global->cmd); // delete this line when done
 		free(line);
-		parse_cmd(global, global->cmd);
+		parse_cmd(global, global->line);
 		run_cmd(global);
 	}
 	return (global->exit_code);

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:41:30 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/13 17:11:41 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 10:25:33 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,22 +32,22 @@ static void	remove_env_item(t_env **head, char *name)
 		prev->next = current->next;
 }
 
-void	ft_unset(t_global *global, t_cmd *cmd)
+void	ft_unset(t_global *global, t_line *line)
 {
 	int		i;
 	char	*name_to_remove;
 
 	i = 1;
-	if (cmd->nbr_token < 2)
+	if (line->nbr_token < 2)
 	{
 		ft_printf("minishell: unset: not enough arguments\n");
 		return ;
 	}
 	else
 	{
-		while (cmd->token[i])
+		while (line->token[i])
 		{
-			name_to_remove = cmd->token[i++];
+			name_to_remove = line->token[i++];
 			remove_env_item(&global->env, name_to_remove);
 		}
 	}
