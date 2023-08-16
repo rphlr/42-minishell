@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/08/16 15:33:25 by rrouille         ###   ########.fr        #
+#    Updated: 2023/08/16 16:00:51 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -100,7 +100,7 @@ os:
 # Build rule for object files
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 			@${MKDIR} ${OBJS_FOLDERS}
-			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -L ${RLDIR} -lreadline -o ${NAME}
+			@${CC} ${CFLAGS} -I ${HDRDIR} -c $< -o $@ -Ireadline/include/
 
 # Linking rule
 ${NAME}: ${OBJS}
@@ -256,7 +256,7 @@ h:		help
 norm:
 			@norminette ${SRCSDIR} >/dev/null 2>&1 && norminette ${HDRDIR} >/dev/null 2>&1 && $(MAKE) draw_norm_yes || $(MAKE) draw_norm_no && norminette ${SRCSDIR} && norminette ${HDRDIR}
 
-n:		norm~
+n:		norm
 
 # fast
 fast: FAST_MODE := YES
