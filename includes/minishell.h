@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 15:59:25 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/16 16:09:18 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ void	run_cmd(t_global *global);
 
 // *---* signals *---*
 void					ft_signal(void);
-void					sigint_manage(int num);
+void					sg_manage(int num);
 void					update_signal_handler(int num);
 void					update_signal(void);
 void					set_termios(void);
