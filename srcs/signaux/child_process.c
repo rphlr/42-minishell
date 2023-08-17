@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvillarr <mvillarr@student.42lausanne.ch>  +#+  +:+       +#+        */
+/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 10:39:49 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/12 16:33:36 by mvillarr         ###   ########.fr       */
+/*   Updated: 2023/08/16 15:06:43 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,3 @@
 //  sigemptyset(&ctr_bl.sa_mask);
 //  sigaction(SIGQUIT, &ctr_bl, NULL);
 //}
-

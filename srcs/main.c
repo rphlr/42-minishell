@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/17 12:56:33 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/17 13:48:36 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ static int	lsh_loop(t_global *global)
 			global->exit_code = 258;
 			continue ;
 		}
-		// print_infos(global->cmd); // delete this line when done
 		free(line);
 		parse_cmd(global, global->line);
 		run_cmd(global);
