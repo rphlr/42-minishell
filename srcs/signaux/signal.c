@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/16 18:15:59 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/17 14:07:51 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_signal(void)
 	sigaction(SIGINT, &s, NULL);
 }
 
-void	sg_manage(int num)
+void	sigint_manage(int num)
 {
 	(void)num;
 	if (num == SIGINT)

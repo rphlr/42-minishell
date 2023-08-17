@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
+/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 18:28:53 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/17 14:08:48 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ void	run_cmd(t_global *global);
 
 // *---* signals *---*
 void					ft_signal(void);
-void					sg_manage(int num);
+void					sigint_manage(int num);
 void					update_signal_handler(int num);
 void					update_signal(void);
 void					set_termios(void);
