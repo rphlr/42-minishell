@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/08/17 13:36:19 by rrouille         ###   ########.fr        #
+#    Updated: 2023/08/17 13:41:08 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -144,7 +144,7 @@ draw_begining:
 					sleep 0.01; \
 				done; \
 				printf '%s' "$$line"
-			@sleep 5
+			@sleep 0.2
 			@${ECHO} "${CLEAR}"
 
 draw_bonus:
