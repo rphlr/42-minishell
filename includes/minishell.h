@@ -204,7 +204,7 @@ void	run_cmd(t_global *global);
 
 // *---* signals *---*
 void					ft_signal(void);
-void					sigint_manage(int num);
+void					sg_manage(int num);
 void					update_signal_handler(int num);
 void					update_signal(void);
 void					set_termios(void);

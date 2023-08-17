@@ -109,7 +109,6 @@ static int	lsh_loop(t_global *global)
 			global->exit_code = 258;
 			continue ;
 		}
-		// print_infos(global->cmd); // delete this line when done
 		free(line);
 		parse_cmd(global, global->line);
 		run_cmd(global);

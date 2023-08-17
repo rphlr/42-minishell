@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
+/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
 /*   Updated: 2023/08/16 18:15:59 by mariavillar      ###   ########.fr       */
@@ -19,9 +19,6 @@
 //ECHOCTL = 0000 0001 ~ -> 1111 1110  &
 //          0000 0001      1011 0000
 // clean ctr-c dans le terminal
-/* struct sigaction s is a structure that specifies the action to be associated
- with specific signals. It's used to define a signal handler with the
- sigaction system call. */
 void	set_termios(void)
 {
 	static struct termios	term;
@@ -31,11 +28,6 @@ void	set_termios(void)
 	tcsetattr(0, 0, &term);
 }
 
-/*  SIGQUIT is typically sent to a process to tell it to terminate and dump core
- (ctrl+d)
-
- SIGINT is the signal sent to a process by its controlling terminal when a user
- wishes to interrupt the process (ctrl+c) */
 void	ft_signal(void)
 {
 	struct sigaction	s;
@@ -48,10 +40,7 @@ void	ft_signal(void)
 	sigaction(SIGINT, &s, NULL);
 }
 
-/* This function is the signal handler for SIGINT. When SIGINT is received, it
- writes a newline character to the terminal, replaces the current line with an
- empty string, and then redisplay the prompt. */
-void	sigint_manage(int num)
+void	sg_manage(int num)
 {
 	(void)num;
 	if (num == SIGINT)
@@ -63,9 +52,6 @@ void	sigint_manage(int num)
 	}
 }
 
-/* It handles both SIGINT and SIGQUIT. For SIGINT, it behaves similarly to
- sigint_manage, but for SIGQUIT, it writes "quitting minishell\n"
- to the terminal.*/
 void	update_signal_handler(int num)
 {
 	(void)num;
@@ -81,9 +67,6 @@ void	update_signal_handler(int num)
 	}
 }
 
-/* This function is similar to ft_signal, but it sets up the signal handling
- using update_signal_handler instead of sg_manage. It's also handling both
- SIGQUIT and SIGINT. */
 void	update_signal(void)
 {
 	struct sigaction	s;
