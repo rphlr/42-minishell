@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/08/17 11:42:10 by rrouille         ###   ########.fr        #
+#    Updated: 2023/08/17 13:36:19 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,6 @@ BLUE			= \033[0;94m
 MAGENTA			= \033[0;95m
 CYAN			= \033[0;96m
 WHITE			= \033[0;97m
-GRAY			= \033[0;90m
 ENDCOLOR		= \033[0m
 
 # Background colors
@@ -138,14 +137,14 @@ fclean: clean
 
 # Drawings
 draw_begining:
-			@${ECHO} "${CLEAR}${CYAN}\c"
+			@${ECHO} "${CLEAR}${GREEN}\c"
 			@cat ascii_art/prog_name | \
 				while IFS= read -r line; do \
 					printf '%s\n' "$$line"; \
 					sleep 0.01; \
 				done; \
 				printf '%s' "$$line"
-			@sleep 0.7
+			@sleep 5
 			@${ECHO} "${CLEAR}"
 
 draw_bonus:
