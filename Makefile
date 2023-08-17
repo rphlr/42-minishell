@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/08/16 16:07:16 by rrouille         ###   ########.fr        #
+#    Updated: 2023/08/17 11:42:10 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,20 +60,19 @@ CLEARLN			= \r\033[K
 # Sources
 SRCS			= ${shell find ${SRCSDIR} -type f -name '*.c'}
 OBJS			= ${patsubst ${SRCSDIR}%,${OBJSDIR}%,${SRCS:%.c=%.o}}
-CFLAGS			= -Werror -Wall -Wextra #-g3 -fsanitize=address
+CFLAGS			= -Werror -Wall -Wextra
 CC				= gcc
 RM				= rm -rf
-MAKE			= make
 MKDIR			= mkdir -p
 
 # Operating System
 OS				:= ${shell uname}
 
 # If using Linux echo command must be `echo -e`
-ifeq ($(OS),Linux)
+ifeq (${OS},Linux)
 	ECHO = echo -e
 	RLDIR = /usr/local/lib
-else ifeq ($(OS),Darwin)
+else ifeq (${OS},Darwin)
 	ECHO = echo
 	RLDIR = ~/.brew/opt/readline/lib/
 endif
@@ -83,16 +82,13 @@ START			= ${ECHO} "${YELLOW}\n🚀 Start of program compilation 🚀${ENDCOLOR}"
 END_COMP		= ${ECHO} "${GREEN}\n\n✅ Compilation completed successfully! ✅${ENDCOLOR}"
 S_OBJS			= ${ECHO} "${RED}🧹 Cleaning objects... 🧹${ENDCOLOR}"
 S_NAME			= ${ECHO} "${RED}🧹 Cleaning program... 🧹${ENDCOLOR}"
-CHARG_LINE		= ${ECHO} "${BG_G} ${ENDCOLOR}\c" && sleep 0.05
+CHARG_LINE		= ${ECHO} "${BG_G} ${ENDCOLOR}\c"
 BS_N			= ${ECHO} "\n"
 
 # Folders
 OBJS_FOLDERS	= ${shell find ${SRCSDIR} -type d | sed "s|${SRCSDIR}|${OBJSDIR}|"}
 
-# Folders
-OBJS_FOLDERS	= ${shell find ${SRCSDIR} -type d | sed "s|${SRCSDIR}|${OBJSDIR}|"}
-
-all: $(NAME)
+all: draw_begining .WAIT ${NAME}
 
 os:
 			@${ECHO} "${OS}"
@@ -105,10 +101,9 @@ ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
 # Linking rule
 ${NAME}: ${OBJS}
 			@${CHARG_LINE}
-			@${CHARG_LINE} ${C_LAST};
+			@${CHARG_LINE}
 			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -L ${RLDIR} -lreadline -o ${NAME}
 			@${END_COMP}
-			@sleep 0.5
  
 # Run the program
 run:	clear fast
@@ -127,7 +122,6 @@ clean:
 			@${ECHO} "${CLEAR}\c"
 			@${S_OBJS}
 			@${RM} objs/ mylib/ .minishell_history
-			@sleep 0.3
 			@${ECHO} "${CLEAR}\c"
 			@${ECHO} "${GREEN}✅ Simple clean completed! ✨\n"
 
@@ -135,7 +129,6 @@ clean:
 fclean: clean
 			@${S_NAME}
 			@${RM} ${NAME}
-			@sleep 0.3
 			@${ECHO} "${CLEAR}\c"
 			@${ECHO} "${GREEN}✅ Deep clean completed! ✨"
 
@@ -236,7 +229,7 @@ lib:	clear
 help:
 			@if [ "${PRINT_SCREEN}" = "YES" ]; then \
 				${ECHO} "${CLEAR}\c"; \
-				$(MAKE) draw_help; \
+				make draw_help; \
 				for i in 3 2 1 0; do \
 					printf '\r${BLUE}Help will be shown in: %d${ENDCOLOR}' "$$i"; \
 					sleep 1; \
@@ -254,7 +247,7 @@ h:		help
 
 # Norminette
 norm:
-			@norminette ${SRCSDIR} >/dev/null 2>&1 && norminette ${HDRDIR} >/dev/null 2>&1 && $(MAKE) draw_norm_yes || $(MAKE) draw_norm_no && norminette ${SRCSDIR} && norminette ${HDRDIR}
+			@norminette ${SRCSDIR} >/dev/null 2>&1 && norminette ${HDRDIR} >/dev/null 2>&1 && make draw_norm_yes || make draw_norm_no && norminette ${SRCSDIR} && norminette ${HDRDIR}
 
 n:		norm
 
@@ -262,7 +255,7 @@ n:		norm
 fast: FAST_MODE := YES
 
 fast: lib ${OBJS}
-			@$(CC) $(OBJS) mylib/objs/*/*.o -L ${RLDIR} -lreadline -o $(NAME)
+			@${CC} ${OBJS} mylib/objs/*/*.o -L ${RLDIR} -lreadline -o ${NAME}
 			
 f: fast
 
@@ -303,6 +296,6 @@ clear:
 			@${ECHO} "${CLEAR}\c"
 
 # Rebuild the program
-re: fclean all
+re: fclean .WAIT all
 
 .PHONY: all clean fclean re run test bonus help norm leaks lldb git clear c
