@@ -6,21 +6,54 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:19:43 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/18 14:49:29 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/18 15:37:38 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// 9223372036854775807 is the max value of a long long int (64 bits)
+// -9223372036854775807 is the min value of a long long int (64 bits)
 static bool	check_exit_token(char *arg)
 {
-	if (!*arg)
+	char *tmp;
+	char *max_ll_str;
+	char *min_ll_str;
+
+	tmp = arg;
+	max_ll_str = "9223372036854775807";
+	min_ll_str = "-9223372036854775807";
+	if (!*tmp)
 		return (false);
-	while (*arg)
+	while (*tmp)
 	{
-		if (!ft_isdigit(*arg) && *arg != '-' && *arg != '+')
+		if (!ft_isdigit(*tmp) && *tmp != '-' && *tmp != '+')
 			return (false);
-		arg++;
+		tmp++;
+	}
+	if (ft_strlen(arg) > ft_strlen(max_ll_str))
+		return (false);
+	else if (ft_strlen(arg) == ft_strlen(max_ll_str))
+	{
+		int i = 1;
+		while (arg[i])
+		{
+			if (arg[i] > max_ll_str[i])
+				return (false);
+			i++;
+		}
+	}
+	if (ft_strlen(arg) > ft_strlen(min_ll_str))
+		return (false);
+	else if (ft_strlen(arg) == ft_strlen(min_ll_str))
+	{
+		int i = 1;
+		while (arg[i])
+		{
+			if (arg[i] > min_ll_str[i])
+				return (false);
+			i++;
+		}
 	}
 	return (true);
 }
@@ -32,7 +65,7 @@ void	ft_exit(t_global *global)
 	i = 1;
 	global->exit_code = 0;
 	ft_printf("exit\n");
-	if (!ft_strcmp(*(global->line->token + 1), "--"))
+	if (global->line->token[i + 1] && !ft_strcmp(global->line->token[i + 1], "--"))
 		i++;
 	if (!global->line->token[i])
 		exit (global->exit_code);

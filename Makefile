@@ -6,7 +6,7 @@
 #    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/08/17 13:41:08 by rrouille         ###   ########.fr        #
+#    Updated: 2023/08/18 15:21:32 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -91,6 +91,11 @@ all: draw_begining .WAIT ${NAME}
 
 os:
 			@${ECHO} "${OS}"
+
+bash:
+			@bash
+
+b: bash
 
 # Build rule for object files
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib
