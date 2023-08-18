@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/18 23:51:38 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/19 00:12:47 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ static void	execute(t_global *global)
 	if (global->line->count->nbr_pipes > 0 || global->line->count->nbr_inputs > 0
 		|| global->line->count->nbr_outputs > 0 || global->line->count->nbr_appends > 0
 		|| global->line->count->nbr_heredocs > 0 || global->line->count->nbr_colons > 0
-		|| global->line->count->nbr_semicolons > 0 || global->line->count->nbr_ands >=0
+		|| global->line->count->nbr_semicolons > 0 || global->line->count->nbr_ands > 0
 		|| global->line->count->nbr_ors > 0)
 	{
 		execute_specials(global, paths);
