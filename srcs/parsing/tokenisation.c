@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 09:02:47 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/15 18:04:04 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/18 16:40:40 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,10 +186,12 @@ t_token	*init_tokens_type(char **tokens)
 				type[i] = WORD;
 			else
 				type[i] = OPTIONS;
+			break;
 		}
 		else
 			detect_type(tokens, i, type);
 	}
+	printf("token");
 	type[i] = END;
 	return (type);
 }

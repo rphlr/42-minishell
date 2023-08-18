@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:19:43 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/18 15:37:38 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/18 16:32:33 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,8 @@ static bool	check_exit_token(char *arg)
 	tmp = arg;
 	max_ll_str = "9223372036854775807";
 	min_ll_str = "-9223372036854775807";
-	if (!*tmp)
+	if (ft_strlen(arg) > 20)
 		return (false);
-	while (*tmp)
-	{
-		if (!ft_isdigit(*tmp) && *tmp != '-' && *tmp != '+')
-			return (false);
-		tmp++;
-	}
 	if (ft_strlen(arg) > ft_strlen(max_ll_str))
 		return (false);
 	else if (ft_strlen(arg) == ft_strlen(max_ll_str))
@@ -54,6 +48,14 @@ static bool	check_exit_token(char *arg)
 				return (false);
 			i++;
 		}
+	}
+	if (!*tmp)
+		return (false);
+	while (*tmp)
+	{
+		if (!ft_isdigit(*tmp) && *tmp != '-' && *tmp != '+')
+			return (false);
+		tmp++;
 	}
 	return (true);
 }
