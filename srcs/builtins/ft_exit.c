@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:19:43 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/18 16:32:33 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/18 23:10:35 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,7 @@ static bool	check_exit_token(char *arg)
 	tmp = arg;
 	max_ll_str = "9223372036854775807";
 	min_ll_str = "-9223372036854775807";
-	if (ft_strlen(arg) > 20)
-		return (false);
-	if (ft_strlen(arg) > ft_strlen(max_ll_str))
+	if (ft_strlen(arg) > ft_strlen(min_ll_str))
 		return (false);
 	else if (ft_strlen(arg) == ft_strlen(max_ll_str))
 	{
@@ -37,8 +35,6 @@ static bool	check_exit_token(char *arg)
 			i++;
 		}
 	}
-	if (ft_strlen(arg) > ft_strlen(min_ll_str))
-		return (false);
 	else if (ft_strlen(arg) == ft_strlen(min_ll_str))
 	{
 		int i = 1;
@@ -67,7 +63,7 @@ void	ft_exit(t_global *global)
 	i = 1;
 	global->exit_code = 0;
 	ft_printf("exit\n");
-	if (global->line->token[i + 1] && !ft_strcmp(global->line->token[i + 1], "--"))
+	if (global->line->token[i + 1] && !ft_strcmp(global->line->token[i], "--"))
 		i++;
 	if (!global->line->token[i])
 		exit (global->exit_code);
