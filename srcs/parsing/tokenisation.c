@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 09:02:47 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/18 16:45:44 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/18 23:15:28 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,8 @@ t_token	*init_tokens_type(char **tokens)
 			type[i] = SEMICOLON;
 		else if (!ft_strcmp(tokens[i], ":"))
 			type[i] = COLON;
+		else if (!ft_strcmp(tokens[i], "--"))
+				type[i] = IGNORE;
 		else if (tokens[i][j] == '&')
 			type[i] = AND;
 		else if (tokens[i][j] == '$')
