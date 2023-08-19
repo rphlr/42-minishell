@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/19 00:14:47 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/19 07:22:10 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,7 @@ typedef struct s_count
 	int					nbr_ands;
 	int					nbr_ors;
 	int					nbr_options;
+	bool 				special_cases;
 }						t_count;
 
 typedef struct s_line

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/19 00:15:18 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/19 07:23:00 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,7 @@ static void	execute(t_global *global)
 		global->exit_code = 127;
 		return ;
 	}
-	if (global->line->count->nbr_pipes > 0 || global->line->count->nbr_inputs > 0
-		|| global->line->count->nbr_outputs > 0 || global->line->count->nbr_appends > 0
-		|| global->line->count->nbr_heredocs > 0 || global->line->count->nbr_colons > 0
-		|| global->line->count->nbr_semicolons > 0 || global->line->count->nbr_ands > 0
-		|| global->line->count->nbr_ors > 0)
+	if (global->line->count->special_cases == true)
 	{
 		execute_specials(global, paths);
 		return ;

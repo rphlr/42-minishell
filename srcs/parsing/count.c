@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:38:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/18 23:52:12 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/19 07:25:23 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ t_count	*count_types(t_token *type)
 	count = ft_gc_malloc(sizeof(t_count));
 	if (!count)
 		return (NULL);
+	count->special_cases = false;
 	while (*type != END)
 	{
 		if (*type == INPUT)
@@ -119,6 +120,12 @@ t_count	*count_types(t_token *type)
 			count->nbr_ors++;
 		else if (*type == OPTIONS)
 			count->nbr_options++;
+		else
+		{
+			type++;
+			continue;
+		}
+		count->special_cases = true;
 		type++;
 	}
 	return (count);
