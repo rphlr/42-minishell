@@ -6,9 +6,11 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 16:06:10 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/17 17:45:27 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+// faires les pipes
 
 #include "minishell.h"
 
