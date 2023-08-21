@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:41:30 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 10:25:33 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/18 23:44:46 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ft_unset(t_global *global, t_line *line)
 	char	*name_to_remove;
 
 	i = 1;
-	if (line->nbr_token < 2)
+	if (line->count->nbr_tokens < 2)
 	{
 		ft_printf("minishell: unset: not enough arguments\n");
 		return ;

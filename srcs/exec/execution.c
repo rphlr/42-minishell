@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
+/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 16:06:10 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/19 07:31:38 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static char	*get_path(char *command, char **paths)
 	return (NULL);
 }
 
-static void	execute_pipe(t_global *global, char **paths)
+static void	execute_specials(t_global *global, char **paths)
 {
 	(void) paths;
 	(void) global;
@@ -102,9 +102,9 @@ static void	execute(t_global *global)
 		global->exit_code = 127;
 		return ;
 	}
-	if (global->line->nbr_cmd > 1)
+	if (global->line->count->special_cases == true)
 	{
-		execute_pipe(global, paths);
+		execute_specials(global, paths);
 		return ;
 	}
 	pid_working(path, paths, global);

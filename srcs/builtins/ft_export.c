@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 13:21:32 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/18 23:44:33 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	ft_export(t_global *global, t_line *line)
 	t_env	*current;
 	int		i;
 
-	if (line->nbr_token < 2)
+	if (line->count->nbr_tokens < 2)
 	{
 		ft_env(global);
 		return ;
