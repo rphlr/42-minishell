@@ -6,13 +6,14 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/21 14:46:03 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/21 17:28:47 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // faires les pipes
 
 #include "minishell.h"
+
 
 static char	**env_to_char(t_global *global)
 {

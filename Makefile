@@ -6,11 +6,7 @@
 #    By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-<<<<<<< HEAD
-#    Updated: 2023/08/17 15:28:11 by mariavillar      ###   ########.fr        #
-=======
-#    Updated: 2023/08/18 15:21:32 by rrouille         ###   ########.fr        #
->>>>>>> main
+#    Updated: 2023/08/21 15:03:56 by mariavillar      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
