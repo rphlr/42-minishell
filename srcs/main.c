@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 16:06:53 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/21 13:59:18 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ static char	*rm_newline(char *line)
 static int	lsh_loop(t_global *global)
 {
 	char	*line;
-	char	**tokens;
 	int		history_fd;
 
 	history_fd = open(".minishell_history", O_CREAT | O_RDWR, 0644);
@@ -100,10 +99,10 @@ static int	lsh_loop(t_global *global)
 			add_history(line);
 			ft_putendl_fd(line, history_fd);
 		}
-		tokens = parsed_line(line);
+		// tokens = parsed_line(line);
 		if (!ft_strcmp(line, ""))
 			continue ;
-		global->line = init_line(tokens);
+		global->line = init_line(line, global);
 		if (!global->line)
 		{
 			global->exit_code = 258;
@@ -123,9 +122,9 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
-        set_termios();
-        ft_signal();
-        global = init_global(envp);
+	set_termios();
+	ft_signal();
+	global = init_global(envp);
 	if (!global)
 		return (1);
 	err_code = lsh_loop(global);

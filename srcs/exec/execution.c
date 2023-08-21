@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/17 17:40:14 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/21 13:52:43 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,18 +112,6 @@ static void	execute(t_global *global)
 
 void	run_cmd(t_global *global)
 {
-	int	i;
-
-	i = 0;
-	// while (global->line->cmds->cmd[i])
-	// {
-	// 	if (global->line->cmds->cmd[i] == '|')
-	// 	{
-	// 		global->line->nbr_cmd++;
-	// 		global->line->cmds->cmd[i] = '\0';
-	// 	}
-	// 	i++;
-	// }
 	if (!ft_strcmp(global->line->token[0], "echo"))
 		ft_echo(global);
 	else if (!ft_strcmp(global->line->token[0], "cd"))
