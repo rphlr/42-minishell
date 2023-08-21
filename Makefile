@@ -6,7 +6,11 @@
 #    By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
+<<<<<<< HEAD
 #    Updated: 2023/08/17 15:28:11 by mariavillar      ###   ########.fr        #
+=======
+#    Updated: 2023/08/18 15:21:32 by rrouille         ###   ########.fr        #
+>>>>>>> main
 #                                                                              #
 # **************************************************************************** #
 
@@ -91,6 +95,11 @@ all: draw_begining .WAIT ${NAME}
 
 os:
 			@${ECHO} "${OS}"
+
+bash:
+			@bash
+
+b: bash
 
 # Build rule for object files
 ${OBJSDIR}/%.o : ${SRCSDIR}/%.c lib

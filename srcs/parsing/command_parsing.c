@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:42:55 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 10:25:15 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/18 23:19:10 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int	parse_cmd(t_global *global, t_line *line)
 		}
 		else if (!ft_strcmp(*token_ptr, "<<"))
 		{
+			// heredoc
+
 		}
 		else if (!ft_strcmp(*token_ptr, ">"))
 		{

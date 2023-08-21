@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/17 17:45:27 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/21 14:46:03 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static char	*get_path(char *command, char **paths)
 	return (NULL);
 }
 
-static void	execute_pipe(t_global *global, char **paths)
+static void	execute_specials(t_global *global, char **paths)
 {
 	(void) paths;
 	(void) global;
@@ -104,9 +104,9 @@ static void	execute(t_global *global)
 		global->exit_code = 127;
 		return ;
 	}
-	if (global->line->nbr_cmd > 1)
+	if (global->line->count->special_cases == true)
 	{
-		execute_pipe(global, paths);
+		execute_specials(global, paths);
 		return ;
 	}
 	pid_working(path, paths, global);

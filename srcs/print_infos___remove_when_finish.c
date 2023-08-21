@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:44:36 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 10:30:56 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/18 23:48:06 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	print_infos(t_line *line)
 
 	ft_printf(C_RED""C_UNDERLINE""C_BOLD"TOKENS\n"C_RESET);
 	ft_printf(C_RED"Nombre de tokens\t= "C_RESET""C_GREEN"%d\n"C_RESET,\
-		line->nbr_token);
+		line->count->nbr_tokens);
 	ft_printf(C_RED"tokens reçus et traités\t= "C_RESET);
 	i = -1;
 	while (line->token[++i])
@@ -78,7 +78,7 @@ void	print_infos(t_line *line)
 	}
 	ft_printf("\n"C_RESET);
 	ft_printf(C_RED""C_UNDERLINE""C_BOLD"\nCOMMANDES\n"C_RESET);
-	ft_printf(C_RED"Nombre de commandes\t= "C_RESET""C_GREEN"%d\n", line->nbr_cmd);
+	ft_printf(C_RED"Nombre de commandes\t= "C_RESET""C_GREEN"%d\n", line->count->nbr_cmds);
 	i = -1;
 	while (line->cmds->cmd[++i])
 	{
@@ -86,6 +86,6 @@ void	print_infos(t_line *line)
 		ft_printf(C_GREEN"%s\n"C_RESET, line->cmds->cmd[i]);
 	}
 	ft_printf(C_RED""C_UNDERLINE""C_BOLD"\nREDIRECTIONS\n"C_RESET);
-	ft_printf(C_RED"Nombre de pipes\t\t= "C_RESET""C_GREEN"%d\n"C_RESET, line->nbr_pipe);
-	ft_printf(C_RED"Nombre de redirections\t= "C_RESET""C_GREEN"%d\n"C_RESET, line->nbr_redirection);
+	ft_printf(C_RED"Nombre de pipes\t\t= "C_RESET""C_GREEN"%d\n"C_RESET, line->count->nbr_pipes);
+	ft_printf(C_RED"Nombre de redirections\t= "C_RESET""C_GREEN"%d\n"C_RESET, line->count->nbr_inputs + line->count->nbr_outputs + line->count->nbr_heredocs + line->count->nbr_appends);
 }

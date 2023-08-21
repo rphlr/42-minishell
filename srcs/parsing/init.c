@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 14:43:29 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/18 23:43:16 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,10 +108,7 @@ t_line	*init_line(char **tokens)
 	line->cmds = init_cmds(tokens, line->type);
 	line->pipe = NULL;
 	line->heredoc = NULL;
-	line->nbr_cmd = count_cmd(line->type);
-	line->nbr_token = ft_tablen(tokens);
-	line->nbr_pipe = count_pipe(line->type);
-	line->nbr_redirection = count_redirection(line->type);
+	line->count = count_types(line->type);
 	return (line);
 }
 
