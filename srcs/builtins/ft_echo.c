@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 07:34:38 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/18 23:17:22 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/22 15:50:12 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,135 +14,66 @@
 
 static int	check_option(char *str)
 {
-	int	i;
-
-	i = 1;
-	while (str[i])
+	while (*++str)
 	{
-		if (str[i] != 'n')
+		if (*str != 'n')
 			return (0);
-		i++;
 	}
 	return (1);
 }
 
-static void	echo_print(char *str, t_global *global)
+static void	echo_print(char *str, t_global *global, int i)
 {
-	int		in_single_quote;
-	int		in_double_quote;
-	char	*end;
-	char	temp;
-	char	*var_value;
+	char	*output;
 
-	in_single_quote = 0;
-	in_double_quote = 0;
-	while (*str)
+	output = ft_gc_malloc(ft_strlen(str) + 1);
+	if (!output)
+		return ;
+	if (global->line->type[i] != CLOSED_DQUOTE && global->line->type[i] != CLOSED_QUOTE)
 	{
-		if (*str == '\\' && !in_single_quote)
+		while (*str)
 		{
-			str++;
-			if (in_double_quote)
+			if (*str == '\\')
 			{
-				if (*str == 'n')
-					ft_printf("\n");
-				else if (*str == 't')
-					ft_printf("\t");
-				else if (*str == 'v')
-					ft_printf("\v");
-				else if (*str == 'b')
-					ft_printf("\b");
-				else if (*str == 'r')
-					ft_printf("\r");
-				else if (*str == 'f')
-					ft_printf("\f");
-				else if (*str == 'a')
-					ft_printf("\a");
-				else if (*str == '0')
-					ft_printf("\0");
-				else if (*str == '\\')
-					ft_printf("\\");
-				else
-					ft_printf("\\%c", *str);
-			}
-			else
+				str++;
 				ft_printf("%c", *str);
-			str++;
-			continue ;
-		}
-		if (*str == '\'' && !in_double_quote)
-		{
-			in_single_quote = !in_single_quote;
-			str++;
-			continue ;
-		}
-		else if (*str == '\"' && !in_single_quote)
-		{
-			in_double_quote = !in_double_quote;
-			str++;
-			continue ;
-		}
-		if (in_single_quote)
-		{
-			ft_printf("%c", *str++);
-			continue ;
-		}
-		if (*str == '$' && !in_single_quote)
-		{
-			str++;
-			if (*str == '?')
-				ft_printf("%d", global->exit_code);
-			else if ((*str >= 'a' && *str <= 'z') || (*str >= 'A'
-					&& *str <= 'Z') || (*str >= '0' && *str <= '9')
-				|| *str == '_')
-			{
-				end = str;
-				while (*end && ((*end >= 'a' && *end <= 'z') || (*end >= 'A'
-							&& *end <= 'Z') || (*end >= '0' && *end <= '9')
-						|| *end == '_'))
-					end++;
-				temp = *end;
-				*end = '\0';
-				var_value = get_env_value(str, global);
-				if (var_value)
-					ft_printf("%s", var_value);
-				else
-					ft_printf("");
-				*end = temp;
-				str = end;
+				str++;
+				continue ;
 			}
-			else
-				ft_printf("");
-			str++;
-		}
-		else
 			ft_printf("%c", *str++);
+		}
+		return ;
 	}
+	while (*str)
+		ft_printf("%c", *str++);
 }
 
 void	ft_echo(t_global *global)
 {
-	int	newline;
+	int	nwln;
+	int	i;
 
-	newline = 1;
+	nwln  = 1;
+	i = 0;
 	global->line->token++;
 	global->line->type++;
-	while (global->line->token && *global->line->type++ == OPTIONS)
+	while (global->line->token[i] && global->line->type[i] == OPTIONS)
 	{
-		if (check_option(*global->line->token))
+		if (check_option(global->line->token[i]))
 		{
-			newline = 0;
-			global->line->token++;
+			nwln = 0;
+			i++;
 		}
 		else
 			break ;
 	}
-	while (*global->line->token)
+	while (global->line->token[i])
 	{
-		echo_print(*global->line->token, global);
-		global->line->token++;
-		if (*global->line->token)
+		echo_print(global->line->token[i], global, i);
+		i++;
+		if (global->line->token[i])
 			ft_printf(" ");
 	}
-	if (newline)
+	if (nwln)
 		ft_printf("\n");
 }

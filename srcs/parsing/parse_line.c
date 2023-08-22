@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 14:32:35 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/16 11:05:35 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/22 12:53:42 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,11 @@ static char	*extract_unquoted_string(char **line_pointer)
 char	**parsed_line(char *line)
 {
 	char	*temp_line;
-	int		count;
 	char	**result;
 	int		index;
 
 	temp_line = line;
-	count = count_substrings(line);
-	result = (char **)ft_gc_malloc(sizeof(char *) * (count + 2));
+	result = (char **)ft_gc_malloc(sizeof(char *) * (count_substrings(line) + 2));
 	index = 0;
 	while (*line)
 	{

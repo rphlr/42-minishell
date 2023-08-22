@@ -6,31 +6,31 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:39:22 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/21 14:48:31 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/22 18:17:17 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	check_options_doublon(char *token)
-{
-	char	*start;
-	char	*compare;
+// static int	check_options_doublon(char *token)
+// {
+// 	char	*start;
+// 	char	*compare;
 
-	start = token;
-	while (*start)
-	{
-		compare = start + 1;
-		while (*compare)
-		{
-			if (*start == *compare)
-				return (1);
-			compare++;
-		}
-		start++;
-	}
-	return (0);
-}
+// 	start = token;
+// 	while (*start)
+// 	{
+// 		compare = start + 1;
+// 		while (*compare)
+// 		{
+// 			if (*start == *compare)
+// 				return (1);
+// 			compare++;
+// 		}
+// 		start++;
+// 	}
+// 	return (0);
+// }
 
 int	check_options_syntax(char *token)
 {
@@ -54,8 +54,6 @@ t_state	check_token_errors(t_token *type, char **tokens,
 		{
 			if (check_options_syntax(*tokens))
 				return (OPTIONS_ERROR);
-			if (check_options_doublon(*tokens))
-				continue ;
 		}
 		type++;
 		tokens++;
@@ -73,11 +71,11 @@ bool	check_token(char *line)
 	return (true);
 }
 
-t_state	check_errors(t_token *type, char **tokens)
+t_state	check_errors(t_token *type, char **tokens, t_global *global)
 {
 	t_state	state;
 
-	state = ft_error(type, tokens);
+	state = ft_error(type, tokens, global);
 	if (state == QUOTE_ERROR)
 		ft_printf("minishell: quote error\n");
 	else if (state == DQUOTE_ERROR)
