@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 13:06:21 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/22 15:52:26 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,7 @@ t_line	*init_line(char *line, t_global *global)
 	line_struct->cmds = init_cmds(line_struct->token, line_struct->type);
 	line_struct->pipe = NULL;
 	line_struct->heredoc = NULL;
-	line_struct->nbr_cmd = count_cmd(line_struct->type);
-	line_struct->nbr_token = ft_tablen(line_struct->token);
-	line_struct->nbr_pipe = count_pipe(line_struct->type);
-	line_struct->nbr_redirection = count_redirection(line_struct->type);
+	line_struct->count = count_types(line_struct->type);
 	return (line_struct);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 14:07:28 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/22 15:51:49 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ typedef enum s_token
 	DOLLAR,
 	TILDE,
 	COLON,
+	IGNORE,
 	BS_NEWLINE,
 	BS_TAB,
 	BS_VERTICAL_TAB,
@@ -150,6 +151,23 @@ typedef struct s_cmds
 	struct s_cmds		*next;
 }						t_cmds;
 
+typedef struct s_count
+{
+	int					nbr_tokens;
+	int					nbr_cmds;
+	int					nbr_pipes;
+	int					nbr_inputs;
+	int					nbr_outputs;
+	int					nbr_appends;
+	int					nbr_heredocs;
+	int					nbr_colons;
+	int					nbr_semicolons;
+	int					nbr_ands;
+	int					nbr_ors;
+	int					nbr_options;
+	bool 				special_cases;
+}						t_count;
+
 typedef struct s_line
 {
 	char				**token;
@@ -157,10 +175,7 @@ typedef struct s_line
 	t_cmds				*cmds;
 	bool				pipe;
 	bool				heredoc;
-	int					nbr_cmd;
-	int					nbr_token;
-	int					nbr_pipe;
-	int					nbr_redirection;
+	t_count				*count;
 }						t_line;
 
 typedef struct s_global
@@ -189,9 +204,7 @@ bool					check_token(char *line);
 t_state					check_errors(t_token *type, char **tokens, t_global *global);
 char					*epur_str(char *line);
 int						parse_cmd(t_global *global, t_line *line);
-int						count_cmd(t_token *type);
-int						count_pipe(t_token *type);
-int						count_redirection(t_token *type);
+t_count					*count_types(t_token *type);
 t_state					ft_error(t_token *type, char **tokens, t_global *global);
 t_line					*init_line(char *line, t_global *global);
 t_global				*init_global(char **envp);
@@ -202,11 +215,11 @@ t_token					*init_tokens_type(char **tokens);
 char					*ft_remove_char(char *str, char c);
 
 // *---* exec *---*
-void	run_cmd(t_global *global);
+void					run_cmd(t_global *global);
 
 // *---* signals *---*
 void					ft_signal(void);
-void					sg_manage(int num);
+void					sigint_manage(int num);
 void					update_signal_handler(int num);
 void					update_signal(void);
 void					set_termios(void);

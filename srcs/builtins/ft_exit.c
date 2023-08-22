@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:19:43 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/21 13:14:45 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/22 15:50:29 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,14 @@ static bool	check_exit_token(char *arg)
 			i++;
 		}
 	}
+	if (!*tmp)
+		return (false);
+	while (*tmp)
+	{
+		if (!ft_isdigit(*tmp) && *tmp != '-' && *tmp != '+')
+			return (false);
+		tmp++;
+	}
 	return (true);
 }
 
@@ -95,7 +103,7 @@ void	ft_exit(t_global *global)
 	i = 1;
 	global->exit_code = 0;
 	ft_printf("exit\n");
-	if (global->line->token[i + 1] && !ft_strcmp(global->line->token[i], "--"))
+	if (global->line->token[i + 1] && global->line->type[i] == IGNORE)
 		i++;
 	if (!global->line->token[i] || (!ft_strcmp(global->line->token[1], "--") && !global->line->token[2]))
 		exit (global->exit_code);
