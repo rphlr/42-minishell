@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/21 13:58:58 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/22 13:06:21 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,14 +101,14 @@ t_line	*init_line(char *line, t_global *global)
 		return (NULL);
 	error_state = VALID;
 	line_struct->token = parsed_line(line);
-	int i = 0;
-	while (line_struct->token[i])
-	{
-		char c = *line_struct->token[i];
-		if (*line_struct->token[i] == '\"' || *line_struct->token[i] == '\'')
-			line_struct->token[i] = ft_remove_char(line_struct->token[i], c);
-		i++;
-	}
+	// int i = 0;
+	// while (line_struct->token[i])
+	// {
+	// 	char c = *line_struct->token[i];
+	// 	if (*line_struct->token[i] == '\"' || *line_struct->token[i] == '\'')
+	// 		line_struct->token[i] = ft_remove_char(line_struct->token[i], c);
+	// 	i++;
+	// }
 	line_struct->type = init_tokens_type(line_struct->token);
 	error_state = check_errors(line_struct->type, line_struct->token, global);
 	if (error_state)

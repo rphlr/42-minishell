@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/21 13:59:18 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/22 14:23:07 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ static int	lsh_loop(t_global *global)
 			add_history(line);
 			ft_putendl_fd(line, history_fd);
 		}
-		// tokens = parsed_line(line);
 		if (!ft_strcmp(line, ""))
 			continue ;
 		global->line = init_line(line, global);
