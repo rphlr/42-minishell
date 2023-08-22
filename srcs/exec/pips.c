@@ -6,32 +6,37 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 17:29:45 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/21 19:07:11 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/22 18:07:44 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-allouer de la memoire pour que les pipes se connectent avec tous les processus
-*/
+// if (global->line->count->special_cases == true)
+// {
+//     execute_specials(global, paths);
+//     return ;
+// }
 
 static int **allocate_pipe(int nbr_of_child_process)
 {
-    
-}
-
-int **create_pipe(int nbr_of_child_processes)
-{
-    
-}
-
-void close_pipes_in_child_process(int **pipes, int nbr_of_child_processes, int i)
-{
+    int **pipes;
+    int i;
+    int fd[2];
 
 }
 
-void    close_pipes_in_main_process(int **pipes, int nbr_of_child_processes)
-{
-    
-}
+    // int **create_pipe(int nbr_of_child_processes)
+    // {
+        
+    // }
+
+    // void close_pipes_in_child_process(int **pipes, int nbr_of_child_processes, int i)
+    // {
+
+    // }
+
+    // void    close_pipes_in_main_process(int **pipes, int nbr_of_child_processes)
+    // {
+        
+    // }

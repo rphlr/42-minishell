@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/21 14:46:18 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/22 12:47:04 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,8 @@ typedef struct s_cmds
 	struct s_cmds		*next;
 }						t_cmds;
 
+// structure qui garde tous les cas "spéciaux" 
+// donc au lieu de line->nbr_pipes, c'est line->count->nbr_pipes
 typedef struct s_count
 {
 	int					nbr_tokens;
@@ -214,6 +216,7 @@ t_token					*init_tokens_type(char **tokens);
 
 // *---* exec *---*
 void					run_cmd(t_global *global);
+
 
 // *---* signals *---*
 void					ft_signal(void);
