@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 14:22:12 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/22 15:26:51 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*format_token(char *token, t_global *global)
 
 	in_double_quotes = 0;
 	in_simple_quotes = 0;
-	output = (char *)ft_gc_malloc(ft_strlen(token) * 2 + 1);
+	output = (char *)ft_gc_malloc(10000000); // a corriger
 	i = 0;
 	while (*token)
 	{
