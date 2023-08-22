@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/15 17:06:20 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/22 15:26:51 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,94 @@ static t_state	*get_error_table(void)
 	return (error_table);
 }
 
-t_state	ft_error(t_token *type, char **tokens)
+char	*extract_variable_name(char *ptoken)
+{
+	char	*start;
+	int		len;
+	char	*var_name;
+
+	start = ptoken;
+	while (*ptoken && ((*ptoken >= 'a' && *ptoken <= 'z') || (*ptoken >= 'A'
+				&& *ptoken <= 'Z') || (*ptoken >= '0' && *ptoken <= '9')
+			|| *ptoken == '_'))
+	{
+		ptoken++;
+	}
+	len = ptoken - start;
+	var_name = (char *)ft_gc_malloc(len + 1);
+	ft_strncpy(var_name, start, len);
+	var_name[len] = '\0';
+	return (var_name);
+}
+
+char	*format_token(char *token, t_global *global)
+{
+	int		in_double_quotes;
+	int		in_simple_quotes;
+	char	*output;
+	int		i;
+	char	*num;
+	char	*var_name;
+	char	*var_value;
+
+	in_double_quotes = 0;
+	in_simple_quotes = 0;
+	output = (char *)ft_gc_malloc(10000000); // a corriger
+	i = 0;
+	while (*token)
+	{
+		if (*token == '\'' && !in_double_quotes)
+		{
+			in_simple_quotes = !in_simple_quotes;
+			token++;
+			continue ;
+		}
+		if (*token == '\"' && !in_simple_quotes)
+		{
+			in_double_quotes = !in_double_quotes;
+			token++;
+			continue ;
+		}
+		if (*token == '$')
+		{
+			if (in_simple_quotes)
+			{
+				output[i++] = *token++;
+				continue ;
+			}
+			token++;
+			if (*token == '?')
+			{
+				num = ft_itoa(global->exit_code);
+				while (*num)
+					output[i++] = *num++;
+				token++;
+			}
+			else
+			{
+				var_name = extract_variable_name(token);
+				if (ft_strlen(var_name) > 0)
+				{
+					var_value = get_env_value(var_name, global);
+					if (var_value)
+					{
+						while (*var_value)
+							output[i++] = *var_value++;
+					}
+					token += ft_strlen(var_name);
+				}
+				else
+					output[i++] = '$';
+			}
+		}
+		else
+			output[i++] = *token++;
+	}
+	output[i] = '\0';
+	return (output);
+}
+
+t_state	ft_error(t_token *type, char **tokens, t_global *global)
 {
 	int		nbr_quote;
 	int		nbr_dquote;
@@ -45,6 +132,7 @@ t_state	ft_error(t_token *type, char **tokens)
 		return (token_check_result);
 	while (*type != END)
 	{
+		*tokens = format_token(*tokens, global);
 		nbr_quote += (*type == NOT_CLOSED_QUOTE) + 2 * (*type == CLOSED_QUOTE);
 		nbr_dquote += (*type == NOT_CLOSED_DQUOTE) + 2
 			* (*type == CLOSED_DQUOTE);

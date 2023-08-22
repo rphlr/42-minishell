@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/18 23:43:16 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/22 15:52:26 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,25 +91,33 @@ static t_cmds	*init_cmds(char **tokens, t_token *type)
 	return (head);
 }
 
-t_line	*init_line(char **tokens)
+t_line	*init_line(char *line, t_global *global)
 {
-	t_line	*line;
+	t_line	*line_struct;
 	t_state	error_state;
 
-	line = ft_gc_malloc(sizeof(t_line));
-	if (!line)
+	line_struct = ft_gc_malloc(sizeof(t_line));
+	if (!line_struct)
 		return (NULL);
 	error_state = VALID;
-	line->token = tokens;
-	line->type = init_tokens_type(tokens);
-	error_state = check_errors(line->type, tokens);
+	line_struct->token = parsed_line(line);
+	// int i = 0;
+	// while (line_struct->token[i])
+	// {
+	// 	char c = *line_struct->token[i];
+	// 	if (*line_struct->token[i] == '\"' || *line_struct->token[i] == '\'')
+	// 		line_struct->token[i] = ft_remove_char(line_struct->token[i], c);
+	// 	i++;
+	// }
+	line_struct->type = init_tokens_type(line_struct->token);
+	error_state = check_errors(line_struct->type, line_struct->token, global);
 	if (error_state)
 		return (NULL);
-	line->cmds = init_cmds(tokens, line->type);
-	line->pipe = NULL;
-	line->heredoc = NULL;
-	line->count = count_types(line->type);
-	return (line);
+	line_struct->cmds = init_cmds(line_struct->token, line_struct->type);
+	line_struct->pipe = NULL;
+	line_struct->heredoc = NULL;
+	line_struct->count = count_types(line_struct->type);
+	return (line_struct);
 }
 
 t_env	*init_env(char **envp)
