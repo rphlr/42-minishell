@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/21 17:34:40 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/21 18:57:02 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,69 +164,160 @@ char *extract_variable_name(char *ptoken) {
 	return var_name;
 }
 
-char *format_token(char *token, t_global *global) {
-	int in_double_quotes = 0;
-	int in_simple_quotes = 0;
-	char *output = (char*)ft_gc_malloc(strlen(token) * 2 + 1); // Assuming worst case: every char is a var name
-	int i = 0;
+// char *format_token(char *token, t_global *global) {
+// 	int in_double_quotes = 0;
+// 	int in_simple_quotes = 0;
+// 	char *output = (char*)ft_gc_malloc(strlen(token) * 2 + 1); // Assuming worst case: every char is a var name
+// 	int i = 0;
 
-	while (*token) {
-		if (*token == '\\' && !in_double_quotes) {
-			token++;
-			char escaped_char = get_escaped_char(*token);
-			if (in_simple_quotes && escaped_char) {
-				output[i++] = escaped_char;
-				token++;
-				continue;
-			} else if (escaped_char) {
-				// If there's an escape sequence outside of double quotes, ignore the backslash and use the character as is.
-				output[i++] = *token++;
-				continue;
-			}
-		}
-		if (*token == '\'' && !in_double_quotes) {
-			in_simple_quotes = !in_simple_quotes;
-			output[i++] = *token++;
-			continue;
-		}
-		if (*token == '\"' && !in_simple_quotes) {
-			in_double_quotes = !in_double_quotes;
-			output[i++] = *token++;
-			continue;
-		}
-		if (in_double_quotes) {
-			output[i++] = *token++;
-			continue;
-		}
-		if (*token == '$') {
-			if (*(token + 1) == '?') {
-				// if (in_simple_quotes) {
-					char *num = ft_itoa(global->exit_code);
-					while (*num) {
-						output[i++] = *num++;
-					}
-				// } else {
-				// 	output[i++] = *token++;
-				// 	output[i++] = *token++;
-				// }
-				token++;
-				token++;
-			} else {
-				char *var_name = extract_variable_name(token);
-				char *var_value = get_env_value(var_name, global);
-				if (var_value) {
-					while (*var_value) {
-						output[i++] = *var_value++;
-					}
-				}
-			}
-		} else {
-			output[i++] = *token++;
-		}
-	}
-	output[i] = '\0';
-	return output;
+// 	while (*token) {
+// 		if (*token == '\\' && !in_double_quotes) {
+// 			token++;
+// 			char escaped_char = get_escaped_char(*token);
+// 			if (in_simple_quotes && escaped_char) {
+// 				output[i++] = escaped_char;
+// 				token++;
+// 				continue;
+// 			} else if (escaped_char) {
+// 				// If there's an escape sequence outside of double quotes, ignore the backslash and use the character as is.
+// 				output[i++] = *token++;
+// 				continue;
+// 			}
+// 		}
+// 		if (*token == '\'' && !in_double_quotes) {
+// 			in_simple_quotes = !in_simple_quotes;
+// 			output[i++] = *token++;
+// 			continue;
+// 		}
+// 		if (*token == '\"' && !in_simple_quotes) {
+// 			in_double_quotes = !in_double_quotes;
+// 			output[i++] = *token++;
+// 			continue;
+// 		}
+// 		// if (in_simple_quotes) {
+// 		// 	output[i++] = *token++;
+// 		// 	continue;
+// 		// }
+// 		if (*token == '$') {
+// 			// if (in_double_quotes) {
+// 			// 	output[i++] = *token++;
+// 			// 	continue;
+// 			// }
+// 			if (*(token + 1) == '?') {
+// 				// if (in_simple_quotes) {
+// 					char *num = ft_itoa(global->exit_code);
+// 					while (*num) {
+// 						output[i++] = *num++;
+// 					}
+// 				// } else {
+// 				// 	output[i++] = *token++;
+// 				// 	output[i++] = *token++;
+// 				// }
+// 				token++;
+// 				token++;
+// 			} else {
+// 				// char *var_name = extract_variable_name(token);
+// 				// if (ft_strlen(var_name) > 0) {
+// 				// 	char *var_value = get_env_value(var_name, global);
+// 				// 	if (var_value) {
+// 				// 		while (*var_value) {
+// 				// 			output[i++] = *var_value++;
+// 				// 		}
+// 				// 	}
+// 				// 	token += ft_strlen(var_name);
+// 				// } else {
+// 				// 	output[i++] = *token++;  // Traitement du caractère `$` comme un caractère normal.
+// 				// }
+// 				// // char *var_value = get_env_value(var_name, global);
+// 				// // if (var_value) {
+// 				// // 	while (*var_value) {
+// 				// // 		output[i++] = *var_value++;
+// 				// // 	}
+// 				// // }
+
+// 				while (in_simple_quotes) {
+// 					output[i++] = *token++;
+// 					continue;
+// 				}
+				
+// 				if (in_double_quotes) {
+// 					char *var_name = extract_variable_name(token); // +1 pour sauter le caractère '$'
+// 					char *var_value = get_env_value(var_name, global);
+// 					if (var_value) {
+// 						while (*var_value) {
+// 							output[i++] = *var_value++;
+// 						}
+// 						token += ft_strlen(var_name) + 1; // +1 pour sauter le caractère '$'
+// 						// continue;
+// 					}
+// 				}
+// 			}
+// 		} else {
+// 			output[i++] = *token++;
+// 		}
+// 	}
+// 	output[i] = '\0';
+// 	return output;
+// }
+
+char *format_token(char *token, t_global *global) {
+    int in_double_quotes = 0;
+    int in_simple_quotes = 0;
+    char *output = (char*)ft_gc_malloc(strlen(token) * 2 + 1);
+    int i = 0;
+
+    while (*token) {
+        if (*token == '\\') {
+            token++;
+            char escaped_char = get_escaped_char(*token);
+            if (escaped_char) {
+                output[i++] = escaped_char;
+                token++;
+                continue;
+            }
+        }
+        if (*token == '\'') {
+            in_simple_quotes = !in_simple_quotes;
+            output[i++] = *token++;
+            continue;
+        }
+        if (*token == '\"') {
+            in_double_quotes = !in_double_quotes;
+            output[i++] = *token++;
+            continue;
+        }
+        if (*token == '$' && !in_simple_quotes) {  // We don't want variable expansion inside single quotes
+            token++;  // Move past the '$'
+            if (*token == '?') {
+                char *num = ft_itoa(global->exit_code);
+                while (*num) {
+                    output[i++] = *num++;
+                }
+                // free(num);  // I assume you need to free this memory
+                token++;
+            } else {
+                char *var_name = extract_variable_name(token);
+                if (ft_strlen(var_name) > 0) {
+                    char *var_value = get_env_value(var_name, global);
+                    if (var_value) {
+                        while (*var_value) {
+                            output[i++] = *var_value++;
+                        }
+                    }
+                    token += ft_strlen(var_name);
+                } else {
+                    output[i++] = '$';  // Add back the '$' since it's not a variable name
+                }
+                // free(var_name);  // I assume you need to free this memory
+            }
+        } else {
+            output[i++] = *token++;
+        }
+    }
+    output[i] = '\0';
+    return output;
 }
+
 
 t_state	ft_error(t_token *type, char **tokens, t_global *global)
 {
