@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 14:23:07 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/22 14:27:16 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,20 @@
 // ✅: display prompt when minishell is ready to receive input
 // ✅: read input
 // ✅: parse input
-// ❌: Search and launch the right executable (based on the PATH variable
+// ✅: Search and launch the right executable (based on the PATH variable
 //			or by using relative or absolute path)
-// ❌: display output
+// ✅: display output
 // ✅: loop
 // ✅: Have a working history
-// ❌: Do not use more than one global variable, think about it and be ready
+// ✅: Do not use more than one global variable, think about it and be ready
 //			to explain why you do it.
-// ❌: Do not interpret unclosed quotes or unspecified special characters
+// ✅: Do not interpret unclosed quotes or unspecified special characters
 //			like \ (eg with $’\n’)
-// ❌: Handle ' and " (quotes) correctly
+// ✅: Handle ' and " (quotes) correctly
 // ❌: Handle redirections > >> < <<
 // ❌: Handle pipes | correctly
-// ❌: Handle environment variables ($ followed by characters)
-// ❌: Handle $? (exit code of the previous program)
+// ✅: Handle environment variables ($ followed by characters)
+// ✅: Handle $? (exit code of the previous program)
 // ✅: Handle ctrl-C ctrl-D ctrl-\ correctly
 // ✅: Implement echo with option ’-n’
 // ✅: Implement cd with only a relative or absolute path
@@ -39,8 +39,8 @@
 // ✅: Implement exit without any options
 // ✅: exit
 // BONUS
-// ✅: Detect Wilcard * (globbing)
-// ✅: Detect && and ||
+// ❌: Detect Wilcard * (globbing)
+// ❌: Detect && and ||
 
 static int	line_is_spaces(char *line)
 {
