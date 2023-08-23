@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 11:36:01 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 13:54:06 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ typedef enum s_token
 	BS_ESCAPE,
 	BS_BACKSLASH,
 	END
-}						t_token;
+}	t_token;
 
 typedef enum state
 {
