@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 11:41:18 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 11:55:18 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,19 +86,6 @@ void	add_to_history_list(t_history **head, char *line)
 			current = current->next;
 		current->next = new_entry;
 	}
-}
-
-// Linear Feedback Shift Register
-int	get_random(void)
-{
-	static unsigned int	lfsr;
-	unsigned int		bit;
-
-	if (!lfsr)
-		lfsr = 0xACE1u;
-	bit = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5)) & 1;
-	lfsr = (lfsr >> 1) | (bit << 15);
-	return (lfsr % 4);
 }
 
 static int	lsh_loop(t_global *global)
