@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 11:55:18 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 17:45:31 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ static int	lsh_loop(t_global *global)
 			continue ;
 		}
 		free(line);
-		parse_cmd(global, global->line);
+		parse_cmd(global->line);
 		run_cmd(global);
 	}
 	return (global->exit_code);

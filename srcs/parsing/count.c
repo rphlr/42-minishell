@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:38:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 10:43:29 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 15:14:03 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,11 @@ t_count	*count_types(t_token *type)
 		else if (*type == OR)
 			count->nbr_ors++;
 		else if (*type == OPTIONS)
+		{
+			type++;
 			count->nbr_options++;
+			continue;
+		}
 		else
 		{
 			type++;

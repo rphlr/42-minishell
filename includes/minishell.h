@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 13:54:06 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 17:45:25 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <termios.h>
 # include <unistd.h>
 # include <termios.h>
+#include <dirent.h>
 
 // Colors definition
 # define C_RED "\033[0;31m"
@@ -211,7 +212,7 @@ int						check_options_syntax(char *token);
 bool					check_token(char *line);
 t_state					check_errors(t_token *type, char **tokens, t_global *global);
 char					*epur_str(char *line);
-int						parse_cmd(t_global *global, t_line *line);
+int						parse_cmd(t_line *line);
 t_count					*count_types(t_token *type);
 t_state					ft_error(t_token *type, char **tokens, t_global *global);
 t_line					*init_line(char *line, t_global *global);

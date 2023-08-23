@@ -6,24 +6,31 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:42:55 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 13:56:40 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 17:45:39 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <dirent.h>
 
-int	parse_cmd(t_global *global, t_line *line)
+int	parse_cmd(t_line *line)
 {
 	DIR				*dir;
 	struct dirent	*entry;
-	char			**new_tokens;
-	int				new_count = 0, i = 0;
+	int				j;
+	int				i;
+	int				new_count;
 	char			**token_ptr;
 	t_token			*type_ptr;
-	char			*temp;
+	int				original_count;
+	char			**entries_array;
+	int				entries_count;
+	char			**old_tokens;
+	t_token			*old_types;
 
-	(void) global;
+	new_count = 0;
+	original_count = 0;
+	while (line->token[original_count] != NULL)
+		original_count++;
 	token_ptr = line->token;
 	type_ptr = line->type;
 	while (*type_ptr != END)
@@ -32,43 +39,55 @@ int	parse_cmd(t_global *global, t_line *line)
 		{
 			dir = opendir(".");
 			if (dir == NULL)
-			{
 				*token_ptr = ft_strdup("*");
-			}
 			else
 			{
-				while ((entry = readdir(dir)) != NULL)
-				{
-					if (entry->d_name[0] != '.')
-						new_count++;
-				}
-				rewinddir(dir);
-				new_tokens = (char **)ft_gc_malloc(sizeof(char *) * (new_count + 1));
+				entries_array = (char **)ft_gc_malloc(sizeof(char *) * 1000);
+				entries_count = 0;
 				while ((entry = readdir(dir)) != NULL)
 				{
 					if (entry->d_name[0] != '.')
 					{
-						new_tokens[i] = ft_strdup(entry->d_name);
-						i++;
+						entries_array[entries_count] = ft_strdup(entry->d_name);
+						entries_count++;
 					}
 				}
-				new_tokens[i] = NULL;
-				closedir(dir);
-				temp = *token_ptr;
-				*token_ptr = ft_strjoin(temp, new_tokens[0]);
-				i = 1;
-				while (new_tokens[i])
+				old_tokens = line->token;
+				old_types = line->type;
+				line->token = (char **)ft_gc_malloc(sizeof(char *)
+					* (original_count + entries_count));
+				line->type = (t_token *)ft_gc_malloc(sizeof(t_token)
+					* (original_count + entries_count));
+				j = -1;
+				while (++j < (token_ptr - old_tokens))
 				{
-					temp = *token_ptr;
-					*token_ptr = ft_strjoin(temp, " ");
-					temp = *token_ptr;
-					*token_ptr = ft_strjoin(temp, new_tokens[i]);
-					i++;
+					line->token[j] = old_tokens[j];
+					line->type[j] = old_types[j];
 				}
+				token_ptr = line->token + j;
+				type_ptr = line->type + j;
+				i = -1;
+				while (++i < entries_count)
+				{
+					*token_ptr++ = entries_array[i];
+					*type_ptr++ = WORD;
+				}
+				j = (token_ptr - line->token) - 1;
+				while (++j < original_count)
+				{
+					line->token[j + entries_count - 1] = old_tokens[j];
+					line->type[j + entries_count - 1] = old_types[j];
+				}
+				line->token[original_count + entries_count - 1] = NULL;
+				line->type[original_count + entries_count - 1] = END;
+				closedir(dir);
 			}
 		}
-		token_ptr++;
-		type_ptr++;
+		else
+		{
+			token_ptr++;
+			type_ptr++;
+		}
 	}
 	return (0);
 }
