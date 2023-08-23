@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 14:32:35 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 12:53:42 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 09:54:12 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,13 @@ char	**parsed_line(char *line)
 		if ((*line == '"' || *line == '\'') && (line == temp_line || *(line
 					- 1) != '\\'))
 			result[index++] = extract_quoted_string(&line);
-		else if (*line != ' ')
-			result[index++] = extract_unquoted_string(&line);
-		else
+		else if (*line == '\t' || *line == ' ')
+		{
 			line++;
+			continue ;
+		}
+		else
+			result[index++] = extract_unquoted_string(&line);
 	}
 	result[index] = NULL;
 	return (result);

@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 18:15:02 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/23 17:45:25 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <termios.h>
 # include <unistd.h>
 # include <termios.h>
+#include <dirent.h>
 
 // Colors definition
 # define C_RED "\033[0;31m"
@@ -62,6 +63,8 @@
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
+
+// # define HOMEFOLDER NULL
 
 // # define PROMPT C_CYAN" rapidshell > "C_RESET
 # define PROMPT "\033[1m\033[7m\033[4m\033[41m Les pros du HTML >\033[0m "
@@ -97,7 +100,7 @@ typedef enum s_token
 	BS_ESCAPE,
 	BS_BACKSLASH,
 	END
-}						t_token;
+}	t_token;
 
 typedef enum state
 {
@@ -130,6 +133,11 @@ typedef enum s_option
 	INVALID_OPTION
 }						t_option;
 
+typedef struct s_history {
+	char				*line;
+	struct s_history	*next;
+}	t_history;
+
 typedef struct s_redirection
 {
 	t_redirectiontype	type;
@@ -146,6 +154,7 @@ typedef struct s_env
 typedef struct s_cmds
 {
 	char				*cmd;
+	char				*home_folder;
 	t_redirection		*input; 
 	t_redirection		*output;
 	struct s_cmds		*next;
@@ -203,7 +212,7 @@ int						check_options_syntax(char *token);
 bool					check_token(char *line);
 t_state					check_errors(t_token *type, char **tokens, t_global *global);
 char					*epur_str(char *line);
-int						parse_cmd(t_global *global, t_line *line);
+int						parse_cmd(t_line *line);
 t_count					*count_types(t_token *type);
 t_state					ft_error(t_token *type, char **tokens, t_global *global);
 t_line					*init_line(char *line, t_global *global);
