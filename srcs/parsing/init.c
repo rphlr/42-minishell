@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 17:53:08 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 18:39:10 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,14 @@ static t_cmds	*init_cmds(char **tokens, t_token *type)
 	while (tokens[i] != NULL)
 	{
 		full_cmd = ft_strdup(tokens[i]);
+		if (tokens[i + 1] != NULL)
+			full_cmd = ft_strjoin(full_cmd, " ");
 		while (tokens[i + 1] != NULL && type[i + 1] != PIPE && type[i + 1] != SEMICOLON && type[i + 1] != AND && type[i + 1] != OR)
 		{
 			i++;
 			temp = full_cmd;
 			full_cmd = ft_strjoin(temp, tokens[i]);
-			if (tokens[i + 1] != NULL && type[i + 1] != PIPE)
+			if (tokens[i + 1] != NULL)
 				full_cmd = ft_strjoin(full_cmd, " ");
 		}
 		new_cmd = (t_cmds *)ft_gc_malloc(sizeof(t_cmds));
@@ -55,8 +57,6 @@ static t_cmds	*init_cmds(char **tokens, t_token *type)
 		i++;
 		while (tokens[i] != NULL && type[i] != PIPE  && type[i] != SEMICOLON && type[i] != AND && type[i] != OR)
 		{
-			printf("type: %d\n", type[i]);
-			printf("token: %s\n", tokens[i]);
 			if (type[i] == INPUT)
 			{
 				new_cmd->input = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
@@ -65,7 +65,6 @@ static t_cmds	*init_cmds(char **tokens, t_token *type)
 				new_cmd->input->type = INPUT_REDIRECTION;
 				new_cmd->input->filename = ft_strdup(tokens[i + 1]);
 				i += 2;
-				printf("input: %s\n", new_cmd->input->filename);
 			}
 			else if (type[i] == OUTPUT)
 			{

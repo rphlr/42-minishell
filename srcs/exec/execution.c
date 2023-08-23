@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 17:50:14 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 18:50:19 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include "minishell.h"
 
+void	execute(t_global *global);
 
 static char	**env_to_char(t_global *global)
 {
@@ -58,92 +59,77 @@ static char	*get_path(char *command, char **paths)
 void	ft_input(t_cmds *curr_cmd)
 {
 	int	fd;
+	// pid_t	pid;
 
-	fd = open(curr_cmd->input->filename, O_RDONLY);
+	// pid = fork();
+	// if (pid < 0)
+	// {
+    //     perror("minishell: fork error");
+    //     return;
+    // }
+	fd = open(curr_cmd->input->filename, O_APPEND);
 	if (fd == -1)
 	{
 		ft_printf("minishell: %s: %s\n", curr_cmd->input->filename, strerror(errno));
-		exit(1);
+		return ;
 	}
-	printf("fd: %d\n", fd);
+	// curr_cmd->cmd;
 	if (dup2(fd, 0) == -1)
-	{
 		ft_printf("minishell: %s\n", strerror(errno));
-		exit(1);
-	}
 	close(fd);
 }
 
-
-static void	execute_specials(t_global *global, char **paths)
+static void	execute_specials(t_global *global)
 {
 	t_count	*count_tmp;
 	t_cmds 	*curr_cmd;
 	t_token	*type_tmp;
-
-	(void) paths;
 
 	count_tmp = global->line->count;
 	curr_cmd = global->line->cmds;
 	type_tmp = global->line->type;
 	while (count_tmp->special_cases)
 	{
-		while (!(*type_tmp == INPUT || *type_tmp == OUTPUT || *type_tmp == APPEND || *type_tmp == HEREDOC || *type_tmp == OR || *type_tmp == AND || *type_tmp == SEMICOLON || *type_tmp == PIPE))
+		while (!(*type_tmp == INPUT || *type_tmp == OUTPUT || *type_tmp == APPEND || *type_tmp == HEREDOC || *type_tmp == OR || *type_tmp == AND || *type_tmp == SEMICOLON || *type_tmp == PIPE) && *type_tmp != END)
 			type_tmp++;
 		if (count_tmp->nbr_inputs > 0 && *type_tmp == INPUT)
 		{
-			printf("input\n");
 			count_tmp->nbr_inputs--;
-			printf ("curr_cmd: %s\n", curr_cmd->cmd);
 			ft_input(curr_cmd);
 		}
 		if (count_tmp->nbr_outputs > 0 && *type_tmp == OUTPUT)
 		{
-			printf("output\n");
 			count_tmp->nbr_outputs--;
-			printf ("curr_cmd: %s\n", curr_cmd->cmd);
 			// ft_output(global, paths);
 		}
 		if (count_tmp->nbr_appends > 0 && *type_tmp == APPEND)
 		{
-			printf("append\n");
 			count_tmp->nbr_appends--;
-			printf ("curr_cmd: %s\n", curr_cmd->cmd);
 			// ft_append(global, paths);
 		}
 		if (count_tmp->nbr_heredocs > 0 && *type_tmp == HEREDOC)
 		{
-			printf("heredoc\n");
 			count_tmp->nbr_heredocs--;
-			printf ("curr_cmd: %s\n", curr_cmd->cmd);
 			// ft_heredoc(global, paths);
 		}
 		if (count_tmp->nbr_ors > 0 && *type_tmp == OR)
 		{
-			printf("or\n");
 			count_tmp->nbr_ors--;
-			printf ("curr_cmd: %s\n", curr_cmd->cmd);
 			// ft_or(global, paths);
 		}
 		if (count_tmp->nbr_ands > 0 && *type_tmp == AND)
 		{
-			printf("and\n");
 			count_tmp->nbr_ands--;
-			printf ("curr_cmd: %s\n", curr_cmd->cmd);
 			// ft_and(global, paths);
 		}
 		if (count_tmp->nbr_semicolons > 0 && *type_tmp == SEMICOLON)
 		{
-			printf("semicolon\n");
 			count_tmp->nbr_semicolons--;
-			printf ("curr_cmd: %s\n", curr_cmd->cmd);
 			// ft_semicolon(global, paths);
 		}
 		if (count_tmp->nbr_pipes > 0 && *type_tmp == PIPE)
 		{
-			printf("pipe\n");
 			count_tmp->nbr_pipes--;
-			printf ("curr_cmd: %s\n", curr_cmd->cmd);
 			// ft_pipe(global, paths);
 		}
 		if (!count_tmp->nbr_inputs && !count_tmp->nbr_outputs
@@ -182,7 +168,7 @@ static void	pid_working(char *path, char **paths, t_global *global)
 	}
 }
 
-static void	execute(t_global *global)
+void	execute(t_global *global)
 {
 	char	*path;
 	char	**paths;
@@ -203,7 +189,7 @@ static void	execute(t_global *global)
 	}
 	if (global->line->count->special_cases == true)
 	{
-		execute_specials(global, paths);
+		execute_specials(global);
 		return ;
 	}
 	pid_working(path, paths, global);
@@ -211,19 +197,25 @@ static void	execute(t_global *global)
 
 void	run_cmd(t_global *global)
 {
-	if (!ft_strcmp(global->line->token[0], "echo"))
+	if (global->line->count->special_cases == true)
+	{
+		printf("special cases\n");
+		execute_specials(global);
+		return ;
+	}
+	if (!ft_strcmp(*global->line->token, "echo"))
 		ft_echo(global);
-	else if (!ft_strcmp(global->line->token[0], "cd"))
+	else if (!ft_strcmp(*global->line->token, "cd"))
 		ft_cd(global);
-	else if (!ft_strcmp(global->line->token[0], "pwd"))
+	else if (!ft_strcmp(*global->line->token, "pwd"))
 		ft_pwd(global->line);
-	else if (!ft_strcmp(global->line->token[0], "export"))
+	else if (!ft_strcmp(*global->line->token, "export"))
 		ft_export(global, global->line);
-	else if (!ft_strcmp(global->line->token[0], "unset"))
+	else if (!ft_strcmp(*global->line->token, "unset"))
 		ft_unset(global, global->line);
-	else if (!ft_strcmp(global->line->token[0], "env"))
+	else if (!ft_strcmp(*global->line->token, "env"))
 		ft_env(global);
-	else if (!ft_strcmp(global->line->token[0], "exit"))
+	else if (!ft_strcmp(*global->line->token, "exit"))
 		ft_exit(global);
 	else
 	{
