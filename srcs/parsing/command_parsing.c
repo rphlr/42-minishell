@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:42:55 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 17:45:39 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 20:28:51 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int	parse_cmd(t_line *line)
 	struct dirent	*entry;
 	int				j;
 	int				i;
-	int				new_count;
 	char			**token_ptr;
 	t_token			*type_ptr;
 	int				original_count;
@@ -27,7 +26,6 @@ int	parse_cmd(t_line *line)
 	char			**old_tokens;
 	t_token			*old_types;
 
-	new_count = 0;
 	original_count = 0;
 	while (line->token[original_count] != NULL)
 		original_count++;
