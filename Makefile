@@ -6,7 +6,7 @@
 #    By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/08/21 15:03:56 by mariavillar      ###   ########.fr        #
+#    Updated: 2023/08/23 16:42:26 by rrouille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,6 +62,7 @@ OBJS			= ${patsubst ${SRCSDIR}%,${OBJSDIR}%,${SRCS:%.c=%.o}}
 CFLAGS			= -Werror -Wall -Wextra -g
 CC				= gcc
 RM				= rm -rf
+MV				= mv
 MKDIR			= mkdir -p
 
 # Operating System
@@ -108,14 +109,6 @@ ${NAME}: ${OBJS}
 			@${CHARG_LINE}
 			@${CC} ${CFLAGS} ${OBJS} mylib/objs/*/*.o -L ${RLDIR} -lreadline -o ${NAME}
 			@${END_COMP}
- 
-# Run the program
-run:	clear fast
-			@${ECHO} "${GREEN}🔧 Operations completed: 🔧${ENDCOLOR}"
-			@./${NAME} ${ARGS}
-r:		clear fast
-			@${ECHO} "${GREEN}🔧 Operations completed: 🔧${ENDCOLOR}"
-			@./${NAME} ${ARGS}
 
 ###############################################################################
 #                   ↓↓↓↓↓           CLEANING           ↓↓↓↓↓                  #
@@ -245,22 +238,53 @@ help:
 			@${ECHO} "\t- You can also use ${ITALIC}\`make run\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make r\`${ENDCOLOR}${GRAY} to try it out."
 			@${ECHO} "\t- Check for memory leaks with ${ITALIC}\`make leaks\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make l\`${ENDCOLOR}${GRAY}."
 			@${ECHO} "\t- Check the 42 norm with ${ITALIC}\`make norm\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make n\`${ENDCOLOR}${GRAY}."
+			@${ECHO} "\t- Check the forbidden functions with ${ITALIC}\`make check_forbidden\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make cf\`${ENDCOLOR}${GRAY}."
+			@${ECHO} "\t- Use ${ITALIC}\`make lldb\`${ENDCOLOR}${GRAY} to run the program with lldb."
+			@${ECHO} "\t- Use ${ITALIC}\`make fast\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make cf\`${ENDCOLOR}${GRAY} to compile the program faster."
+			@${ECHO} "\t- Use ${ITALIC}\`make clear\`${ENDCOLOR}${GRAY} or ${ITALIC}\`make c\`${ENDCOLOR}${GRAY} to clear the screen."
+			@${ECHO} "\t- Use ${ITALIC}\`make clean\`${ENDCOLOR}${GRAY} to clean the object files."
+			@${ECHO} "\t- Use ${ITALIC}\`make fclean\`${ENDCOLOR}${GRAY} to clean the object files and the executable."
 			@${ECHO} ""
 			@${ECHO} "${YELLOW}🌟 Use ${ITALIC}\`make help\`${ENDCOLOR}${YELLOW} or ${ITALIC}\`make h\`${ENDCOLOR}${YELLOW} to display these helpful tips. 🚀${ENDCOLOR}"
 h:		help
+ 
+# Run the program
+run:	clear fast
+			@${ECHO} "${GREEN}🔧 Operations completed: 🔧${ENDCOLOR}"
+			@./${NAME} ${ARGS}
+r:		clear fast
+			@${ECHO} "${GREEN}🔧 Operations completed: 🔧${ENDCOLOR}"
+			@./${NAME} ${ARGS}
+
+check_forbidden:
+			@${ECHO} "${CLEAR}\c"
+			@nm -u ./minishell | grep -v "___" | grep -v "dyld_stub_binder" | sed 's/$$\INODE64//; s/^_//' > functions_used
+			@sort functions_used -o functions_used_sorted
+			@sort authorized_functions -o authorized_functions_sorted
+			@${RM} functions_used authorized_functions
+			@${MV} functions_used_sorted functions_used
+			@${MV} authorized_functions_sorted authorized_functions
+			@comm -23 functions_used authorized_functions > unauthorized_used
+			@if [ -s unauthorized_used ]; then \
+				${ECHO} "${RED}❌ The unauthorized functions used are:${ENDCOLOR}"; \
+				cat unauthorized_used; \
+				${ECHO} "${ENDCOLOR}"; \
+			else \
+				${ECHO} "${GREEN}✅ No unauthorized functions used! ✨${ENDCOLOR}"; \
+			fi
+			@${RM} functions_used unauthorized_used
+cf:		check_forbidden
 
 # Norminette
 norm:
 			@norminette ${SRCSDIR} >/dev/null 2>&1 && norminette ${HDRDIR} >/dev/null 2>&1 && make draw_norm_yes || make draw_norm_no && norminette ${SRCSDIR} && norminette ${HDRDIR}
-
 n:		norm
 
 # fast
 fast: FAST_MODE := YES
 
 fast: lib ${OBJS}
-			@${CC} ${OBJS} mylib/objs/*/*.o -L ${RLDIR} -lreadline -o ${NAME}
-			
+			@${CC} ${OBJS} mylib/objs/*/*.o -L ${RLDIR} -lreadline -o ${NAME}	
 f: fast
 
 # Leaks
@@ -298,6 +322,8 @@ git: fclean
 # Clear the screen
 clear:
 			@${ECHO} "${CLEAR}\c"
+
+c:		clear
 
 # Rebuild the program
 re: fclean .WAIT all

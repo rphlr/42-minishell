@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:42:00 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/15 17:12:15 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 11:17:14 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*get_env_value(char *name, t_global *global)
 	tmp = global->env;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->name, name) == 0)
+		if (!ft_strcmp(tmp->name, name))
 			return (tmp->value);
 		tmp = tmp->next;
 	}
