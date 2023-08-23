@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 15:49:32 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 11:06:56 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static char	**env_to_char(t_global *global)
 {
 	char	**paths;
 
+	if (!global->env)
+		return (NULL);
 	while (ft_strcmp(global->env->name, "PATH"))
 	{
 		global->env = global->env->next;

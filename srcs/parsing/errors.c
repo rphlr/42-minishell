@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 15:26:51 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 11:01:32 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,39 @@ char	*extract_variable_name(char *ptoken)
 	return (var_name);
 }
 
+int	biggest_var_value(t_env	*env)
+{
+	int		len;
+	int		len_biggest;
+	t_env	*current;
+
+	len_biggest = 0;
+	current = env;
+	while (current)
+	{
+		len = ft_strlen(current->value);
+		if (len > len_biggest)
+			len_biggest = len;
+		current = current->next;
+	}
+	return (len_biggest);
+}
+
 char	*format_token(char *token, t_global *global)
 {
 	int		in_double_quotes;
 	int		in_simple_quotes;
 	char	*output;
 	int		i;
+	int		len_biggest_var_value;
 	char	*num;
 	char	*var_name;
 	char	*var_value;
 
 	in_double_quotes = 0;
 	in_simple_quotes = 0;
-	output = (char *)ft_gc_malloc(10000000); // a corriger
+	len_biggest_var_value = biggest_var_value(global->env);
+	output = (char *)ft_gc_malloc(len_biggest_var_value + 1);
 	i = 0;
 	while (*token)
 	{

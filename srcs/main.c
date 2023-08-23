@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 15:49:27 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 11:41:18 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@
 // ❌: Detect Wilcard * (globbing)
 // ❌: Detect && and ||
 
-static int	line_is_spaces(char *line)
+static int	line_is_wspaces(char *line)
 {
 	while (*line)
 	{
-		if (*line++ != ' ')
+		if (!ft_isspace(*line++))
 			return (0);
 	}
 	return (1);
@@ -69,11 +69,47 @@ static char	*rm_newline(char *line)
 	return (line);
 }
 
+void	add_to_history_list(t_history **head, char *line)
+{
+	t_history	*new_entry;
+	t_history	*current;
+
+	new_entry = ft_gc_malloc(sizeof(t_history));
+	new_entry->line = ft_strdup(line);
+	new_entry->next = NULL;
+	if (!(*head))
+		*head = new_entry;
+	else
+	{
+		current = *head;
+		while (current->next)
+			current = current->next;
+		current->next = new_entry;
+	}
+}
+
+// Linear Feedback Shift Register
+int	get_random(void)
+{
+	static unsigned int	lfsr;
+	unsigned int		bit;
+
+	if (!lfsr)
+		lfsr = 0xACE1u;
+	bit = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5)) & 1;
+	lfsr = (lfsr >> 1) | (bit << 15);
+	return (lfsr % 4);
+}
+
 static int	lsh_loop(t_global *global)
 {
-	char	*line;
-	int		history_fd;
+	char		*line;
+	char		*rdm_prompt_clr;
+	int			history_fd;
+	t_history	*history_head;
+	t_history	*last_entry;
 
+	history_head = NULL;
 	history_fd = open(".minishell_history", O_CREAT | O_RDWR, 0644);
 	if (history_fd == -1)
 		ft_printf("minishell: can't open history file\n");
@@ -84,20 +120,29 @@ static int	lsh_loop(t_global *global)
 		{
 			line = rm_newline(line);
 			add_history(line);
+			add_to_history_list(&history_head, line);
 			line = get_next_line(history_fd);
 		}
 	}
 	while (1)
 	{
-		line = readline(PROMPT);
+		rdm_prompt_clr = ft_strjoin(ft_strjoin(ft_strjoin("\033[", ft_itoa(get_random() % 7 + 31)), "m"), PROMPT);
+		line = readline(rdm_prompt_clr);
 		if (!check_token(line))
 			break ;
-		if (line_is_spaces(line))
+		if (line_is_wspaces(line))
 			continue ;
 		if (line && ft_strcmp(line, ""))
 		{
-			add_history(line);
-			ft_putendl_fd(line, history_fd);
+			last_entry = history_head;
+			while (last_entry && last_entry->next)
+				last_entry = last_entry->next;
+			if (!last_entry || ft_strcmp(line, last_entry->line))
+			{
+				add_history(line);
+				ft_putendl_fd(line, history_fd);
+				add_to_history_list(&history_head, line);
+			}
 		}
 		if (!ft_strcmp(line, ""))
 			continue ;

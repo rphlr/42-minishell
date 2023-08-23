@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 15:51:49 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/23 11:36:01 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
+
+// # define HOMEFOLDER NULL
 
 // # define PROMPT C_CYAN" rapidshell > "C_RESET
 # define PROMPT "\033[1m\033[7m\033[4m\033[41m Les pros du HTML >\033[0m "
@@ -130,6 +132,11 @@ typedef enum s_option
 	INVALID_OPTION
 }						t_option;
 
+typedef struct s_history {
+	char				*line;
+	struct s_history	*next;
+}	t_history;
+
 typedef struct s_redirection
 {
 	t_redirectiontype	type;
@@ -146,6 +153,7 @@ typedef struct s_env
 typedef struct s_cmds
 {
 	char				*cmd;
+	char				*home_folder;
 	t_redirection		*input; 
 	t_redirection		*output;
 	struct s_cmds		*next;
