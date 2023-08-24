@@ -17,14 +17,14 @@
 //     execute_specials(global, paths);
 //     return ;
 // }
-
-static int **allocate_pipe(int nbr_of_child_process)
-{
-    int **pipes;
-    int i;
-    int fd[2];
-
-}
+//
+//static int **allocate_pipe(int nbr_of_child_process)
+//{
+//    int **pipes;
+//    int i;
+//    int fd[2];
+//
+//}
 
     // int **create_pipe(int nbr_of_child_processes)
     // {
