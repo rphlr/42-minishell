@@ -18,7 +18,7 @@ int	parse_cmd(t_line *line)
 	struct dirent	*entry;
 	int				j;
 	int				i;
-	int				new_count;
+//	int				new_count;
 	char			**token_ptr;
 	t_token			*type_ptr;
 	int				original_count;
@@ -27,7 +27,7 @@ int	parse_cmd(t_line *line)
 	char			**old_tokens;
 	t_token			*old_types;
 
-	new_count = 0;
+//	new_count = 0;
 	original_count = 0;
 	while (line->token[original_count] != NULL)
 		original_count++;
