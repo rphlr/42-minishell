@@ -6,7 +6,7 @@
 #    By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/08/23 16:42:26 by rrouille         ###   ########.fr        #
+#    Updated: 2023/08/24 16:30:57 by mariavillar      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -142,7 +142,7 @@ draw_begining:
 					sleep 0.01; \
 				done; \
 				printf '%s' "$$line"
-			@sleep 0.2
+			@sleep 5
 			@${ECHO} "${CLEAR}"
 
 draw_bonus:
