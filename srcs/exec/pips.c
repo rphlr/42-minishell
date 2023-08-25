@@ -6,37 +6,24 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 17:29:45 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/22 18:07:44 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/25 12:24:04 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// if (global->line->count->special_cases == true)
-// {
-//     execute_specials(global, paths);
-//     return ;
-// }
-//
-//static int **allocate_pipe(int nbr_of_child_process)
-//{
-//    int **pipes;
-//    int i;
-//    int fd[2];
-//
-//}
+// filename path : global->line->cmds->redirection->filename
 
-    // int **create_pipe(int nbr_of_child_processes)
-    // {
-        
-    // }
+char *ft_pipe(t_global *global, char *paths)
+{
+    int parent_process;
+    
+    
+    paths = global->line->cmds->input;
+    check_pipe(char **av, );
+}
 
-    // void close_pipes_in_child_process(int **pipes, int nbr_of_child_processes, int i)
-    // {
-
-    // }
-
-    // void    close_pipes_in_main_process(int **pipes, int nbr_of_child_processes)
-    // {
-        
-    // }
+check_pipe(char **av, )
+{
+    
+}

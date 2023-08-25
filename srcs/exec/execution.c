@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 18:50:19 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/25 11:33:11 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ static void	execute_specials(t_global *global)
 		if (count_tmp->nbr_pipes > 0 && *type_tmp == PIPE)
 		{
 			count_tmp->nbr_pipes--;
-			// ft_pipe(global, paths);
+			ft_pipe(global, paths);
 		}
 		if (!count_tmp->nbr_inputs && !count_tmp->nbr_outputs
 			&& !count_tmp->nbr_appends && !count_tmp->nbr_heredocs
