@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/24 14:01:38 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/25 09:08:27 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,51 +55,171 @@ static char	*get_path(char *command, char **paths)
     return (NULL);
 }
 
-void	ft_input(t_cmds *curr_cmd)
+void	ft_redir(t_global *global, t_cmds *curr_cmd)
 {
-	int fd;
-
-	// Ouvrir le fichier en mode lecture
-	fd = open(curr_cmd->input->filename, O_RDONLY);
-	if (fd == -1)
+	if (curr_cmd->redir->type == INPUT_REDIRECTION)
 	{
-		ft_printf("minishell: %s: %s\n", curr_cmd->input->filename, strerror(errno));
-		return ;
+		if (curr_cmd->redir->filename)
+		{
+			if (access(curr_cmd->redir->filename, F_OK) == -1)
+			{
+				ft_printf("minishell: %s: %s\n", curr_cmd->redir->filename, strerror(errno));
+				global->exit_code = 1;
+				return ;
+			}
+			if (access(curr_cmd->redir->filename, R_OK) == -1)
+			{
+				ft_printf("minishell: %s: %s\n", curr_cmd->redir->filename, strerror(errno));
+				global->exit_code = 1;
+				return ;
+			}
+		}
 	}
-
-	// Rediriger l'entrée standard vers le fichier
-	if (dup2(fd, STDIN_FILENO) == -1)
+	else if (curr_cmd->redir->type == OUTPUT_REDIRECTION)
 	{
-		ft_printf("minishell: dup2 error\n");
-		return ;
+		if (curr_cmd->redir->filename)
+		{
+			if (access(curr_cmd->redir->filename, F_OK) == 0)
+			{
+				if (access(curr_cmd->redir->filename, W_OK) == -1)
+				{
+					ft_printf("minishell: %s: %s\n", curr_cmd->redir->filename, strerror(errno));
+					global->exit_code = 1;
+					return ;
+				}
+			}
+		}
 	}
-
-	// Fermer le descripteur de fichier original
-	close(fd);
+	else if (curr_cmd->redir->type == APPEND_REDIRECTION)
+	{
+		if (curr_cmd->redir->filename)
+		{
+			if (access(curr_cmd->redir->filename, F_OK) == 0)
+			{
+				if (access(curr_cmd->redir->filename, W_OK) == -1)
+				{
+					ft_printf("minishell: %s: %s\n", curr_cmd->redir->filename, strerror(errno));
+					global->exit_code = 1;
+					return ;
+				}
+			}
+		}
+	}
+	else if (curr_cmd->redir->type == HEREDOC)
+	{
+		if (curr_cmd->redir->filename)
+		{
+			if (access(curr_cmd->redir->filename, F_OK) == -1)
+			{
+				ft_printf("minishell: %s: %s\n", curr_cmd->redir->filename, strerror(errno));
+				global->exit_code = 1;
+				return ;
+			}
+			if (access(curr_cmd->redir->filename, R_OK) == -1)
+			{
+				ft_printf("minishell: %s: %s\n", curr_cmd->redir->filename, strerror(errno));
+				global->exit_code = 1;
+				return ;
+			}
+		}
+	}
 }
 
-void	ft_output(t_cmds *curr_cmd)
+// #include <sys/types.h>
+// #include <sys/wait.h>
+// #include <unistd.h>
+// #include <string.h>
+// #include <stdio.h>
+
+int execute_cmd(char *cmd, t_redirection *redir)
 {
-	int fd;
+    pid_t pid; //, wpid;
+    int status;
+    char *argv[100];  // Assumons un maximum de 100 arguments pour simplifier
+    char *token;
+    int i = 0;
 
-    printf("0\n");
-    fd = open(curr_cmd->output->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    printf("1\n");
-    if (fd == -1)
+    // Parsez la commande en arguments pour execvp
+    token = strtok(cmd, " ");
+    while (token != NULL)
     {
-        ft_printf("minishell: %s: %s\n", curr_cmd->output->filename, strerror(errno));
-        return ;
+        argv[i] = token;
+        i++;
+        token = strtok(NULL, " ");
     }
+    argv[i] = NULL;
 
-    printf("2\n");
-    if (dup2(fd, STDOUT_FILENO) == -1)
+    pid = fork();
+    if (pid == 0)
     {
-        ft_printf("minishell: dup2 error\n");
-        close(fd);  // Assurez-vous de fermer le descripteur de fichier en cas d'erreur
-        return ;
+        // Processus enfant
+        if (redir && redir->filename)
+        {
+            int fd;
+            switch (redir->type)
+            {
+                case OUTPUT_REDIRECTION:
+                    fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                    dup2(fd, STDOUT_FILENO);
+                    close(fd);
+                    break;
+                case APPEND_REDIRECTION:
+                    fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+                    dup2(fd, STDOUT_FILENO);
+                    close(fd);
+                    break;
+				case INPUT_REDIRECTION:
+					fd = open(redir->filename, O_RDONLY);
+					dup2(fd, STDIN_FILENO);
+					close(fd);
+					break;
+				case NO_REDIRECTION:
+					break;
+                // Ajoutez d'autres cas si nécessaire
+            }
+        }
+        execvp(argv[0], argv);
+        perror("execvp");
+        exit(EXIT_FAILURE);
     }
-    printf("3\n");
-    close(fd);
+    else if (pid < 0)
+    {
+        // Erreur lors du fork
+        perror("fork");
+        return -1;
+    }
+    else
+    {
+        // Processus parent
+        // do
+        // {
+        //     wpid = waitpid(pid, &status, WUNTRACED);
+        // } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+
+        return WEXITSTATUS(status);
+    }
+}
+
+void ft_or(t_cmds *curr_cmd, t_cmds *next_cmd)
+{
+    if (execute_cmd(curr_cmd->cmd, curr_cmd->redir) != 0)
+    {
+        execute_cmd(next_cmd->cmd, next_cmd->redir);
+    }
+}
+
+void	ft_and(t_cmds *curr_cmd, t_cmds *next_cmd)
+{
+	if (execute_cmd(curr_cmd->cmd, curr_cmd->redir) == 0)
+	{
+		execute_cmd(next_cmd->cmd, next_cmd->redir);
+	}
+}
+
+void	ft_semicolon(t_cmds *curr_cmd, t_cmds *next_cmd)
+{
+	execute_cmd(curr_cmd->cmd, curr_cmd->redir);
+	execute_cmd(next_cmd->cmd, next_cmd->redir);
 }
 
 static void	execute_specials(t_global *global)
@@ -117,40 +237,25 @@ static void	execute_specials(t_global *global)
         {
             type_tmp++;
         }
-		if (count_tmp->nbr_inputs > 0 && *type_tmp == INPUT)
+		if (count_tmp->nbr_inputs > 0 && (*type_tmp == INPUT || *type_tmp == HEREDOC || *type_tmp == APPEND || *type_tmp == OUTPUT))
 		{
 			count_tmp->nbr_inputs--;
-			ft_input(curr_cmd);
-		}
-		if (count_tmp->nbr_outputs > 0 && *type_tmp == OUTPUT)
-		{
-			count_tmp->nbr_outputs--;
-			ft_output(curr_cmd);
-		}
-		if (count_tmp->nbr_appends > 0 && *type_tmp == APPEND)
-		{
-			count_tmp->nbr_appends--;
-			// ft_append(global, paths);
-		}
-		if (count_tmp->nbr_heredocs > 0 && *type_tmp == HEREDOC)
-		{
-			count_tmp->nbr_heredocs--;
-			// ft_heredoc(global, paths);
+			ft_redirection(global, curr_cmd);
 		}
 		if (count_tmp->nbr_ors > 0 && *type_tmp == OR)
 		{
 			count_tmp->nbr_ors--;
-			// ft_or(global, paths);
+			ft_or(curr_cmd, curr_cmd->next);
 		}
 		if (count_tmp->nbr_ands > 0 && *type_tmp == AND)
 		{
 			count_tmp->nbr_ands--;
-			// ft_and(global, paths);
+			ft_and(curr_cmd, curr_cmd->next);
 		}
 		if (count_tmp->nbr_semicolons > 0 && *type_tmp == SEMICOLON)
 		{
 			count_tmp->nbr_semicolons--;
-			// ft_semicolon(global, paths);
+			ft_semicolon(curr_cmd, curr_cmd->next);
 		}
 		if (count_tmp->nbr_pipes > 0 && *type_tmp == PIPE)
 		{

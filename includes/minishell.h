@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 17:45:25 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/25 08:53:32 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,8 +155,7 @@ typedef struct s_cmds
 {
 	char				*cmd;
 	char				*home_folder;
-	t_redirection		*input; 
-	t_redirection		*output;
+	t_redirection		*redir;
 	struct s_cmds		*next;
 }						t_cmds;
 

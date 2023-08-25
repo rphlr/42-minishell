@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 21:29:28 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/25 08:54:55 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ static t_cmds	*init_cmds(char **tokens, t_token *type)
 				full_cmd = ft_strjoin(full_cmd, " ");
 		}
 		new_cmd->cmd = full_cmd;
-		new_cmd->input = NULL;
-		new_cmd->output = NULL;
+		new_cmd->redir = NULL;
 		new_cmd->next = NULL;
 		if (head == NULL)
 		{
@@ -99,29 +98,29 @@ static t_cmds	*init_cmds(char **tokens, t_token *type)
 	{
 		if (type[i] == INPUT)
 		{
-			new_cmd->input = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-			if (!new_cmd->input)
+			new_cmd->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
+			if (!new_cmd->redir)
 				return (NULL);
-			new_cmd->input->type = INPUT_REDIRECTION;
-			new_cmd->input->filename = ft_strdup(tokens[i + 1]);
+			new_cmd->redir->type = INPUT_REDIRECTION;
+			new_cmd->redir->filename = ft_strdup(tokens[i + 1]);
 			i += 2;
 		}
 		else if (type[i] == OUTPUT)
 		{
-			new_cmd->output = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-			if (!new_cmd->output)
+			new_cmd->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
+			if (!new_cmd->redir)
 				return (NULL);
-			new_cmd->output->type = OUTPUT_REDIRECTION;
-			new_cmd->output->filename = ft_strdup(tokens[i + 1]);
+			new_cmd->redir->type = OUTPUT_REDIRECTION;
+			new_cmd->redir->filename = ft_strdup(tokens[i + 1]);
 			i += 2;
 		}
 		else if (type[i] == APPEND)
 		{
-			new_cmd->output = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-			if (!new_cmd->output)
+			new_cmd->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
+			if (!new_cmd->redir)
 				return (NULL);
-			new_cmd->output->type = APPEND_REDIRECTION;
-			new_cmd->output->filename = ft_strdup(tokens[i + 1]);
+			new_cmd->redir->type = APPEND_REDIRECTION;
+			new_cmd->redir->filename = ft_strdup(tokens[i + 1]);
 			i += 2;
 		}
 		else
