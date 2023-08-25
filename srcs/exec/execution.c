@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 18:26:19 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/25 18:59:59 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,38 +55,47 @@ static char	*get_path(char *command, char **paths)
 
 static int	cmd_is_primaries(char *cmd)
 {
-	if (!ft_strcmp(cmd, "echo"))
+	char *cmd_copy = ft_strdup(cmd);
+	char *first_word = ft_strtok(cmd_copy, " ");
+
+	if (!ft_strcmp(first_word, "echo"))
 		return (1);
-	else if (!ft_strcmp(cmd, "cd"))
+	else if (!ft_strcmp(first_word, "cd"))
 		return (1);
-	else if (!ft_strcmp(cmd, "pwd"))
+	else if (!ft_strcmp(first_word, "pwd"))
 		return (1);
-	else if (!ft_strcmp(cmd, "export"))
+	else if (!ft_strcmp(first_word, "export"))
 		return (1);
-	else if (!ft_strcmp(cmd, "unset"))
+	else if (!ft_strcmp(first_word, "unset"))
 		return (1);
-	else if (!ft_strcmp(cmd, "env"))
+	else if (!ft_strcmp(first_word, "env"))
 		return (1);
-	else if (!ft_strcmp(cmd, "exit"))
+	else if (!ft_strcmp(first_word, "exit"))
 		return (1);
 	return (0);
 }
 
 static void	execute_primaries(char	*cmd, t_global *global)
 {
-	if (!ft_strcmp(cmd, "echo"))
+	char *cmd_copy = ft_strdup(cmd);
+	char *first_word = ft_strtok(cmd_copy, " ");
+
+	if (!ft_strcmp(first_word, "echo"))
+	{
+		printf("cmd = %s\n", cmd);
 		ft_echo(cmd);
-	else if (!ft_strcmp(cmd, "cd"))
+	}
+	else if (!ft_strcmp(first_word, "cd"))
 		ft_cd(cmd, global);
-	else if (!ft_strcmp(cmd, "pwd"))
+	else if (!ft_strcmp(first_word, "pwd"))
 		ft_pwd(global->line);
-	else if (!ft_strcmp(cmd, "export"))
+	else if (!ft_strcmp(first_word, "export"))
 		ft_export(global, global->line);
-	else if (!ft_strcmp(cmd, "unset"))
+	else if (!ft_strcmp(first_word, "unset"))
 		ft_unset(global, global->line);
-	else if (!ft_strcmp(cmd, "env"))
+	else if (!ft_strcmp(first_word, "env"))
 		ft_env(global);
-	else if (!ft_strcmp(cmd, "exit"))
+	else if (!ft_strcmp(first_word, "exit"))
 		ft_exit(global);
 }
 
@@ -118,8 +127,7 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 	{
 		ft_printf("minishell: %s: command not found\n", argv[0]);
 		global->exit_code = 127;
-		manage_exit(&global->exit_code);
-		return (EXIT_FAILURE);
+		return (manage_exit(&global->exit_code));
 	}
 	pid = fork();
 	if (pid == 0)
@@ -168,7 +176,7 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 		}
 		execve(path, argv, NULL);
 		global->exit_code = EXIT_FAILURE;
-		exit(EXIT_FAILURE);
+		exit (manage_exit(&global->exit_code));
 	}
 	else if (pid < 0)
 	{
@@ -178,7 +186,7 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 	else
 	{
 		waitpid(pid, &status, 0);
-		return WEXITSTATUS(status);
+		return (WEXITSTATUS(status));
 	}
 }
 
@@ -300,6 +308,7 @@ void	run_cmd(t_global *global)
 {
 	int primaries;
 
+	printf("cmd = %s\n", global->line->cmds->cmd);
 	primaries = cmd_is_primaries(global->line->cmds->cmd);
 	if (primaries)
 	{
@@ -311,7 +320,6 @@ void	run_cmd(t_global *global)
 		execute_specials(global);
 		return ;
 	}
-	execute_cmd(global->line->cmds->cmd, global->line->cmds->redir, global);
-	global->exit_code = 0;
+	global->exit_code = execute_cmd(global->line->cmds->cmd, global->line->cmds->redir, global);
 	manage_exit(&global->exit_code);
 }
