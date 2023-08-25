@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 08:53:32 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/25 14:25:15 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,6 @@ typedef struct s_env
 typedef struct s_cmds
 {
 	char				*cmd;
-	char				*home_folder;
 	t_redirection		*redir;
 	struct s_cmds		*next;
 }						t_cmds;
@@ -189,18 +188,19 @@ typedef struct s_line
 typedef struct s_global
 {
 	int					exit_code;
+	char				*home_folder;
 	t_env				*env;
 	t_line				*line;
 }						t_global;
 
 /* FUNCTIONS */
 // *---* builtins *---*
-void					ft_echo(t_global *global);
-char					*get_env_value(char *name, t_global *global);
+void					ft_echo(char *cmd);
+char					*get_env_value(char *name, t_env *env);
 void					ft_env(t_global *global);
 void					ft_pwd(t_line *line);
 void					ft_export(t_global *global, t_line *line);
-void					ft_cd(t_global *global);
+void					ft_cd(char *cmd, t_global *global);
 void					ft_unset(t_global *global, t_line *line);
 void					ft_exit(t_global *global);
 
@@ -211,9 +211,10 @@ int						check_options_syntax(char *token);
 bool					check_token(char *line);
 t_state					check_errors(t_token *type, char **tokens, t_global *global);
 char					*epur_str(char *line);
-int						parse_cmd(t_line *line);
+t_global				*parse_cmd(t_global *global);
 t_count					*count_types(t_token *type);
 t_state					ft_error(t_token *type, char **tokens, t_global *global);
+t_cmds					*init_cmds(char **tokens, t_token *type);
 t_line					*init_line(char *line, t_global *global);
 t_global				*init_global(char **envp);
 char					*format_options(char *token);

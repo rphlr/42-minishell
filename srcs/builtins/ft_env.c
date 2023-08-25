@@ -6,17 +6,17 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:42:00 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 11:17:14 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/25 11:46:33 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_env_value(char *name, t_global *global)
+char	*get_env_value(char *name, t_env *env)
 {
 	t_env	*tmp;
 
-	tmp = global->env;
+	tmp = env;
 	while (tmp)
 	{
 		if (!ft_strcmp(tmp->name, name))

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 07:34:38 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 15:50:12 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/25 14:17:20 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,58 +22,109 @@ static int	check_option(char *str)
 	return (1);
 }
 
-static void	echo_print(char *str, t_global *global, int i)
+static void	echo_print(char *str)
 {
-	char	*output;
-
-	output = ft_gc_malloc(ft_strlen(str) + 1);
-	if (!output)
-		return ;
-	if (global->line->type[i] != CLOSED_DQUOTE && global->line->type[i] != CLOSED_QUOTE)
-	{
-		while (*str)
-		{
-			if (*str == '\\')
-			{
-				str++;
-				ft_printf("%c", *str);
-				str++;
-				continue ;
-			}
-			ft_printf("%c", *str++);
-		}
-		return ;
-	}
 	while (*str)
+	{
+		if (*str == '\\')
+		{
+			str++;
+			ft_printf("%c", *str);
+			str++;
+			continue;
+		}
 		ft_printf("%c", *str++);
+	}
 }
 
-void	ft_echo(t_global *global)
+char **split_cmd_to_tokens(char *cmd)
+{
+    int count = 0;
+    char **tokens;
+    char *token;
+    char *cmd_copy = ft_strdup(cmd);
+
+    token = ft_strtok(cmd_copy, " ");
+    while (token)
+    {
+        count++;
+        token = ft_strtok(NULL, " ");
+    }
+    cmd_copy = ft_strdup(cmd);
+    tokens = (char **)ft_gc_malloc((count + 1) * sizeof(char *));
+    count = 0;
+    token = ft_strtok(cmd_copy, " ");
+    while (token)
+    {
+        tokens[count] = ft_strdup(token);
+        count++;
+        token = ft_strtok(NULL, " ");
+    }
+    tokens[count] = NULL;
+    return tokens;
+}
+
+void	ft_echo(char *cmd)
 {
 	int	nwln;
-	int	i;
+	int i;
+	char **tokens;
 
 	nwln  = 1;
+	tokens = split_cmd_to_tokens(cmd);
 	i = 0;
-	global->line->token++;
-	global->line->type++;
-	while (global->line->token[i] && global->line->type[i] == OPTIONS)
-	{
-		if (check_option(global->line->token[i]))
-		{
-			nwln = 0;
-			i++;
-		}
-		else
-			break ;
-	}
-	while (global->line->token[i])
-	{
-		echo_print(global->line->token[i], global, i);
+	while (tokens[i] && ft_strcmp(tokens[i], "echo") != 0)
 		i++;
-		if (global->line->token[i])
+	i++;
+	while (tokens[i] && tokens[i][0] == '-' && check_option(tokens[i]))
+	{
+		nwln = 0;
+		i++;
+	}
+	while (tokens[i])
+	{
+		echo_print(tokens[i]);
+		i++;
+		if (tokens[i])
 			ft_printf(" ");
 	}
 	if (nwln)
 		ft_printf("\n");
 }
+
+// void	ft_echo(char *cmd)
+// {
+// 	int	nwln;
+// 	int	i;
+
+// 	nwln  = 1;
+// 	i = 0;
+// 	cmd = ft_strstr(cmd, "echo");
+// 	// while (ft_strcmp(global->line->token[i], "echo"))
+// 	// {
+// 	// 	i++;
+// 	// 	global->line->token++;
+// 	// 	global->line->type++;
+// 	// }
+// 	global->line->token++;
+// 	global->line->type++;
+// 	while (global->line->token[i] && global->line->type[i] == OPTIONS)
+// 	{
+// 		if (check_option(global->line->token[i]))
+// 		{
+// 			nwln = 0;
+// 			i++;
+// 		}
+// 		else
+// 			break ;
+// 	}
+// 	while (global->line->token[i])
+// 	{
+// 		echo_print(global->line->token[i], global, i);
+// 		i++;
+// 		if (global->line->token[i])
+// 			ft_printf(" ");
+// 	}
+// 	if (nwln)
+// 		ft_printf("\n");
+// }

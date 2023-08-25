@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 13:40:35 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/25 11:46:40 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ char	*format_token(char *token, t_global *global)
 				var_name = extract_variable_name(token);
 				if (ft_strlen(var_name) > 0)
 				{
-					var_value = get_env_value(var_name, global);
+					var_value = get_env_value(var_name, global->env);
 					if (var_value)
 					{
 						while (*var_value)
