@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 14:27:31 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/25 17:09:38 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,7 @@ static int	lsh_loop(t_global *global)
 		if (!global->line)
 		{
 			global->exit_code = 258;
+			manage_exit(&global->exit_code);
 			continue ;
 		}
 		free(line);
@@ -154,11 +155,11 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
-	set_termios();
-	ft_signal();
 	global = init_global(envp);
 	if (!global)
 		return (1);
+	set_termios();
+	ft_signal();
 	err_code = lsh_loop(global);
 	exit(err_code);
 }

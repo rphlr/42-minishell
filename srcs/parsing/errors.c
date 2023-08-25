@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 11:46:40 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/25 17:09:16 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ char	*format_token(char *token, t_global *global)
 			token++;
 			if (*token == '?')
 			{
+				global->exit_code = manage_exit(NULL);
 				num = ft_itoa(global->exit_code);
 				while (*num)
 					output[i++] = *num++;

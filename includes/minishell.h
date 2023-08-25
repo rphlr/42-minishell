@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 14:25:15 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/25 17:10:12 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,13 +224,13 @@ t_token					*init_tokens_type(char **tokens);
 char					*ft_remove_char(char *str, char c);
 
 // *---* exec *---*
+pid_t					manage_pid(pid_t *new_pid);
+int						manage_exit(int *new_code);
 void					run_cmd(t_global *global);
 
 // *---* signals *---*
 void					ft_signal(void);
 void					sigint_manage(int num);
-void					update_signal_handler(int num);
-void					update_signal(void);
 void					set_termios(void);
 
 // remove when finish
