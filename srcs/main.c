@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
+/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 10:51:51 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/26 16:52:33 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,13 +134,17 @@ static int	lsh_loop(t_global *global)
 		if (!ft_strcmp(line, ""))
 			continue ;
 		global->line = init_line(line, global);
+		// printf("filename: %s\n", global->line->cmds->output->filename);
 		if (!global->line)
 		{
 			global->exit_code = 258;
+			manage_exit(&global->exit_code);
 			continue ;
 		}
 		free(line);
-		parse_cmd(global->line);
+		global = parse_cmd(global);
+		if (!ft_strcmp(global->line->cmds->cmd, ""))
+			continue ;
 		run_cmd(global);
 	}
 	return (global->exit_code);
@@ -153,11 +157,11 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
-	set_termios();
-	ft_signal();
 	global = init_global(envp);
 	if (!global)
 		return (1);
+	set_termios();
+	ft_signal();
 	err_code = lsh_loop(global);
 	exit(err_code);
 }
