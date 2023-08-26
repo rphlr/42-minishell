@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 15:49:46 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 16:20:23 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -460,6 +460,13 @@ void	run_cmd(t_global *global)
 	if (primaries)
 	{
 		execute_primaries(global->line->cmds->cmd, global);
+		return ;
+	}
+	if (!get_env_value("PATH", global->env))
+	{
+		ft_printf("minishell: %s: No such file or directory\n", global->line->cmds->cmd);
+		global->exit_code = 127;
+		manage_exit(&global->exit_code);
 		return ;
 	}
 	global->exit_code = execute_cmd(global->line->cmds->cmd, global->line->cmds->redir, global);
