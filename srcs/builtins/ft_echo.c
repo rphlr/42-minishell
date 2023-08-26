@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 07:34:38 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 16:46:49 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 17:23:40 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ static char **split_cmd_to_tokens(char *cmd)
 	token = ft_strtok(cmd_copy, " ");
 	while (token)
 	{
-		tokens[count] = ft_strdup(token);
-		count++;
+		tokens[count++] = ft_strdup(token);
+		// count++;
 		token = ft_strtok(NULL, " ");
 	}
-	tokens[count] = NULL;
+	tokens[count + 1] = NULL;
 	return tokens;
 }
 

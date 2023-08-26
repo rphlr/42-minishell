@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 16:09:34 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 17:22:08 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 //			like \ (eg with $’\n’)
 // ✅: Handle ' and " (quotes) correctly
 // ❌: Handle redirections > >> < <<
-// ❌: Handle pipes | correctly
+// ✅: Handle pipes | correctly
 // ✅: Handle environment variables ($ followed by characters)
 // ✅: Handle $? (exit code of the previous program)
 // ✅: Handle ctrl-C ctrl-D ctrl-\ correctly
@@ -39,8 +39,8 @@
 // ✅: Implement exit without any options
 // ✅: exit
 // BONUS
-// ❌: Detect Wilcard * (globbing)
-// ❌: Detect && and ||
+// ✅: Detect Wilcard * (globbing)
+// ✅: Detect && and ||
 
 static int	line_is_wspaces(char *line)
 {
