@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/26 16:50:05 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 16:54:51 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	set_termios(void)
 	tcsetattr(0, 0, &term);
 }
 
+// l.40 ctr-bck slash
+// l.41 
 void	ft_signal(void)
 {
 	struct sigaction	s;
@@ -42,7 +44,7 @@ void	ft_signal(void)
 	sigemptyset(&s.sa_mask);
 	s.sa_flags = 0;
 	sigaction(SIGQUIT, &s, NULL);
-	s.sa_handler = sigint_manage;
+	s.sa_handler = sigint_manage;// function crl-c
 	sigaction(SIGINT, &s, NULL);
 	signal(SIGPIPE, handle_sigpipe);
 }

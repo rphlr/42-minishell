@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 16:52:57 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 16:56:19 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # include <termios.h>
 # include <unistd.h>
 # include <termios.h>
-#include <dirent.h>
+# include <dirent.h>
 
 // Colors definition
 # define C_RED "\033[0;31m"
@@ -177,7 +177,7 @@ typedef struct s_count
 	int					nbr_ands;
 	int					nbr_ors;
 	int					nbr_options;
-	bool 				special_cases;
+	bool				special_cases;
 }						t_count;
 
 typedef struct s_line
@@ -214,7 +214,8 @@ t_state					check_token_errors(t_token *type, char **tokens,
 							t_state *error_table);
 int						check_options_syntax(char *token);
 bool					check_token(char *line);
-t_state					check_errors(t_token *type, char **tokens, t_global *global);
+t_state					check_errors(t_token *type, char **tokens,
+							t_global *global);
 char					*epur_str(char *line);
 t_global				*parse_cmd(t_global *global);
 t_count					*count_types(t_token *type);
@@ -232,7 +233,6 @@ char					*ft_remove_char(char *str, char c);
 pid_t					manage_pid(pid_t *new_pid);
 int						manage_exit(int *new_code);
 void					run_cmd(t_global *global);
-
 
 // *---* signals *---*
 void					ft_signal(void);
