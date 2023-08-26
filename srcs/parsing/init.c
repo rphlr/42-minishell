@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 17:09:21 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 11:00:25 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,42 @@
 // 	return (head);
 // }
 
+void    set_filename(t_cmds *head, char **tokens, t_token *type, int *i)
+{
+    while (tokens[*i] != NULL && type[*i] != PIPE  && type[*i] != SEMICOLON && type[*i] != AND && type[*i] != OR)
+    {
+        if (type[*i] == INPUT)
+        {
+            head->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
+            if (!head->redir)
+                return ;
+            head->redir->type = INPUT_REDIRECTION;
+            head->redir->filename = ft_strdup(tokens[*i + 1]);
+            *i += 2;
+        }
+        else if (type[*i] == OUTPUT)
+        {
+            head->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
+            if (!head->redir)
+                return ;
+            head->redir->type = OUTPUT_REDIRECTION;
+            head->redir->filename = ft_strdup(tokens[*i + 1]);
+            *i += 2;
+        }
+        else if (type[*i] == APPEND)
+        {
+            head->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
+            if (!head->redir)
+                return ;
+            head->redir->type = APPEND_REDIRECTION;
+            head->redir->filename = ft_strdup(tokens[*i + 1]);
+            *i += 2;
+        }
+        else
+            *i += 1;
+    }
+}
+
 t_cmds *init_cmds(char **tokens, t_token *type)
 {
     t_cmds *head = NULL;
@@ -167,42 +203,12 @@ t_cmds *init_cmds(char **tokens, t_token *type)
             current = new_cmd;
         }
         i++;
-        while (tokens[i] != NULL && (type[i] == INPUT || type[i] == OUTPUT || type[i] == APPEND))
-        {
-            if (type[i] == INPUT)
-            {
-                new_cmd->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-                if (!new_cmd->redir)
-                    return (NULL);
-                new_cmd->redir->type = INPUT_REDIRECTION;
-                new_cmd->redir->filename = ft_strdup(tokens[i + 1]);
-                i += 2;
-            }
-            else if (type[i] == OUTPUT)
-            {
-                new_cmd->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-                if (!new_cmd->redir)
-                    return (NULL);
-                new_cmd->redir->type = OUTPUT_REDIRECTION;
-                new_cmd->redir->filename = ft_strdup(tokens[i + 1]);
-                i += 2;
-            }
-            else if (type[i] == APPEND)
-            {
-                new_cmd->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-                if (!new_cmd->redir)
-                    return (NULL);
-                new_cmd->redir->type = APPEND_REDIRECTION;
-                new_cmd->redir->filename = ft_strdup(tokens[i + 1]);
-                i += 2;
-            }
-            else
-                i++;
-        }
 
         if (type[i] == PIPE || type[i] == SEMICOLON || type[i] == AND || type[i] == OR)
             i++;
     }
+    i = 0;
+    set_filename(head, tokens, type, &i);
     return (head);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/25 17:09:13 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 10:56:37 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 //ECHOCTL = 0000 0001 ~ -> 1111 1110  &
 //          0000 0001      1011 0000
 // clean ctr-c dans le terminal
+
+void handle_sigpipe(int signo)
+{
+	(void) signo;
+}
 
 void	set_termios(void)
 {
@@ -36,9 +41,10 @@ void	ft_signal(void)
 	s.sa_handler = SIG_IGN;
 	sigemptyset(&s.sa_mask);
 	s.sa_flags = 0;
-	sigaction(SIGQUIT, &s, NULL); //ctr-bck slash
-	s.sa_handler = sigint_manage;// function crl-c
+	sigaction(SIGQUIT, &s, NULL);
+	s.sa_handler = sigint_manage;
 	sigaction(SIGINT, &s, NULL);
+	signal(SIGPIPE, handle_sigpipe);
 }
 
 void	sigint_manage(int num)
