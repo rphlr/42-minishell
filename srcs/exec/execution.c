@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 11:23:59 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 12:54:08 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,78 @@ static void	execute_primaries(char	*cmd, t_global *global)
 		ft_exit(global);
 }
 
+// void	get_heredoc_input(char *limiter, int file)
+// {
+// 	char	*buf;
+
+// 	while (true)
+// 	{
+// 		write(1, "pipe heredoc> ", 14);
+// 		buf = get_next_line(0);
+// 		if (buf < 0)
+// 			exit(1);
+// 		if (!ft_strncmp(limiter, buf, ft_strlen(limiter + 1)))
+// 			break ;
+// 		write(file, buf, ft_strlen(buf));
+// 		write(file, "\n", 1);
+// 	}
+// }
+
+void	ft_heredoc(char *filename, char *limiter, int type)
+{
+	int		file;
+	int		fd_final;
+	char	*buf;
+
+	fd_final = 0;
+	file = open(".heredoc_content", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (file < 0)
+	{
+		ft_printf("Error: failed to open temporary file\n");
+		exit (1);
+	}
+	while (true)
+	{
+		ft_printf("heredoc> ");
+		buf = get_next_line(0);
+		if (!buf)
+			exit(1);
+		if (!ft_strncmp(limiter, buf, ft_strlen(limiter)))
+			break ;
+		write(file, buf, ft_strlen(buf));
+	}
+	close(file);
+	if (filename)
+	{
+		if (type == INPUT)
+			fd_final = open(filename, O_RDONLY);
+		else if (type == APPEND)
+			fd_final = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		else if (type == OUTPUT)
+			fd_final = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		if (fd_final < 0)
+		{
+			ft_printf("Failed to open file\n");
+			exit (1);
+		}
+		dup2(fd_final, STDOUT_FILENO);
+		close(fd_final);
+	}
+	fd_final = open(".heredoc_content", O_RDONLY);
+	if (fd_final < 0)
+	{
+		unlink(".heredoc_content");
+		ft_printf("Error: failed to open temporary file\n");
+		exit (1);
+	}
+	while ((buf = get_next_line(fd_final)))
+	{
+		write(STDOUT_FILENO, buf, ft_strlen(buf));
+	}
+	close(fd_final);
+	unlink(".heredoc_content");
+}
+
 static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 {
 	pid_t pid;
@@ -129,12 +201,22 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (redir && redir->filename)
+		printf("redir %p\n", redir);
+		if (redir)
 		{
 			int fd;
+			printf("redir type: %d\n", redir->type);
 			switch (redir->type)
 			{
+				case HEREDOC_REDIRECTION:
+					printf("heredoc limiter: %s\n", redir->limiter);
+					if (redir->filename)
+						printf("heredoc filename: %s\n", redir->filename);
+					ft_heredoc(redir->filename, redir->limiter, redir->type_hd);
+					exit (EXIT_SUCCESS);
+					break;
 				case OUTPUT_REDIRECTION:
+					printf("output");
 					fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 					if (fd == -1)
 					{
@@ -146,6 +228,7 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 					close(fd);
 					break;
 				case APPEND_REDIRECTION:
+					printf("append");
 					fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 					if (fd == -1)
 					{
@@ -157,17 +240,7 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 					close(fd);
 					break;
 				case INPUT_REDIRECTION:
-					fd = open(redir->filename, O_RDONLY);
-					if (fd == -1)
-					{
-						ft_printf("minishell: %s: %s\n", redir->filename, strerror(errno));
-						global->exit_code = 1;
-						exit(EXIT_FAILURE);
-					}
-					dup2(fd, STDIN_FILENO);
-					close(fd);
-					break;
-				case HEREDOC_REDIRECTION:
+					printf("input");
 					fd = open(redir->filename, O_RDONLY);
 					if (fd == -1)
 					{

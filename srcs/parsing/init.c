@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 11:25:57 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 13:01:25 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,24 @@
 
 void    set_filename(t_cmds *head, char **tokens, t_token *type, int *i)
 {
-    while (tokens[*i] != NULL && type[*i] != PIPE  && type[*i] != SEMICOLON && type[*i] != AND && type[*i] != OR)
+    while (tokens[*i] && type[*i] != PIPE  && type[*i] != SEMICOLON && type[*i] != AND && type[*i] != OR)
     {
-        if (type[*i] == INPUT)
+        if (type[*i] == HEREDOC)
+        {
+            head->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
+            if (!head->redir)
+                return ;
+            head->redir->type = HEREDOC_REDIRECTION;
+            head->redir->limiter = ft_strdup(tokens[*i + 1]);
+            if (tokens[*i + 3] && (type[*i + 2] == INPUT || type[*i + 2] == OUTPUT || type[*i + 2] == APPEND))
+            {
+                head->redir->type_hd = type[*i + 2];
+                head->redir->filename = ft_strdup(tokens[*i + 3]);
+            }
+            *i += 2;
+            return ;
+        }
+        else if (type[*i] == INPUT)
         {
             head->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
             if (!head->redir)
@@ -160,15 +175,6 @@ void    set_filename(t_cmds *head, char **tokens, t_token *type, int *i)
             head->redir->filename = ft_strdup(tokens[*i + 1]);
             *i += 2;
         }
-        else if (type[*i] == HEREDOC)
-        {
-            head->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-            if (!head->redir)
-                return ;
-            head->redir->type = HEREDOC_REDIRECTION;
-            head->redir->filename = ft_strdup(tokens[*i + 1]);
-            *i += 2;
-        }
         else
             *i += 1;
     }
@@ -182,7 +188,7 @@ t_cmds *init_cmds(char **tokens, t_token *type)
     char *temp = NULL;
     int i = 0;
 
-    while (tokens[i] != NULL)
+    while (tokens[i])
     {
         t_cmds *new_cmd = (t_cmds *)ft_gc_malloc(sizeof(t_cmds));
         if (!new_cmd)
@@ -190,7 +196,7 @@ t_cmds *init_cmds(char **tokens, t_token *type)
         full_cmd = ft_strdup(tokens[i]);
         if (tokens[i + 1] != NULL)
             full_cmd = ft_strjoin(full_cmd, " ");
-        while (tokens[i + 1] != NULL && type[i + 1] != PIPE && type[i + 1] != SEMICOLON && type[i + 1] != AND && type[i + 1] != OR)
+        while (tokens[i + 1] != NULL && type[i + 1] != PIPE && type[i + 1] != SEMICOLON && type[i + 1] != AND && type[i + 1] != OR && type[i + 1] != HEREDOC && type[i + 1] != INPUT && type[i + 1] != OUTPUT && type[i + 1] != APPEND)
         {
             i++;
             temp = full_cmd;

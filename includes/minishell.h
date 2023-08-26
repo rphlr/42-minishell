@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 11:25:24 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 12:51:42 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,8 @@ typedef struct s_redirection
 {
 	t_redirectiontype	type;
 	char				*filename;
+	char				*limiter;
+	int					type_hd;
 }						t_redirection;
 
 typedef struct s_env
