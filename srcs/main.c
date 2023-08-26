@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 17:09:38 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 15:06:20 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ static int	lsh_loop(t_global *global)
 	}
 	while (1)
 	{
+		// pid_t pid = -1;
+		// manage_pid(&pid);
 		rdm_prompt_clr = ft_strjoin(ft_strjoin(ft_strjoin("\033[", ft_itoa(get_random() % 7 + 31)), "m"), PROMPT);
 		line = readline(rdm_prompt_clr);
 		if (!check_token(line))

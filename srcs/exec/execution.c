@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 12:54:08 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 15:49:46 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 	{
 		ft_printf("minishell: %s: No such file or directory\n", argv[0]);
 		global->exit_code = 127;
-		return (manage_exit(&global->exit_code));
+		return (global->exit_code);
 	}
 	char **paths = env_to_char(global);
 	char *path = get_path(argv[0], paths);
@@ -196,27 +196,22 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 	{
 		ft_printf("minishell: %s: command not found\n", argv[0]);
 		global->exit_code = 127;
-		return (manage_exit(&global->exit_code));
+		return (global->exit_code);
 	}
 	pid = fork();
-	if (pid == 0)
+	manage_pid(&pid);
+	if (!pid)
 	{
-		printf("redir %p\n", redir);
 		if (redir)
 		{
 			int fd;
-			printf("redir type: %d\n", redir->type);
 			switch (redir->type)
 			{
 				case HEREDOC_REDIRECTION:
-					printf("heredoc limiter: %s\n", redir->limiter);
-					if (redir->filename)
-						printf("heredoc filename: %s\n", redir->filename);
 					ft_heredoc(redir->filename, redir->limiter, redir->type_hd);
 					exit (EXIT_SUCCESS);
 					break;
 				case OUTPUT_REDIRECTION:
-					printf("output");
 					fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 					if (fd == -1)
 					{
@@ -228,7 +223,6 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 					close(fd);
 					break;
 				case APPEND_REDIRECTION:
-					printf("append");
 					fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 					if (fd == -1)
 					{
@@ -240,7 +234,6 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 					close(fd);
 					break;
 				case INPUT_REDIRECTION:
-					printf("input");
 					fd = open(redir->filename, O_RDONLY);
 					if (fd == -1)
 					{
@@ -255,11 +248,10 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 					break;
 			}
 		}
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
 		execve(path, argv, NULL);
 		global->exit_code = EXIT_FAILURE;
-		exit (manage_exit(&global->exit_code));
+		// manage_pid(&pid);
+		exit (global->exit_code);
 	}
 	else if (pid < 0)
 	{
@@ -306,14 +298,15 @@ static void execute_pipeline(t_global *global, t_cmds *cmds)
 		if (pipe(fds[i]) < 0)
 		{
 			perror("pipe");
-			exit(EXIT_FAILURE);
+			global->exit_code = EXIT_FAILURE;
+			exit (global->exit_code);
 		}
 	}
 	i = -1;
 	while (++i < num_cmds)
 	{
 		pid_t pid = fork();
-		if (pid == 0)
+		if (!pid)
 		{
 			if (i != 0)
 			{
@@ -331,16 +324,15 @@ static void execute_pipeline(t_global *global, t_cmds *cmds)
 				if (j != i - 1) close(fds[j][0]);
 				if (j != i) close(fds[j][1]);
 			}
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
-
 			execute_cmd(cmds->cmd, cmds->redir, global);
-			exit(EXIT_SUCCESS);
+			global->exit_code = EXIT_SUCCESS;
+			exit (global->exit_code);
 		}
 		else if (pid < 0)
 		{
 			perror("fork");
-			exit(EXIT_FAILURE);
+			global->exit_code = EXIT_FAILURE;
+			exit (global->exit_code);
 		}
 		cmds = cmds->next;
 	}
@@ -369,8 +361,8 @@ static void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 		dup2(fds[1], STDOUT_FILENO);
 		close(fds[1]);
 		close(fds[0]);
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
+		// signal(SIGINT, SIG_DFL);
+		// signal(SIGQUIT, SIG_DFL);
 		execute_cmd(curr_cmd->cmd, curr_cmd->redir, global);
 		exit(EXIT_SUCCESS);
 	}
@@ -382,8 +374,8 @@ static void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 	dup2(fds[0], STDIN_FILENO);
 	close(fds[0]);
 	close(fds[1]);
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	// signal(SIGINT, SIG_DFL);
+	// signal(SIGQUIT, SIG_DFL);
 	execute_cmd(next_cmd->cmd, next_cmd->redir, global);
 	wait(NULL);
 }
@@ -418,6 +410,7 @@ static void	execute_specials(t_global *global)
 			else if (count_tmp->nbr_outputs > 0 && *type_tmp == OUTPUT)
 				count_tmp->nbr_outputs--;
 			ft_redir(global, curr_cmd);
+			return ;
 		}
 		else if (count_tmp->nbr_ors > 0 && *type_tmp == OR)
 		{
@@ -456,6 +449,8 @@ void	run_cmd(t_global *global)
 {
 	int primaries;
 
+	global->exit_code = 0;
+	manage_exit(&global->exit_code);
 	if (global->line->count->special_cases == true)
 	{
 		execute_specials(global);
@@ -468,5 +463,5 @@ void	run_cmd(t_global *global)
 		return ;
 	}
 	global->exit_code = execute_cmd(global->line->cmds->cmd, global->line->cmds->redir, global);
-	manage_exit(&global->exit_code);
+	// manage_exit(&global->exit_code);
 }

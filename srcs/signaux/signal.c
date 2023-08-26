@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/26 11:12:03 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 16:00:06 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,12 @@ void	sigint_manage(int num)
 {
 	(void) num;
 	int exit_code;
+	pid_t reset_pid;
+	pid_t child_pid;
 
-	pid_t child_pid = manage_pid(NULL);
-	if(child_pid > 0)
+	child_pid = manage_pid(NULL);
+	reset_pid = -1;
+	if (child_pid > 0)
 	{
         ft_printf("\n");
 		rl_replace_line("", 0);
@@ -69,6 +72,7 @@ void	sigint_manage(int num)
 		exit_code = 1;
     }
 	manage_exit(&exit_code);
+    manage_pid(&reset_pid);
 }
 
 // void	update_signal_handler(int num)
