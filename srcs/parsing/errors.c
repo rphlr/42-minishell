@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 17:09:16 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 20:34:38 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,7 @@ char	*extract_variable_name(char *ptoken)
 	while (*ptoken && ((*ptoken >= 'a' && *ptoken <= 'z') || (*ptoken >= 'A'
 				&& *ptoken <= 'Z') || (*ptoken >= '0' && *ptoken <= '9')
 			|| *ptoken == '_'))
-	{
 		ptoken++;
-	}
 	len = ptoken - start;
 	var_name = (char *)ft_gc_malloc(len + 1);
 	ft_strncpy(var_name, start, len);
@@ -83,6 +81,8 @@ char	*format_token(char *token, t_global *global)
 	in_simple_quotes = 0;
 	len_biggest_var_value = biggest_var_value(global->env);
 	output = (char *)ft_gc_malloc(len_biggest_var_value + 1);
+	if (!output)
+		return (NULL);
 	i = 0;
 	while (*token)
 	{
@@ -138,6 +138,62 @@ char	*format_token(char *token, t_global *global)
 	return (output);
 }
 
+// char **merge_adjacent_quotes(char **tokens)
+// {
+//     char **temp_tokens = tokens; // Use a temporary pointer for iteration
+
+//     while (*temp_tokens)
+//     {
+// 		printf("current: %s\n", *temp_tokens);
+//         char *current = *temp_tokens;
+//         char *next = *(temp_tokens + 1);
+        
+//         // If current token is a single or double quote and the next token is the same
+//         if ((current && current[0] == '\'' && current[1] == '\0' && next && next[0] == '\'') ||
+//             (current && current[0] == '\"' && current[1] == '\0' && next && next[0] == '\"'))
+//         {
+// 			printf("merge\n");
+// 			printf("current: %s\n", *temp_tokens);
+// 			printf("next: %s\n", *(temp_tokens + 1));
+//             // Merge the tokens
+//             *temp_tokens = ""; // Empty the current token
+//             *(temp_tokens + 1) = ""; // Empty the next token
+//             temp_tokens += 2; // Move two steps ahead with the temporary pointer
+//         }
+//         else
+//         {
+//             temp_tokens++; // Move one step ahead with the temporary pointer
+//         }
+//     }
+
+//     return tokens; // Return the original pointer
+// }
+
+char **merge_adjacent_quotes(char **tokens)
+{
+    char **temp_tokens = tokens;
+
+    while (*temp_tokens && *(temp_tokens + 1))
+    {
+        char *current = *temp_tokens;
+        char *next = *(temp_tokens + 1);
+        if ((current[0] == '\'' && next[0] == '\'') ||
+            (current[0] == '\"' && next[0] == '\"'))
+        {
+            // Merge the tokens
+			*temp_tokens = ft_strjoin(current, next);
+            *(temp_tokens + 1) = "";
+            temp_tokens += 2;
+        }
+        else
+            temp_tokens++;
+    }
+
+    return tokens;
+}
+
+
+
 t_state	ft_error(t_token *type, char **tokens, t_global *global)
 {
 	int		nbr_quote;
@@ -147,6 +203,14 @@ t_state	ft_error(t_token *type, char **tokens, t_global *global)
 
 	nbr_quote = 0;
 	nbr_dquote = 0;
+	tokens = merge_adjacent_quotes(tokens);
+	//print
+	char **temp_tokens = tokens;
+	while (*temp_tokens)
+	{
+		printf("token: %s\n", *temp_tokens);
+		temp_tokens++;
+	}
 	error_table = get_error_table();
 	token_check_result = check_token_errors(type, tokens, error_table);
 	if (token_check_result != VALID)

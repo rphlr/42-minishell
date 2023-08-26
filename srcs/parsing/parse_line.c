@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 14:32:35 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 09:54:12 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 20:37:19 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,7 @@ static char	*extract_unquoted_string(char **line_pointer)
 	line = *line_pointer;
 	start = line;
 	while (*line && *line != ' ' && *line != '"' && *line != '\'')
-	{
 		line++;
-	}
 	*line_pointer = line;
 	return (ft_strndup(start, line - start));
 }
@@ -84,6 +82,8 @@ char	**parsed_line(char *line)
 
 	temp_line = line;
 	result = (char **)ft_gc_malloc(sizeof(char *) * (count_substrings(line) + 2));
+	if (!result)
+		return (NULL);
 	index = 0;
 	while (*line)
 	{

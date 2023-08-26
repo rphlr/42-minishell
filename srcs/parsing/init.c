@@ -6,128 +6,11 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 13:01:25 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 20:06:05 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// static t_cmds	*init_cmds(char **tokens, t_token *type)
-// {
-// 	t_cmds	*head;
-// 	t_cmds	*current;
-// 	t_cmds	*new_cmd;
-// 	char	*full_cmd;
-// 	char	*temp;
-// 	int		i;
-// 	// int		nbr_tokens;
-
-// 	head = NULL;
-// 	current = NULL;
-// 	i = 0;
-// 	new_cmd = (t_cmds *)ft_gc_malloc(sizeof(t_cmds));
-// 	if (!new_cmd)
-// 		return (NULL);
-// 	while (tokens[i] != NULL)
-// 	{
-// 		full_cmd = ft_strdup(tokens[i]);
-// 		if (tokens[i + 1] != NULL)
-// 			full_cmd = ft_strjoin(full_cmd, " ");
-// 		while (tokens[i + 1] != NULL && type[i + 1] != PIPE && type[i + 1] != SEMICOLON && type[i + 1] != AND && type[i + 1] != OR)
-// 		{
-// 			i++;
-// 			temp = full_cmd;
-// 			full_cmd = ft_strjoin(temp, tokens[i]);
-// 			if (tokens[i + 1] != NULL)
-// 				full_cmd = ft_strjoin(full_cmd, " ");
-// 		}
-// 		new_cmd->cmd = full_cmd;
-// 		new_cmd->redir = NULL;
-// 		new_cmd->next = NULL;
-// 		if (head == NULL)
-// 		{
-// 			head = new_cmd;
-// 			current = head;
-// 		}
-// 		else
-// 		{
-// 			current->next = new_cmd;
-// 			current = new_cmd;
-// 		}
-// 		i++;
-// 		// nbr_tokens = i;
-// 		// while (tokens[i] != NULL && type[i] != PIPE  && type[i] != SEMICOLON && type[i] != AND && type[i] != OR)
-// 		// // while (i < nbr_tokens && tokens[i] != NULL && (type[i] == INPUT || type[i] == OUTPUT || type[i] == APPEND))
-// 		// {
-// 		// 	if (type[i] == INPUT)
-// 		// 	{
-// 		// 		new_cmd->input = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-// 		// 		if (!new_cmd->input)
-// 		// 			return (NULL);
-// 		// 		new_cmd->input->type = INPUT_REDIRECTION;
-// 		// 		new_cmd->input->filename = ft_strdup(tokens[i + 1]);
-// 		// 		i += 2;
-// 		// 	}
-// 		// 	else if (type[i] == OUTPUT)
-// 		// 	{
-// 		// 		new_cmd->output = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-// 		// 		if (!new_cmd->output)
-// 		// 			return (NULL);
-// 		// 		new_cmd->output->type = OUTPUT_REDIRECTION;
-// 		// 		new_cmd->output->filename = ft_strdup(tokens[i + 1]);
-// 		// 		i += 2;
-// 		// 	}
-// 		// 	else if (type[i] == APPEND)
-// 		// 	{
-// 		// 		new_cmd->output = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-// 		// 		if (!new_cmd->output)
-// 		// 			return (NULL);
-// 		// 		new_cmd->output->type = APPEND_REDIRECTION;
-// 		// 		new_cmd->output->filename = ft_strdup(tokens[i + 1]);
-// 		// 		i += 2;
-// 		// 	}
-// 		// 	else
-// 		// 		i++;
-// 		// }
-// 		if (type[i] == PIPE || type[i] == SEMICOLON || type[i] == AND || type[i] == OR)
-// 			i++;
-// 	}
-// 	i = 0;
-// 	while (tokens[i] != NULL && type[i] != PIPE  && type[i] != SEMICOLON && type[i] != AND && type[i] != OR)
-// 	// while (i < nbr_tokens && tokens[i] != NULL && (type[i] == INPUT || type[i] == OUTPUT || type[i] == APPEND))
-// 	{
-// 		if (type[i] == INPUT)
-// 		{
-// 			new_cmd->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-// 			if (!new_cmd->redir)
-// 				return (NULL);
-// 			new_cmd->redir->type = INPUT_REDIRECTION;
-// 			new_cmd->redir->filename = ft_strdup(tokens[i + 1]);
-// 			i += 2;
-// 		}
-// 		else if (type[i] == OUTPUT)
-// 		{
-// 			new_cmd->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-// 			if (!new_cmd->redir)
-// 				return (NULL);
-// 			new_cmd->redir->type = OUTPUT_REDIRECTION;
-// 			new_cmd->redir->filename = ft_strdup(tokens[i + 1]);
-// 			i += 2;
-// 		}
-// 		else if (type[i] == APPEND)
-// 		{
-// 			new_cmd->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-// 			if (!new_cmd->redir)
-// 				return (NULL);
-// 			new_cmd->redir->type = APPEND_REDIRECTION;
-// 			new_cmd->redir->filename = ft_strdup(tokens[i + 1]);
-// 			i += 2;
-// 		}
-// 		else
-// 			i++;
-// 	}
-// 	return (head);
-// }
 
 void    set_filename(t_cmds *head, char **tokens, t_token *type, int *i)
 {
@@ -238,14 +121,6 @@ t_line	*init_line(char *line, t_global *global)
 		return (NULL);
 	error_state = VALID;
 	line_struct->token = parsed_line(line);
-	// int i = 0;
-	// while (line_struct->token[i])
-	// {
-	// 	char c = *line_struct->token[i];
-	// 	if (*line_struct->token[i] == '\"' || *line_struct->token[i] == '\'')
-	// 		line_struct->token[i] = ft_remove_char(line_struct->token[i], c);
-	// 	i++;
-	// }
 	line_struct->type = init_tokens_type(line_struct->token);
 	error_state = check_errors(line_struct->type, line_struct->token, global);
 	if (error_state)
