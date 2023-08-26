@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 16:20:23 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 16:26:06 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ void	ft_heredoc(char *filename, char *limiter, int type)
 			fd_final = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (fd_final < 0)
 		{
-			ft_printf("Failed to open file\n");
+			ft_printf("minishell: %s: No such file or directory\n", filename);
 			exit (1);
 		}
 		dup2(fd_final, STDOUT_FILENO);
