@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 11:00:25 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 11:25:57 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,15 @@ void    set_filename(t_cmds *head, char **tokens, t_token *type, int *i)
             if (!head->redir)
                 return ;
             head->redir->type = APPEND_REDIRECTION;
+            head->redir->filename = ft_strdup(tokens[*i + 1]);
+            *i += 2;
+        }
+        else if (type[*i] == HEREDOC)
+        {
+            head->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
+            if (!head->redir)
+                return ;
+            head->redir->type = HEREDOC_REDIRECTION;
             head->redir->filename = ft_strdup(tokens[*i + 1]);
             *i += 2;
         }

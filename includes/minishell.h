@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 17:10:12 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 11:25:24 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,8 @@ typedef enum s_redirectiontype
 	NO_REDIRECTION,
 	INPUT_REDIRECTION,
 	OUTPUT_REDIRECTION,
-	APPEND_REDIRECTION
+	APPEND_REDIRECTION,
+	HEREDOC_REDIRECTION
 }						t_redirectiontype;
 
 typedef enum s_option

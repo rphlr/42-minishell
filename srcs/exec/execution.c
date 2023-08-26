@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 10:59:51 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 11:23:59 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,17 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 					close(fd);
 					break;
 				case INPUT_REDIRECTION:
+					fd = open(redir->filename, O_RDONLY);
+					if (fd == -1)
+					{
+						ft_printf("minishell: %s: %s\n", redir->filename, strerror(errno));
+						global->exit_code = 1;
+						exit(EXIT_FAILURE);
+					}
+					dup2(fd, STDIN_FILENO);
+					close(fd);
+					break;
+				case HEREDOC_REDIRECTION:
 					fd = open(redir->filename, O_RDONLY);
 					if (fd == -1)
 					{
