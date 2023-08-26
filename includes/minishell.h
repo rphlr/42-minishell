@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 12:19:24 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/26 11:37:04 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # include <termios.h>
 # include <unistd.h>
 # include <termios.h>
-#include <dirent.h>
+# include <dirent.h>
 
 // Colors definition
 # define C_RED "\033[0;31m"
@@ -155,7 +155,7 @@ typedef struct s_cmds
 {
 	char				*cmd;
 	char				*home_folder;
-	t_redirection		*input; 
+	t_redirection		*input;
 	t_redirection		*output;
 	struct s_cmds		*next;
 }						t_cmds;
@@ -176,7 +176,7 @@ typedef struct s_count
 	int					nbr_ands;
 	int					nbr_ors;
 	int					nbr_options;
-	bool 				special_cases;
+	bool				special_cases;
 }						t_count;
 
 typedef struct s_line
@@ -212,11 +212,13 @@ t_state					check_token_errors(t_token *type, char **tokens,
 							t_state *error_table);
 int						check_options_syntax(char *token);
 bool					check_token(char *line);
-t_state					check_errors(t_token *type, char **tokens, t_global *global);
+t_state					check_errors(t_token *type, char **tokens,
+							t_global *global);
 char					*epur_str(char *line);
 int						parse_cmd(t_line *line);
 t_count					*count_types(t_token *type);
-t_state					ft_error(t_token *type, char **tokens, t_global *global);
+t_state					ft_error(t_token *type, char **tokens,
+							t_global *global);
 t_line					*init_line(char *line, t_global *global);
 t_global				*init_global(char **envp);
 char					*format_options(char *token);
@@ -227,7 +229,6 @@ char					*ft_remove_char(char *str, char c);
 
 // *---* exec *---*
 void					run_cmd(t_global *global);
-
 
 // *---* signals *---*
 void					ft_signal(void);

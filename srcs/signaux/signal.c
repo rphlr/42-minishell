@@ -28,6 +28,8 @@ void	set_termios(void)
 	tcsetattr(0, 0, &term);
 }
 
+// l.40 ctr-bck slash
+// l.41 
 void	ft_signal(void)
 {
 	struct sigaction	s;
@@ -35,7 +37,7 @@ void	ft_signal(void)
 	s.sa_handler = SIG_IGN;
 	sigemptyset(&s.sa_mask);
 	s.sa_flags = 0;
-	sigaction(SIGQUIT, &s, NULL); //ctr-bck slash
+	sigaction(SIGQUIT, &s, NULL);
 	s.sa_handler = sigint_manage;// function crl-c
 	sigaction(SIGINT, &s, NULL);
 }

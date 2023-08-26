@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:42:55 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 10:55:45 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/26 11:13:04 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,4 @@ int	parse_cmd(t_line *line)
 		}
 	}
 	return (0);
-}
+}	
