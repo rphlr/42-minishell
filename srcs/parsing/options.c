@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   options.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:43:52 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/18 16:34:26 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 00:01:02 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ char	*format_options(char *token)
 	dst = new_token;
 	while (*token)
 	{
-		printf("token: %c\n", *token);
 		scan = token + 1;
 		while (*scan && *scan != *token)
 			scan++;

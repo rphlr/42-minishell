@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenisation.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 09:02:47 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 17:01:34 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 20:12:13 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
