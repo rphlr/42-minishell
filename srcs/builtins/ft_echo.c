@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 07:34:38 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 15:50:12 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 15:36:06 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ static void	echo_print(char *str, t_global *global, int i)
 	output = ft_gc_malloc(ft_strlen(str) + 1);
 	if (!output)
 		return ;
-	if (global->line->type[i] != CLOSED_DQUOTE && global->line->type[i] != CLOSED_QUOTE)
+	if (global->line->type[i] != CLOSED_DQUOTE && global->line->type[i]
+		!= CLOSED_QUOTE)
 	{
 		while (*str)
 		{
@@ -53,7 +54,7 @@ void	ft_echo(t_global *global)
 	int	nwln;
 	int	i;
 
-	nwln  = 1;
+	nwln = 1;
 	i = 0;
 	global->line->token++;
 	global->line->type++;
