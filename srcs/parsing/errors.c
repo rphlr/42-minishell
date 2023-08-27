@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 20:34:38 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 07:59:48 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,29 +169,92 @@ char	*format_token(char *token, t_global *global)
 //     return tokens; // Return the original pointer
 // }
 
-char **merge_adjacent_quotes(char **tokens)
-{
-    char **temp_tokens = tokens;
 
-    while (*temp_tokens && *(temp_tokens + 1))
-    {
-        char *current = *temp_tokens;
-        char *next = *(temp_tokens + 1);
-        if ((current[0] == '\'' && next[0] == '\'') ||
-            (current[0] == '\"' && next[0] == '\"'))
-        {
-            // Merge the tokens
-			*temp_tokens = ft_strjoin(current, next);
-            *(temp_tokens + 1) = "";
-            temp_tokens += 2;
-        }
-        else
-            temp_tokens++;
-    }
 
-    return tokens;
-}
 
+// char **split_tokens_with_multiple_quotes(char **tokens)
+// {
+//     int total_tokens = 0;
+//     while (tokens[total_tokens])
+//         total_tokens++;
+
+//     for (int i = 0; i < total_tokens; i++)
+//     {
+//         char *token = tokens[i];
+
+//         // Count the number of quotes in the token.
+//         int quote_count = 0;
+//         for (int j = 0; token[j]; j++)
+//             if (token[j] == '"' || token[j] == '\'')
+//                 quote_count++;
+
+//         // If there are more than 2 quotes, the token contains multiple quoted strings.
+//         if (quote_count > 2)
+//         {
+//             char *start = token;
+//             char *end = start;
+//             int new_tokens_count = 0;
+
+//             while (*end)
+//             {
+//                 if (*end == '"' || *end == '\'')
+//                 {
+//                     char quote = *end;
+//                     end++;
+
+//                     while (*end && *end != quote)
+//                         end++;
+
+//                     if (*end == quote)
+//                         end++;
+
+//                     new_tokens_count++;
+//                 }
+//                 else
+//                 {
+//                     end++;
+//                 }
+//             }
+
+//             // Create space for the new tokens.
+//             char **new_tokens = (char **)ft_gc_malloc((total_tokens + new_tokens_count + 1) * sizeof(char *));
+//             int idx = 0;
+//             for (int j = 0; j < i; j++)
+//                 new_tokens[idx++] = tokens[j];
+
+//             end = start;
+//             while (*end)
+//             {
+//                 if (*end == '"' || *end == '\'')
+//                 {
+//                     char quote = *end;
+//                     start = end++;
+//                     while (*end && *end != quote)
+//                         end++;
+//                     if (*end == quote)
+//                         end++;
+
+//                     new_tokens[idx++] = ft_strndup(start, end - start);
+//                 }
+//                 else
+//                 {
+//                     end++;
+//                 }
+//             }
+
+//             for (int j = i + 1; j < total_tokens; j++)
+//                 new_tokens[idx++] = tokens[j];
+
+//             new_tokens[idx] = NULL;
+//             tokens = new_tokens;
+
+//             // Adjust the total token count.
+//             total_tokens += new_tokens_count - 1;
+//         }
+//     }
+
+//     return tokens;
+// }
 
 
 t_state	ft_error(t_token *type, char **tokens, t_global *global)
@@ -203,14 +266,6 @@ t_state	ft_error(t_token *type, char **tokens, t_global *global)
 
 	nbr_quote = 0;
 	nbr_dquote = 0;
-	tokens = merge_adjacent_quotes(tokens);
-	//print
-	char **temp_tokens = tokens;
-	while (*temp_tokens)
-	{
-		printf("token: %s\n", *temp_tokens);
-		temp_tokens++;
-	}
 	error_table = get_error_table();
 	token_check_result = check_token_errors(type, tokens, error_table);
 	if (token_check_result != VALID)
