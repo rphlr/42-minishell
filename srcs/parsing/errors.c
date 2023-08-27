@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 17:09:16 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 14:12:24 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ char	*extract_variable_name(char *ptoken)
 	while (*ptoken && ((*ptoken >= 'a' && *ptoken <= 'z') || (*ptoken >= 'A'
 				&& *ptoken <= 'Z') || (*ptoken >= '0' && *ptoken <= '9')
 			|| *ptoken == '_'))
-	{
 		ptoken++;
-	}
 	len = ptoken - start;
 	var_name = (char *)ft_gc_malloc(len + 1);
+	if (!var_name)
+		return (NULL);
 	ft_strncpy(var_name, start, len);
 	var_name[len] = '\0';
 	return (var_name);
@@ -83,6 +83,8 @@ char	*format_token(char *token, t_global *global)
 	in_simple_quotes = 0;
 	len_biggest_var_value = biggest_var_value(global->env);
 	output = (char *)ft_gc_malloc(len_biggest_var_value + 1);
+	if (!output)
+		return (NULL);
 	i = 0;
 	while (*token)
 	{
@@ -137,6 +139,7 @@ char	*format_token(char *token, t_global *global)
 	output[i] = '\0';
 	return (output);
 }
+
 
 t_state	ft_error(t_token *type, char **tokens, t_global *global)
 {

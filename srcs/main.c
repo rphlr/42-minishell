@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 16:52:33 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 18:48:43 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 //			like \ (eg with $’\n’)
 // ✅: Handle ' and " (quotes) correctly
 // ❌: Handle redirections > >> < <<
-// ❌: Handle pipes | correctly
+// ✅: Handle pipes | correctly
 // ✅: Handle environment variables ($ followed by characters)
 // ✅: Handle $? (exit code of the previous program)
 // ✅: Handle ctrl-C ctrl-D ctrl-\ correctly
@@ -39,8 +39,8 @@
 // ✅: Implement exit without any options
 // ✅: exit
 // BONUS
-// ❌: Detect Wilcard * (globbing)
-// ❌: Detect && and ||
+// ✅: Detect Wilcard * (globbing)
+// ✅: Detect && and ||
 
 static int	line_is_wspaces(char *line)
 {
@@ -75,6 +75,8 @@ void	add_to_history_list(t_history **head, char *line)
 	t_history	*current;
 
 	new_entry = ft_gc_malloc(sizeof(t_history));
+	if (!new_entry)
+		return ;
 	new_entry->line = ft_strdup(line);
 	new_entry->next = NULL;
 	if (!(*head))
@@ -113,6 +115,8 @@ static int	lsh_loop(t_global *global)
 	}
 	while (1)
 	{
+		// signal(SIGINT, SIG_IGN);
+    	// signal(SIGQUIT, SIG_IGN);
 		rdm_prompt_clr = ft_strjoin(ft_strjoin(ft_strjoin("\033[", ft_itoa(get_random() % 7 + 31)), "m"), PROMPT);
 		line = readline(rdm_prompt_clr);
 		if (!check_token(line))
@@ -134,7 +138,6 @@ static int	lsh_loop(t_global *global)
 		if (!ft_strcmp(line, ""))
 			continue ;
 		global->line = init_line(line, global);
-		// printf("filename: %s\n", global->line->cmds->output->filename);
 		if (!global->line)
 		{
 			global->exit_code = 258;
@@ -145,6 +148,7 @@ static int	lsh_loop(t_global *global)
 		global = parse_cmd(global);
 		if (!ft_strcmp(global->line->cmds->cmd, ""))
 			continue ;
+		// printfsd: %d\n", global->line->count->special_cases);
 		run_cmd(global);
 	}
 	return (global->exit_code);

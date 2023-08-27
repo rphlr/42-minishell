@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 16:56:19 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 18:47:20 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ typedef struct s_global
 
 /* FUNCTIONS */
 // *---* builtins *---*
-void					ft_echo(char *cmd);
+void					ft_echo(char *cmd, t_global *global);
 char					*get_env_value(char *name, t_env *env);
 void					ft_env(t_global *global);
 void					ft_pwd(t_line *line);

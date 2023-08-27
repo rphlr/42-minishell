@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_parsing.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:42:55 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 16:55:27 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 18:49:35 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,97 +19,6 @@ static void	define_home_folder(t_env *env, t_global *global)
 	global->home_folder = get_env_value("HOME", env);
 }
 
-// int	parse_cmd(t_line *line, t_env *env, t_global *global)
-// {
-// 	DIR				*dir;
-// 	struct dirent	*entry;
-// 	int				j;
-// 	int				i;
-// 	char			**token_ptr;
-// 	t_token			*type_ptr;
-// 	int				original_count;
-// 	char			**entries_array;
-// 	int				entries_count;
-// 	char			**old_tokens;
-// 	t_token			*old_types;
-// 	int				token_idx;
-// 	int				type_idx;
-
-// 	token_idx = 0;
-// 	type_idx = 0;
-// 	original_count = 0;
-// 	while (line->token[original_count] != NULL)
-// 		original_count++;
-// 	token_ptr = line->token;
-// 	type_ptr = line->type;
-// 	while (*type_ptr != END)
-// 	{
-// 		if (*type_ptr == STAR)
-// 		{
-// 			dir = opendir(".");
-// 			if (dir == NULL)
-// 				*token_ptr = ft_strdup("*");
-// 			else
-// 			{
-// 				entries_array = (char **)ft_gc_malloc(sizeof(char *) * 1000);
-// 				entries_count = 0;
-// 				while ((entry = readdir(dir)) != NULL)
-// 				{
-// 					if (entry->d_name[0] != '.')
-// 					{
-// 						entries_array[entries_count] = ft_strdup(entry->d_name);
-// 						entries_count++;
-// 					}
-// 				}
-// 				old_tokens = line->token;
-// 				old_types = line->type;
-// 				line->token = (char **)ft_gc_malloc(sizeof(char *)
-// 					* (original_count + entries_count));
-// 				line->type = (t_token *)ft_gc_malloc(sizeof(t_token)
-// 					* (original_count + entries_count));
-// 				j = -1;
-// 				while (++j < (token_ptr - old_tokens))
-// 				{
-// 					line->token[j] = old_tokens[j];
-// 					line->type[j] = old_types[j];
-// 				}
-// 				token_ptr = line->token + j;
-// 				type_ptr = line->type + j;
-// 				i = -1;
-// 				while (++i < entries_count)
-// 				{
-// 					*token_ptr++ = entries_array[i];
-// 					*type_ptr++ = WORD;
-// 				}
-// 				j = (token_ptr - line->token) - 1;
-// 				while (++j < original_count)
-// 				{
-// 					line->token[j + entries_count - 1] = old_tokens[j];
-// 					line->type[j + entries_count - 1] = old_types[j];
-// 				}
-// 				line->token[original_count + entries_count - 1] = NULL;
-// 				line->type[original_count + entries_count - 1] = END;
-// 				closedir(dir);
-// 			}
-// 		}
-// 		else if (*type_ptr == TILDE)
-// 		{
-// 			define_home_folder(env, global);
-// 			*token_ptr = ft_strdup(get_env_value("HOME", env));
-// 			if (*token_ptr == NULL)
-// 				*token_ptr = ft_strdup("~");
-// 			type_ptr++;
-// 		}
-// 		else
-// 		{
-// 			token_ptr++;
-// 			type_ptr++;
-// 		}
-// 	}
-// 	return (0);
-// }
-
-
 t_global	*parse_cmd(t_global *global)
 {
 	DIR				*dir;
@@ -121,10 +30,8 @@ t_global	*parse_cmd(t_global *global)
 	original_count = 0;
 	while (global->line->token[original_count] != NULL)
 		original_count++;
-
 	token_idx = 0;
 	type_idx = 0;
-
 	while (global->line->type[type_idx] != END)
 	{
 		if (global->line->type[type_idx] == STAR)
@@ -146,24 +53,21 @@ t_global	*parse_cmd(t_global *global)
 					}
 				}
 				closedir(dir);
-
 				char **new_tokens = (char **)ft_gc_malloc(sizeof(char *) * (original_count + entries_count));
+				if (!new_tokens)
+					return NULL;
 				t_token *new_types = (t_token *)ft_gc_malloc(sizeof(t_token) * (original_count + entries_count));
-
-				// Copy old tokens/types until current index.
+				if (!new_types)
+					return NULL;
 				for (int j = 0; j < token_idx; j++) {
 					new_tokens[j] = global->line->token[j];
 					new_types[j] = global->line->type[j];
 				}
-
-				// Add directory entries.
 				for (int i = 0; i < entries_count; i++) {
 					new_tokens[token_idx + i] = entries_array[i];
 					new_types[type_idx + i] = WORD;
 				}
-
-				// Copy remaining old tokens/types.
-				for (int j = token_idx+1; j < original_count; j++) { // start from token_idx+1 since * is replaced
+				for (int j = token_idx+1; j < original_count; j++) {
 					new_tokens[j + entries_count - 1] = global->line->token[j];
 					new_types[j + entries_count - 1] = global->line->type[j];
 				}

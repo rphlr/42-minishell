@@ -6,91 +6,11 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:38:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 15:14:03 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 15:34:06 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// int	count_cmd(t_token *type)
-// {
-// 	int	nbr_cmd;
-
-// 	nbr_cmd = 0;
-// 	while (*type != END)
-// 	{
-// 		if (*type++ == PIPE)
-// 			nbr_cmd++;
-// 	}
-// 	return (nbr_cmd + 1);
-// }
-
-// int	count_semicolon(t_token *type)
-// {
-// 	int	nbr_semicolon;
-
-// 	nbr_semicolon = 0;
-// 	while (*type != END)
-// 	{
-// 		if (*type++ == SEMICOLON)
-// 			nbr_semicolon++;
-// 	}
-// 	return (nbr_semicolon);
-// }
-
-// int	count_and(t_token *type)
-// {
-// 	int	nbr_and;
-
-// 	nbr_and = 0;
-// 	while (*type != END)
-// 	{
-// 		if (*type++ == AND)
-// 			nbr_and++;
-// 	}
-// 	return (nbr_and);
-// }
-
-// int	count_or(t_token *type)
-// {
-// 	int	nbr_or;
-
-// 	nbr_or = 0;
-// 	while (*type != END)
-// 	{
-// 		if (*type++ == OR)
-// 			nbr_or++;
-// 	}
-// 	return (nbr_or);
-// }
-
-// int	count_pipe(t_token *type)
-// {
-// 	int	nbr_pipe;
-
-// 	nbr_pipe = 0;
-// 	while (*type != END)
-// 	{
-// 		if (*type++ == PIPE)
-// 			nbr_pipe++;
-// 	}
-// 	return (nbr_pipe);
-// }
-
-// int	count_redirection(t_token *type)
-// {
-// 	int	nbr_redirection;
-
-// 	nbr_redirection = 0;
-// 	while (*type != END)
-// 	{
-// 		if (*type == INPUT || *type == OUTPUT || *type == APPEND
-// 			|| *type == HEREDOC)
-// 			nbr_redirection++;
-// 		type++;
-// 	}
-// 	return (nbr_redirection);
-// }
 
 t_count	*count_types(t_token *type)
 {
@@ -135,6 +55,5 @@ t_count	*count_types(t_token *type)
 		type++;
 	}
 	count->nbr_cmds = count->nbr_pipes + 1;
-	
 	return (count);
 }

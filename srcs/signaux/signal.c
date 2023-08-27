@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/26 16:54:51 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 18:49:57 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,23 @@ void handle_sigpipe(int signo)
 	(void) signo;
 }
 
+
 void	set_termios(void)
 {
 	static struct termios	term;
 
 	tcgetattr(0, &term);
 	term.c_lflag = term.c_lflag & ~ECHOCTL;
+	// term.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(0, 0, &term);
 }
+// void sigint_handler(int num)
+// {
+//     (void) num;
+//     restore_original_termios();
+//     exit(1);
+// }
+
 
 // l.40 ctr-bck slash
 // l.41 
@@ -46,6 +55,7 @@ void	ft_signal(void)
 	sigaction(SIGQUIT, &s, NULL);
 	s.sa_handler = sigint_manage;// function crl-c
 	sigaction(SIGINT, &s, NULL);
+	// signal(SIGINT, sigint_handler);
 	signal(SIGPIPE, handle_sigpipe);
 }
 
