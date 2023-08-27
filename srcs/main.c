@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 11:50:50 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 12:23:54 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ void	add_to_history_list(t_history **head, char *line)
 	t_history	*current;
 
 	new_entry = ft_gc_malloc(sizeof(t_history));
+	if (!new_entry)
+		return ;
 	new_entry->line = ft_strdup(line);
 	new_entry->next = NULL;
 	if (!(*head))
@@ -146,7 +148,7 @@ static int	lsh_loop(t_global *global)
 		global = parse_cmd(global);
 		if (!ft_strcmp(global->line->cmds->cmd, ""))
 			continue ;
-		// printf("global->line->cmds->cmd = %s\n", global->line->cmds->cmd);
+		printf("global->line->cmds->cmd = %s\n", global->line->cmds->cmd);
 		run_cmd(global);
 	}
 	return (global->exit_code);

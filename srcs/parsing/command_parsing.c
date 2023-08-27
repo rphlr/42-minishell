@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:42:55 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 07:52:41 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 12:24:31 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,15 +148,15 @@ t_global	*parse_cmd(t_global *global)
 				closedir(dir);
 
 				char **new_tokens = (char **)ft_gc_malloc(sizeof(char *) * (original_count + entries_count));
+				if (!new_tokens)
+					return NULL;
 				t_token *new_types = (t_token *)ft_gc_malloc(sizeof(t_token) * (original_count + entries_count));
-
-				// Copy old tokens/types until current index.
+				if (!new_types)
+					return NULL;
 				for (int j = 0; j < token_idx; j++) {
 					new_tokens[j] = global->line->token[j];
 					new_types[j] = global->line->type[j];
 				}
-
-				// Add directory entries.
 				for (int i = 0; i < entries_count; i++) {
 					new_tokens[token_idx + i] = entries_array[i];
 					new_types[type_idx + i] = WORD;

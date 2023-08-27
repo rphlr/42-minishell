@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 07:34:38 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 17:23:40 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 12:24:03 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ static char **split_cmd_to_tokens(char *cmd)
 	}
 	cmd_copy = ft_strdup(cmd);
 	tokens = (char **)ft_gc_malloc((count + 1) * sizeof(char *));
+	if (!tokens)
+		return NULL;
 	count = 0;
 	token = ft_strtok(cmd_copy, " ");
 	while (token)

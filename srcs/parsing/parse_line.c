@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 14:32:35 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 07:00:43 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 12:25:31 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ char **parsed_line(char *line)
     char **result = (char **)ft_gc_malloc(sizeof(char *) * (count_substrings(line) + 2));
     if (!result)
         return NULL;
-    
     int index = 0;
     while (*line)
     {
