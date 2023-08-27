@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 17:22:08 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 08:14:36 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,6 @@ static int	lsh_loop(t_global *global)
 		if (!ft_strcmp(line, ""))
 			continue ;
 		global->line = init_line(line, global);
-		// printf("filename: %s\n", global->line->cmds->output->filename);
 		if (!global->line)
 		{
 			global->exit_code = 258;

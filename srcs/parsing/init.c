@@ -6,128 +6,11 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 13:01:25 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 08:08:01 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// static t_cmds	*init_cmds(char **tokens, t_token *type)
-// {
-// 	t_cmds	*head;
-// 	t_cmds	*current;
-// 	t_cmds	*new_cmd;
-// 	char	*full_cmd;
-// 	char	*temp;
-// 	int		i;
-// 	// int		nbr_tokens;
-
-// 	head = NULL;
-// 	current = NULL;
-// 	i = 0;
-// 	new_cmd = (t_cmds *)ft_gc_malloc(sizeof(t_cmds));
-// 	if (!new_cmd)
-// 		return (NULL);
-// 	while (tokens[i] != NULL)
-// 	{
-// 		full_cmd = ft_strdup(tokens[i]);
-// 		if (tokens[i + 1] != NULL)
-// 			full_cmd = ft_strjoin(full_cmd, " ");
-// 		while (tokens[i + 1] != NULL && type[i + 1] != PIPE && type[i + 1] != SEMICOLON && type[i + 1] != AND && type[i + 1] != OR)
-// 		{
-// 			i++;
-// 			temp = full_cmd;
-// 			full_cmd = ft_strjoin(temp, tokens[i]);
-// 			if (tokens[i + 1] != NULL)
-// 				full_cmd = ft_strjoin(full_cmd, " ");
-// 		}
-// 		new_cmd->cmd = full_cmd;
-// 		new_cmd->redir = NULL;
-// 		new_cmd->next = NULL;
-// 		if (head == NULL)
-// 		{
-// 			head = new_cmd;
-// 			current = head;
-// 		}
-// 		else
-// 		{
-// 			current->next = new_cmd;
-// 			current = new_cmd;
-// 		}
-// 		i++;
-// 		// nbr_tokens = i;
-// 		// while (tokens[i] != NULL && type[i] != PIPE  && type[i] != SEMICOLON && type[i] != AND && type[i] != OR)
-// 		// // while (i < nbr_tokens && tokens[i] != NULL && (type[i] == INPUT || type[i] == OUTPUT || type[i] == APPEND))
-// 		// {
-// 		// 	if (type[i] == INPUT)
-// 		// 	{
-// 		// 		new_cmd->input = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-// 		// 		if (!new_cmd->input)
-// 		// 			return (NULL);
-// 		// 		new_cmd->input->type = INPUT_REDIRECTION;
-// 		// 		new_cmd->input->filename = ft_strdup(tokens[i + 1]);
-// 		// 		i += 2;
-// 		// 	}
-// 		// 	else if (type[i] == OUTPUT)
-// 		// 	{
-// 		// 		new_cmd->output = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-// 		// 		if (!new_cmd->output)
-// 		// 			return (NULL);
-// 		// 		new_cmd->output->type = OUTPUT_REDIRECTION;
-// 		// 		new_cmd->output->filename = ft_strdup(tokens[i + 1]);
-// 		// 		i += 2;
-// 		// 	}
-// 		// 	else if (type[i] == APPEND)
-// 		// 	{
-// 		// 		new_cmd->output = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-// 		// 		if (!new_cmd->output)
-// 		// 			return (NULL);
-// 		// 		new_cmd->output->type = APPEND_REDIRECTION;
-// 		// 		new_cmd->output->filename = ft_strdup(tokens[i + 1]);
-// 		// 		i += 2;
-// 		// 	}
-// 		// 	else
-// 		// 		i++;
-// 		// }
-// 		if (type[i] == PIPE || type[i] == SEMICOLON || type[i] == AND || type[i] == OR)
-// 			i++;
-// 	}
-// 	i = 0;
-// 	while (tokens[i] != NULL && type[i] != PIPE  && type[i] != SEMICOLON && type[i] != AND && type[i] != OR)
-// 	// while (i < nbr_tokens && tokens[i] != NULL && (type[i] == INPUT || type[i] == OUTPUT || type[i] == APPEND))
-// 	{
-// 		if (type[i] == INPUT)
-// 		{
-// 			new_cmd->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-// 			if (!new_cmd->redir)
-// 				return (NULL);
-// 			new_cmd->redir->type = INPUT_REDIRECTION;
-// 			new_cmd->redir->filename = ft_strdup(tokens[i + 1]);
-// 			i += 2;
-// 		}
-// 		else if (type[i] == OUTPUT)
-// 		{
-// 			new_cmd->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-// 			if (!new_cmd->redir)
-// 				return (NULL);
-// 			new_cmd->redir->type = OUTPUT_REDIRECTION;
-// 			new_cmd->redir->filename = ft_strdup(tokens[i + 1]);
-// 			i += 2;
-// 		}
-// 		else if (type[i] == APPEND)
-// 		{
-// 			new_cmd->redir = (t_redirection *)ft_gc_malloc(sizeof(t_redirection));
-// 			if (!new_cmd->redir)
-// 				return (NULL);
-// 			new_cmd->redir->type = APPEND_REDIRECTION;
-// 			new_cmd->redir->filename = ft_strdup(tokens[i + 1]);
-// 			i += 2;
-// 		}
-// 		else
-// 			i++;
-// 	}
-// 	return (head);
-// }
 
 void    set_filename(t_cmds *head, char **tokens, t_token *type, int *i)
 {
@@ -227,6 +110,231 @@ t_cmds *init_cmds(char **tokens, t_token *type)
     return (head);
 }
 
+char **merge_adjacent_quotes(char **tokens)
+{
+    char **temp_tokens = tokens;
+
+    while (*temp_tokens && *(temp_tokens + 1))
+    {
+        char *current = *temp_tokens;
+        char *next = *(temp_tokens + 1);
+        if ((current[0] == '\'' && next[0] == '\'') ||
+            (current[0] == '\"' && next[0] == '\"'))
+        {
+            // Merge the tokens
+			*temp_tokens = ft_strjoin(current, next);
+            *(temp_tokens + 1) = "";
+            temp_tokens += 2;
+        }
+        else
+            temp_tokens++;
+    }
+
+    return tokens;
+}
+
+// char **split_tokens_with_multiple_quotes(char **tokens, t_token *type)
+// {
+//     int total_tokens = 0;
+//     while (tokens[total_tokens])
+//         total_tokens++;
+
+//     for (int i = 0; i < total_tokens; i++)
+//     {
+//         char *token = tokens[i];
+
+//         // Count the number of quotes in the token.
+//         int quote_count = 0;
+//         for (int j = 0; token[j]; j++)
+//             if (token[j] == '"' || token[j] == '\'')
+//                 quote_count++;
+
+//         // If there are more than 2 quotes, the token contains multiple quoted strings.
+//         if (quote_count > 2)
+//         {
+//             char *start = token;
+//             char *end = start;
+//             int new_tokens_count = 0;
+
+//             while (*end)
+//             {
+//                 if (*end == '"' || *end == '\'')
+//                 {
+//                     char quote = *end;
+//                     end++;
+
+//                     while (*end && *end != quote)
+//                         end++;
+
+//                     if (*end == quote)
+//                         end++;
+
+//                     if (*end == ' ' && *(end + 1) == quote)
+//                         new_tokens_count++;
+//                 }
+//                 else
+//                 {
+//                     end++;
+//                 }
+//             }
+
+//             if (new_tokens_count == 0)
+//                 continue;
+
+//             // Create space for the new tokens.
+//             char **new_tokens = (char **)ft_gc_malloc((total_tokens + new_tokens_count + 1) * sizeof(char *));
+//             int idx = 0;
+//             for (int j = 0; j < i; j++)
+//                 new_tokens[idx++] = tokens[j];
+
+//             end = start;
+//             while (*end)
+//             {
+//                 if (*end == '"' || *end == '\'')
+//                 {
+//                     char quote = *end;
+//                     start = end++;
+//                     while (*end && *end != quote)
+//                         end++;
+//                     if (*end == quote)
+//                         end++;
+
+//                     new_tokens[idx++] = ft_strndup(start, end - start);
+
+//                     if (*end == ' ' && *(end + 1) == quote)
+//                     {
+//                         end++;  // Skip the space
+//                     }
+//                 }
+//                 else
+//                 {
+//                     end++;
+//                 }
+//             }
+
+//             for (int j = i + 1; j < total_tokens; j++)
+//                 new_tokens[idx++] = tokens[j];
+
+//             new_tokens[idx] = NULL;
+//             tokens = new_tokens;
+
+//             // Adjust the total token count.
+//             total_tokens += new_tokens_count - 1;
+//         }
+//     }
+
+//     return tokens;
+// }
+
+char **split_tokens_with_multiple_quotes(char **tokens, t_token **type_ptr)
+{
+    int total_tokens = 0;
+    while (tokens[total_tokens])
+        total_tokens++;
+
+    t_token *type = *type_ptr;
+
+    for (int i = 0; i < total_tokens; i++)
+    {
+        char *token = tokens[i];
+
+        // Count the number of quotes in the token.
+        int quote_count = 0;
+        for (int j = 0; token[j]; j++)
+            if (token[j] == '"' || token[j] == '\'')
+                quote_count++;
+
+        // If there are more than 2 quotes, the token contains multiple quoted strings.
+        if (quote_count > 2)
+        {
+            char *start = token;
+            char *end = start;
+            int new_tokens_count = 0;
+
+            while (*end)
+            {
+                if (*end == '"' || *end == '\'')
+                {
+                    char quote = *end;
+                    end++;
+
+                    while (*end && *end != quote)
+                        end++;
+
+                    if (*end == quote)
+                        end++;
+
+                    if (*end == ' ' && *(end + 1) == quote)
+                        new_tokens_count++;
+                }
+                else
+                {
+                    end++;
+                }
+            }
+
+            if (new_tokens_count == 0)
+                continue;
+
+            // Create space for the new tokens and their types.
+            char **new_tokens = (char **)ft_gc_malloc((total_tokens + new_tokens_count + 1) * sizeof(char *));
+            t_token *new_types = (t_token *)ft_gc_malloc((total_tokens + new_tokens_count + 1) * sizeof(t_token));
+            int idx = 0;
+            for (int j = 0; j < i; j++)
+            {
+                new_tokens[idx] = tokens[j];
+                new_types[idx] = type[j];
+                idx++;
+            }
+
+            end = start;
+            while (*end)
+            {
+                if (*end == '"' || *end == '\'')
+                {
+                    char quote = *end;
+                    start = end++;
+                    while (*end && *end != quote)
+                        end++;
+                    if (*end == quote)
+                        end++;
+
+                    new_tokens[idx] = ft_strndup(start, end - start);
+                    new_types[idx] = (quote == '"') ? CLOSED_DQUOTE : CLOSED_QUOTE;
+                    idx++;
+
+                    if (*end == ' ' && *(end + 1) == quote)
+                    {
+                        end++;  // Skip the space
+                    }
+                }
+                else
+                {
+                    end++;
+                }
+            }
+
+            for (int j = i + 1; j < total_tokens; j++)
+            {
+                new_tokens[idx] = tokens[j];
+                new_types[idx] = type[j];
+                idx++;
+            }
+
+            new_tokens[idx] = NULL;
+            new_types[idx] = END;
+
+            tokens = new_tokens;
+            *type_ptr = new_types;
+
+            // Adjust the total token count.
+            total_tokens += new_tokens_count - 1;
+        }
+    }
+
+    return tokens;
+}
+
 
 t_line	*init_line(char *line, t_global *global)
 {
@@ -238,15 +346,9 @@ t_line	*init_line(char *line, t_global *global)
 		return (NULL);
 	error_state = VALID;
 	line_struct->token = parsed_line(line);
-	// int i = 0;
-	// while (line_struct->token[i])
-	// {
-	// 	char c = *line_struct->token[i];
-	// 	if (*line_struct->token[i] == '\"' || *line_struct->token[i] == '\'')
-	// 		line_struct->token[i] = ft_remove_char(line_struct->token[i], c);
-	// 	i++;
-	// }
 	line_struct->type = init_tokens_type(line_struct->token);
+	line_struct->token = merge_adjacent_quotes(line_struct->token);
+	line_struct->token = split_tokens_with_multiple_quotes(line_struct->token, &line_struct->type);
 	error_state = check_errors(line_struct->type, line_struct->token, global);
 	if (error_state)
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:39:22 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/22 15:48:55 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 07:58:27 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ t_state	check_errors(t_token *type, char **tokens, t_global *global)
 	else if (state == INPUT_ERROR)
 	{
 		if (!ft_strcmp(tokens[0], "<"))
-			ft_printf("\
-			minishell: syntax error near unexpected token `newline'\n");
+			ft_printf(\
+			"minishell: syntax error near unexpected token `newline'\n");
 		else
 			ft_printf("minishell: syntax error near unexpected token `<'\n");
 	}

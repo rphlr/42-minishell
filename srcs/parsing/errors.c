@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 17:19:26 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 08:14:46 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,7 @@ char	*extract_variable_name(char *ptoken)
 	while (*ptoken && ((*ptoken >= 'a' && *ptoken <= 'z') || (*ptoken >= 'A'
 				&& *ptoken <= 'Z') || (*ptoken >= '0' && *ptoken <= '9')
 			|| *ptoken == '_'))
-	{
 		ptoken++;
-	}
 	len = ptoken - start;
 	var_name = (char *)ft_gc_malloc(len + 1);
 	ft_strncpy(var_name, start, len);
@@ -83,6 +81,8 @@ char	*format_token(char *token, t_global *global)
 	in_simple_quotes = 0;
 	len_biggest_var_value = biggest_var_value(global->env);
 	output = (char *)ft_gc_malloc(len_biggest_var_value + 1);
+	if (!output)
+		return (NULL);
 	i = 0;
 	while (*token)
 	{
@@ -137,6 +137,125 @@ char	*format_token(char *token, t_global *global)
 	output[i] = '\0';
 	return (output);
 }
+
+// char **merge_adjacent_quotes(char **tokens)
+// {
+//     char **temp_tokens = tokens; // Use a temporary pointer for iteration
+
+//     while (*temp_tokens)
+//     {
+// 		printf("current: %s\n", *temp_tokens);
+//         char *current = *temp_tokens;
+//         char *next = *(temp_tokens + 1);
+        
+//         // If current token is a single or double quote and the next token is the same
+//         if ((current && current[0] == '\'' && current[1] == '\0' && next && next[0] == '\'') ||
+//             (current && current[0] == '\"' && current[1] == '\0' && next && next[0] == '\"'))
+//         {
+// 			printf("merge\n");
+// 			printf("current: %s\n", *temp_tokens);
+// 			printf("next: %s\n", *(temp_tokens + 1));
+//             // Merge the tokens
+//             *temp_tokens = ""; // Empty the current token
+//             *(temp_tokens + 1) = ""; // Empty the next token
+//             temp_tokens += 2; // Move two steps ahead with the temporary pointer
+//         }
+//         else
+//         {
+//             temp_tokens++; // Move one step ahead with the temporary pointer
+//         }
+//     }
+
+//     return tokens; // Return the original pointer
+// }
+
+
+
+
+// char **split_tokens_with_multiple_quotes(char **tokens)
+// {
+//     int total_tokens = 0;
+//     while (tokens[total_tokens])
+//         total_tokens++;
+
+//     for (int i = 0; i < total_tokens; i++)
+//     {
+//         char *token = tokens[i];
+
+//         // Count the number of quotes in the token.
+//         int quote_count = 0;
+//         for (int j = 0; token[j]; j++)
+//             if (token[j] == '"' || token[j] == '\'')
+//                 quote_count++;
+
+//         // If there are more than 2 quotes, the token contains multiple quoted strings.
+//         if (quote_count > 2)
+//         {
+//             char *start = token;
+//             char *end = start;
+//             int new_tokens_count = 0;
+
+//             while (*end)
+//             {
+//                 if (*end == '"' || *end == '\'')
+//                 {
+//                     char quote = *end;
+//                     end++;
+
+//                     while (*end && *end != quote)
+//                         end++;
+
+//                     if (*end == quote)
+//                         end++;
+
+//                     new_tokens_count++;
+//                 }
+//                 else
+//                 {
+//                     end++;
+//                 }
+//             }
+
+//             // Create space for the new tokens.
+//             char **new_tokens = (char **)ft_gc_malloc((total_tokens + new_tokens_count + 1) * sizeof(char *));
+//             int idx = 0;
+//             for (int j = 0; j < i; j++)
+//                 new_tokens[idx++] = tokens[j];
+
+//             end = start;
+//             while (*end)
+//             {
+//                 if (*end == '"' || *end == '\'')
+//                 {
+//                     char quote = *end;
+//                     start = end++;
+//                     while (*end && *end != quote)
+//                         end++;
+//                     if (*end == quote)
+//                         end++;
+
+//                     new_tokens[idx++] = ft_strndup(start, end - start);
+//                 }
+//                 else
+//                 {
+//                     end++;
+//                 }
+//             }
+
+//             for (int j = i + 1; j < total_tokens; j++)
+//                 new_tokens[idx++] = tokens[j];
+
+//             new_tokens[idx] = NULL;
+//             tokens = new_tokens;
+
+//             // Adjust the total token count.
+//             total_tokens += new_tokens_count - 1;
+//         }
+//     }
+
+//     return tokens;
+// }
+
 
 t_state	ft_error(t_token *type, char **tokens, t_global *global)
 {
