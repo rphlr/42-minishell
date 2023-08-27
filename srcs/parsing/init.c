@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 12:25:18 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 12:59:23 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,6 +230,7 @@ char **split_tokens_with_multiple_quotes(char **tokens, t_token **type_ptr)
 }
 
 
+
 t_line	*init_line(char *line, t_global *global)
 {
 	t_line	*line_struct;
@@ -238,7 +239,7 @@ t_line	*init_line(char *line, t_global *global)
 	line_struct = ft_gc_malloc(sizeof(t_line));
 	if (!line_struct)
 		return (NULL);
-	error_state = VALID;
+	// error_state = VALID;÷
 	line_struct->token = parsed_line(line);
 	line_struct->type = init_tokens_type(line_struct->token);
 	line_struct->token = merge_adjacent_quotes(line_struct->token);
@@ -250,6 +251,7 @@ t_line	*init_line(char *line, t_global *global)
 	line_struct->pipe = NULL;
 	line_struct->heredoc = NULL;
 	line_struct->count = count_types(line_struct->type);
+	printf("special_cases: %d\n", global->line->count->special_cases);
 	return (line_struct);
 }
 

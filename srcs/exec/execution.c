@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 11:50:47 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 12:34:57 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static void	execute_primaries(char	*cmd, t_global *global)
 	char *first_word = ft_strtok(cmd_copy, " ");
 
 	if (!ft_strcmp(first_word, "echo"))
-		ft_echo(cmd);
+		ft_echo(cmd, global);
 	else if (!ft_strcmp(first_word, "cd"))
 		ft_cd(cmd, global);
 	else if (!ft_strcmp(first_word, "pwd"))

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:38:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 15:14:03 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 12:53:50 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,9 +132,11 @@ t_count	*count_types(t_token *type)
 		}
 		count->special_cases = true;
 		count->nbr_tokens++;
+		printf("special_cases");
 		type++;
 	}
 	count->nbr_cmds = count->nbr_pipes + 1;
 	
+	printf("special_cases: %d\n", count->special_cases);
 	return (count);
 }
