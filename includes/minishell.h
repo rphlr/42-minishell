@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 12:51:42 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 11:33:28 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@
 
 // # define PROMPT C_CYAN" rapidshell > "C_RESET
 # define PROMPT "\033[1m\033[7m\033[4m\033[41m Les pros du HTML >\033[0m "
+
+static struct termios original_term;
 
 typedef enum s_token
 {
@@ -234,7 +236,10 @@ void					run_cmd(t_global *global);
 // *---* signals *---*
 void					ft_signal(void);
 void					sigint_manage(int num);
+// void					init_termios(void);
 void					set_termios(void);
+// void					reset_termios(void);
+void save_original_termios(void);
 
 // remove when finish
 void					print_infos(t_line *line);

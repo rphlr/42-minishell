@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 09:36:26 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 11:33:23 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,13 +181,13 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
     for (int j = 0; global->line->token[j]; j++)
     {
         // Check if the token is at the current cmd_ptr position.
-        if (strncmp(cmd_ptr, global->line->token[j], strlen(global->line->token[j])) == 0)
+        if (ft_strncmp(cmd_ptr, global->line->token[j], ft_strlen(global->line->token[j])) == 0)
         {
             argv[i] = global->line->token[j];
             i++;
 
             // Move the cmd_ptr ahead by the length of the matched token.
-            cmd_ptr += strlen(global->line->token[j]);
+            cmd_ptr += ft_strlen(global->line->token[j]);
 
             // If the next character in cmd is a space, skip it.
             if (*cmd_ptr == ' ')
@@ -221,6 +221,8 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 	manage_pid(&pid);
 	if (!pid)
 	{
+		signal(SIGINT, SIG_DFL);
+	    signal(SIGQUIT, SIG_DFL);
 		if (redir)
 		{
 			int fd;
@@ -267,7 +269,11 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 					break;
 			}
 		}
+		// signal(SIGINT, sigint_manage);  // Handle SIGINT with sigint_manage function
+		// signal(SIGQUIT, SIG_DFL);       // Default handling for SIGQUIT
 		execve(path, argv, NULL);
+		// signal(SIGINT, SIG_IGN);
+		// signal(SIGQUIT, SIG_IGN);
 		global->exit_code = EXIT_FAILURE;
 		// manage_pid(&pid);
 		exit (global->exit_code);
@@ -470,6 +476,7 @@ void	run_cmd(t_global *global)
 
 	global->exit_code = 0;
 	manage_exit(&global->exit_code);
+	// set_termios();
 	if (global->line->count->special_cases == true)
 	{
 		execute_specials(global);
@@ -490,4 +497,5 @@ void	run_cmd(t_global *global)
 	}
 	global->exit_code = execute_cmd(global->line->cmds->cmd, global->line->cmds->redir, global);
 	// manage_exit(&global->exit_code);
+	// reset_termios();
 }
