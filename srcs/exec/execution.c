@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 09:26:59 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 09:36:26 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,10 @@ void	ft_heredoc(char *filename, char *limiter, int type)
 		ft_printf("heredoc> ");
 		buf = get_next_line(0);
 		if (!buf)
+		{
+			close(file);
 			exit(1);
+		}
 		if (!ft_strncmp(limiter, buf, ft_strlen(limiter)))
 			break ;
 		write(file, buf, ft_strlen(buf));
@@ -161,9 +164,7 @@ void	ft_heredoc(char *filename, char *limiter, int type)
 		exit (1);
 	}
 	while ((buf = get_next_line(fd_final)))
-	{
 		write(STDOUT_FILENO, buf, ft_strlen(buf));
-	}
 	close(fd_final);
 	unlink(".heredoc_content");
 }
