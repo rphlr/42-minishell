@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 08:14:36 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 09:10:36 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ static int	lsh_loop(t_global *global)
 		global = parse_cmd(global);
 		if (!ft_strcmp(global->line->cmds->cmd, ""))
 			continue ;
+		// printf("global->line->cmds->cmd = %s\n", global->line->cmds->cmd);
 		run_cmd(global);
 	}
 	return (global->exit_code);

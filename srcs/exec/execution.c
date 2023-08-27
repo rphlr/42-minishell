@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 07:03:14 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 09:26:59 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,17 +173,35 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 	pid_t pid;
 	int status;
 	char *argv[100];
-	char *token;
+	// char *token;
 	int i = 0;
 
-	token = ft_strtok(cmd, " ");
-	while (token != NULL)
-	{
-		argv[i] = token;
-		i++;
-		token = ft_strtok(NULL, " ");
-	}
-	argv[i] = NULL;
+	char *cmd_ptr = cmd;
+    for (int j = 0; global->line->token[j]; j++)
+    {
+        // Check if the token is at the current cmd_ptr position.
+        if (strncmp(cmd_ptr, global->line->token[j], strlen(global->line->token[j])) == 0)
+        {
+            argv[i] = global->line->token[j];
+            i++;
+
+            // Move the cmd_ptr ahead by the length of the matched token.
+            cmd_ptr += strlen(global->line->token[j]);
+
+            // If the next character in cmd is a space, skip it.
+            if (*cmd_ptr == ' ')
+                cmd_ptr++;
+        }
+    }
+    argv[i] = NULL;
+	// token = ft_strtok(cmd, " ");
+	// while (token != NULL)
+	// {
+	// 	argv[i] = token;
+	// 	i++;
+	// 	token = ft_strtok(NULL, " ");
+	// }
+	// argv[i] = NULL;
 	if (!global->env)
 	{
 		ft_printf("minishell: %s: No such file or directory\n", argv[0]);
