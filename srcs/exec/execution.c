@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 15:40:14 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 15:50:37 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,7 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 		execve(path, argv, NULL);
 		perror("execve");
 		global->exit_code = EXIT_FAILURE;
+		// manage_exit(&global->exit_code);
 		// manage_pid(&pid);
 		exit (global->exit_code);
 	}
@@ -491,4 +492,5 @@ void	run_cmd(t_global *global)
 		return ;
 	}
 	global->exit_code = execute_cmd(global->line->cmds->cmd, global->line->cmds->redir, global);
+	manage_exit(&global->exit_code);
 }
