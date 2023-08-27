@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 16:02:14 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 16:10:35 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,7 +249,10 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 	else
 	{
 		waitpid(pid, &status, 0);
-		return (manage_exit(NULL));
+		if (manage_exit(NULL) != 130)
+			return (WEXITSTATUS(status));
+		else
+			return (manage_exit(NULL));
 	}
 }
 
