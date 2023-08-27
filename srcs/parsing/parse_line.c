@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 14:32:35 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 15:33:51 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 16:14:39 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char **parsed_line(char *line)
         {
             char *current_string;
             char quote_used = extract_quoted_string(&line, &current_string);
-            while (*(line - 1) == quote_used && *line != ' ')
+            while (*(line - 1) == quote_used && (*line != ' ' && *line != '\t' && *line != '\0'))
             {
                 char *next_string;
                 extract_quoted_string(&line, &next_string);
