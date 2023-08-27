@@ -6,17 +6,24 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 14:32:35 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 12:25:31 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 15:33:51 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// static int is_special_char(char c)
+// {
+//     return (c == '|' || c == '>' || c == '<' || c == '&');
+// }
 
 static int	count_substrings(char *line)
 {
 	int	count;
 
 	count = 0;
+	while (*line && (*line == ' ' || *line == '\t'))
+		line++;
 	while (*line)
 	{
 		if (*line == '"' || *line == '\'')
@@ -25,11 +32,13 @@ static int	count_substrings(char *line)
 			line++;
 			while (*line && (*line != '"' && *line != '\''))
 				line++;
+			if (*line)
+				line++;
 		}
-		else if (*line != ' ')
+		else if (*line != ' ' && *line != '\t')
 		{
 			count++;
-			while (*line && *line != ' ' && *line != '"' && *line != '\'')
+			while (*line && *line != ' ' && *line != '\t' && *line != '"' && *line != '\'')
 				line++;
 		}
 		else
@@ -44,7 +53,6 @@ static char extract_quoted_string(char **line_pointer, char **output)
     char quote = *line++;
     char *start = line - 1;
     int nbr_backslash = 0;
-    
     while (*line && (*line != quote || *(line - 1) == '\\'))
     {
         if (*line == '\\' && *(line - 1) == '\\')
@@ -82,30 +90,23 @@ char **parsed_line(char *line)
     int index = 0;
     while (*line)
     {
+        while (*line && (*line == ' ' || *line == '\t'))
+            line++;
         if ((*line == '"' || *line == '\'') && (line == temp_line || *(line - 1) != '\\'))
         {
             char *current_string;
             char quote_used = extract_quoted_string(&line, &current_string);
-            while (*(line - 1) == quote_used)
+            while (*(line - 1) == quote_used && *line != ' ')
             {
                 char *next_string;
                 extract_quoted_string(&line, &next_string);
                 char *merged_string = ft_strjoin(current_string, next_string);
-				// merged_string[ft_strlen(merged_string) - 1] = '\0';
                 current_string = merged_string;
             }
-            
             result[index++] = current_string;
         }
-        else if (*line == '\t' || *line == ' ')
-        {
-            line++;
-            continue;
-        }
-        else
-        {
+        else if (*line && *line != ' ' && *line != '\t')
             result[index++] = extract_unquoted_string(&line);
-        }
     }
     result[index] = NULL;
     return result;

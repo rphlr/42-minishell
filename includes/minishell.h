@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 12:36:15 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 13:41:12 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,6 @@ void					ft_export(t_global *global, t_line *line);
 void					ft_cd(char *cmd, t_global *global);
 void					ft_unset(t_global *global, t_line *line);
 void					ft_exit(t_global *global);
-char **split_tokens_with_multiple_quotes(char **tokens, t_token **type_ptr);
 
 // *---* parsing *---*
 t_state					check_token_errors(t_token *type, char **tokens,

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 07:34:38 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 12:49:42 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 14:20:09 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,22 +194,10 @@ void	ft_echo(char *cmd, t_global *global)
 {
 	int	nwln;
 	int i;
-	// char **tokens;
 
 	(void)cmd;
-	// (void)global;
-
 	nwln  = 1;
-	// tokens = split_cmd_to_tokens(cmd);
-	// char **split_tokens_with_multiple_quotes(char **tokens, t_token **type_ptr)
-	// tokens = split_cmd_to_tokens(cmd);
 	i = 0;
-	printf("special_cases: %d\n", global->line->count->special_cases);
-	if (global->line->count->special_cases == true)
-	{
-		while (global->line->type[i] != END && (global->line->type[i] == AND || global->line->type[i] == OR || global->line->type[i] == PIPE || global->line->type[i] == SEMICOLON))
-			i++;
-	}
 	while (global->line->token[i] && ft_strcmp(global->line->token[i], "echo") != 0)
 		i++;
 	i++;

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 12:59:23 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 15:15:13 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ t_cmds *init_cmds(char **tokens, t_token *type)
             current = new_cmd;
         }
         i++;
-
         if (type[i] == PIPE || type[i] == SEMICOLON || type[i] == AND || type[i] == OR)
             i++;
     }
@@ -132,14 +131,11 @@ char **merge_adjacent_quotes(char **tokens)
     return tokens;
 }
 
-char **split_tokens_with_multiple_quotes(char **tokens, t_token **type_ptr)
+char **split_tokens_with_multiple_quotes(char **tokens)
 {
     int total_tokens = 0;
     while (tokens[total_tokens])
         total_tokens++;
-
-    t_token *type = *type_ptr;
-
     for (int i = 0; i < total_tokens; i++)
     {
         char *token = tokens[i];
@@ -152,41 +148,31 @@ char **split_tokens_with_multiple_quotes(char **tokens, t_token **type_ptr)
             char *start = token;
             char *end = start;
             int new_tokens_count = 0;
-
             while (*end)
             {
                 if (*end == '"' || *end == '\'')
                 {
                     char quote = *end;
                     end++;
-
                     while (*end && *end != quote)
                         end++;
-
                     if (*end == quote)
                         end++;
-
                     if (*end == ' ' && *(end + 1) == quote)
                         new_tokens_count++;
                 }
                 else
-                {
                     end++;
-                }
             }
             if (new_tokens_count == 0)
                 continue;
             char **new_tokens = (char **)ft_gc_malloc((total_tokens + new_tokens_count + 1) * sizeof(char *));
             if (!new_tokens)
                 return NULL;
-            t_token *new_types = (t_token *)ft_gc_malloc((total_tokens + new_tokens_count + 1) * sizeof(t_token));
-            if (!new_types)
-                return NULL;
             int idx = 0;
             for (int j = 0; j < i; j++)
             {
                 new_tokens[idx] = tokens[j];
-                new_types[idx] = type[j];
                 idx++;
             }
             end = start;
@@ -201,35 +187,25 @@ char **split_tokens_with_multiple_quotes(char **tokens, t_token **type_ptr)
                     if (*end == quote)
                         end++;
                     new_tokens[idx] = ft_strndup(start, end - start);
-                    new_types[idx] = (quote == '"') ? CLOSED_DQUOTE : CLOSED_QUOTE;
                     idx++;
                     if (*end == ' ' && *(end + 1) == quote)
-                    {
                         end++;
-                    }
                 }
                 else
-                {
                     end++;
-                }
             }
             for (int j = i + 1; j < total_tokens; j++)
             {
                 new_tokens[idx] = tokens[j];
-                new_types[idx] = type[j];
                 idx++;
             }
             new_tokens[idx] = NULL;
-            new_types[idx] = END;
             tokens = new_tokens;
-            *type_ptr = new_types;
             total_tokens += new_tokens_count - 1;
         }
     }
     return tokens;
 }
-
-
 
 t_line	*init_line(char *line, t_global *global)
 {
@@ -239,11 +215,10 @@ t_line	*init_line(char *line, t_global *global)
 	line_struct = ft_gc_malloc(sizeof(t_line));
 	if (!line_struct)
 		return (NULL);
-	// error_state = VALID;÷
 	line_struct->token = parsed_line(line);
-	line_struct->type = init_tokens_type(line_struct->token);
 	line_struct->token = merge_adjacent_quotes(line_struct->token);
-	line_struct->token = split_tokens_with_multiple_quotes(line_struct->token, &line_struct->type);
+	line_struct->token = split_tokens_with_multiple_quotes(line_struct->token);
+    line_struct->type = init_tokens_type(line_struct->token);
 	error_state = check_errors(line_struct->type, line_struct->token, global);
 	if (error_state)
 		return (NULL);
@@ -251,7 +226,6 @@ t_line	*init_line(char *line, t_global *global)
 	line_struct->pipe = NULL;
 	line_struct->heredoc = NULL;
 	line_struct->count = count_types(line_struct->type);
-	printf("special_cases: %d\n", global->line->count->special_cases);
 	return (line_struct);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 12:34:57 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 14:57:02 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,23 +96,6 @@ static void	execute_primaries(char	*cmd, t_global *global)
 		ft_exit(global);
 }
 
-// void	get_heredoc_input(char *limiter, int file)
-// {
-// 	char	*buf;
-
-// 	while (true)
-// 	{
-// 		write(1, "pipe heredoc> ", 14);
-// 		buf = get_next_line(0);
-// 		if (buf < 0)
-// 			exit(1);
-// 		if (!ft_strncmp(limiter, buf, ft_strlen(limiter + 1)))
-// 			break ;
-// 		write(file, buf, ft_strlen(buf));
-// 		write(file, "\n", 1);
-// 	}
-// }
-
 void	ft_heredoc(char *filename, char *limiter, int type)
 {
 	int		file;
@@ -174,35 +157,21 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 	pid_t pid;
 	int status;
 	char *argv[100];
-	// char *token;
 	int i = 0;
 
 	char *cmd_ptr = cmd;
     for (int j = 0; global->line->token[j]; j++)
     {
-        // Check if the token is at the current cmd_ptr position.
         if (ft_strncmp(cmd_ptr, global->line->token[j], ft_strlen(global->line->token[j])) == 0)
         {
             argv[i] = global->line->token[j];
             i++;
-
-            // Move the cmd_ptr ahead by the length of the matched token.
             cmd_ptr += ft_strlen(global->line->token[j]);
-
-            // If the next character in cmd is a space, skip it.
             if (*cmd_ptr == ' ')
                 cmd_ptr++;
         }
     }
     argv[i] = NULL;
-	// token = ft_strtok(cmd, " ");
-	// while (token != NULL)
-	// {
-	// 	argv[i] = token;
-	// 	i++;
-	// 	token = ft_strtok(NULL, " ");
-	// }
-	// argv[i] = NULL;
 	if (!global->env)
 	{
 		ft_printf("minishell: %s: No such file or directory\n", argv[0]);
@@ -267,11 +236,7 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 					break;
 			}
 		}
-		// signal(SIGINT, sigint_manage);  // Handle SIGINT with sigint_manage function
-		// signal(SIGQUIT, SIG_DFL);       // Default handling for SIGQUIT
 		execve(path, argv, NULL);
-		// signal(SIGINT, SIG_IGN);
-		// signal(SIGQUIT, SIG_IGN);
 		global->exit_code = EXIT_FAILURE;
 		// manage_pid(&pid);
 		exit (global->exit_code);
@@ -381,11 +346,9 @@ static void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 	pid_t pid = fork();
 	if (pid == 0)
 	{
+		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);
 		close(fds[1]);
-		close(fds[0]);
-		// signal(SIGINT, SIG_DFL);
-		// signal(SIGQUIT, SIG_DFL);
 		execute_cmd(curr_cmd->cmd, curr_cmd->redir, global);
 		exit(EXIT_SUCCESS);
 	}
@@ -394,14 +357,27 @@ static void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 		perror("fork");
 		exit(EXIT_FAILURE);
 	}
-	dup2(fds[0], STDIN_FILENO);
+	
+	pid_t pid2 = fork();
+	if (pid2 == 0)
+	{
+		close(fds[1]);
+		dup2(fds[0], STDIN_FILENO);
+		close(fds[0]);
+		execute_cmd(next_cmd->cmd, next_cmd->redir, global);
+		exit(EXIT_SUCCESS);
+	}
+	else if (pid2 < 0)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
 	close(fds[0]);
 	close(fds[1]);
-	// signal(SIGINT, SIG_DFL);
-	// signal(SIGQUIT, SIG_DFL);
-	execute_cmd(next_cmd->cmd, next_cmd->redir, global);
-	wait(NULL);
+	waitpid(pid, NULL, 0);
+	waitpid(pid2, NULL, 0);
 }
+
 
 static void	ft_semicolon(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 {
@@ -420,7 +396,7 @@ static void	execute_specials(t_global *global)
 	type_tmp = global->line->type;
 	while (count_tmp->special_cases)
 	{
-		while (!(*type_tmp == INPUT || *type_tmp == OUTPUT || *type_tmp == APPEND || *type_tmp == HEREDOC || *type_tmp == OR || *type_tmp == AND || *type_tmp == SEMICOLON || *type_tmp == PIPE) && *type_tmp != END)
+		while (!(*type_tmp == INPUT || *type_tmp == OUTPUT || *type_tmp == APPEND || *type_tmp == HEREDOC || *type_tmp == AND || *type_tmp == OR || *type_tmp == SEMICOLON || *type_tmp == PIPE) && *type_tmp != END)
 			type_tmp++;
 		if (*type_tmp == INPUT || *type_tmp == HEREDOC || *type_tmp == APPEND || *type_tmp == OUTPUT)
 		{
@@ -439,11 +415,31 @@ static void	execute_specials(t_global *global)
 		{
 			count_tmp->nbr_ors--;
 			ft_or(global, curr_cmd, curr_cmd->next);
+			if (global->exit_code == 0)
+				return;
+			if (curr_cmd->next)
+			{
+				curr_cmd = curr_cmd->next;
+				type_tmp++;
+				while (*type_tmp != OR && *type_tmp != END)
+					type_tmp++;
+				if (*type_tmp == END)
+					return;
+			}
 		}
 		else if (count_tmp->nbr_ands > 0 && *type_tmp == AND)
 		{
 			count_tmp->nbr_ands--;
 			ft_and(global, curr_cmd, curr_cmd->next);
+			if (curr_cmd->next)
+			{
+				curr_cmd = curr_cmd->next;
+				type_tmp++;
+				while (*type_tmp != AND && *type_tmp != END)
+					type_tmp++;
+				if (*type_tmp == END)
+					return;
+			}
 		}
 		else if (count_tmp->nbr_semicolons > 0 && *type_tmp == SEMICOLON)
 		{
@@ -458,7 +454,8 @@ static void	execute_specials(t_global *global)
 				ft_pipe(global, curr_cmd, curr_cmd->next);
 			count_tmp->nbr_pipes = 0;
 		}
-		curr_cmd = curr_cmd->next;
+		if (curr_cmd->next)
+			curr_cmd = curr_cmd->next;
 		type_tmp++;
 		if (!count_tmp->nbr_inputs && !count_tmp->nbr_outputs
 			&& !count_tmp->nbr_appends && !count_tmp->nbr_heredocs
@@ -474,7 +471,6 @@ void	run_cmd(t_global *global)
 
 	global->exit_code = 0;
 	manage_exit(&global->exit_code);
-	// set_termios();
 	if (global->line->count->special_cases == true)
 	{
 		execute_specials(global);
@@ -494,6 +490,4 @@ void	run_cmd(t_global *global)
 		return ;
 	}
 	global->exit_code = execute_cmd(global->line->cmds->cmd, global->line->cmds->redir, global);
-	// manage_exit(&global->exit_code);
-	// reset_termios();
 }
