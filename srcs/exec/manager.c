@@ -1,39 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   manager.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/07 12:42:00 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 11:46:33 by rrouille         ###   ########.fr       */
+/*   Created: 2023/08/25 17:08:38 by rrouille          #+#    #+#             */
+/*   Updated: 2023/08/26 15:58:48 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_env_value(char *name, t_env *env)
+int	manage_exit(int *new_code)
 {
-	t_env	*tmp;
+	static int	exit_code;
 
-	tmp = env;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->name, name))
-			return (tmp->value);
-		tmp = tmp->next;
-	}
-	return (NULL);
+	if (new_code)
+		exit_code = *new_code;
+	return (exit_code);
 }
 
-void	ft_env(t_global *global)
+pid_t	manage_pid(pid_t *new_pid)
 {
-	t_env	*tmp;
+	static pid_t	child_pid;
 
-	tmp = global->env;
-	while (tmp)
-	{
-		ft_printf("%s=%s\n", tmp->name, tmp->value);
-		tmp = tmp->next;
-	}
+	// if (child_pid < 0)
+	// 	child_pid = 0;
+	if (new_pid)
+		child_pid = *new_pid;
+	return (child_pid);
 }
