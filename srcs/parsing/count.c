@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   count.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:38:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 15:34:06 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 00:14:07 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

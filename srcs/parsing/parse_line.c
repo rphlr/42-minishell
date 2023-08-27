@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 14:32:35 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 16:14:39 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/27 23:58:52 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

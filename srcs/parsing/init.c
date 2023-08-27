@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 15:15:13 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 00:05:32 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

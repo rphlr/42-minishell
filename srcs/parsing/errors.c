@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 14:12:24 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 00:13:04 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

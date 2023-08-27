@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:42:00 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 11:46:33 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 00:32:58 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

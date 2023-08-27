@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/27 18:49:57 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/28 00:42:21 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void handle_sigpipe(int signo)
 {
 	(void) signo;
 }
-
 
 void	set_termios(void)
 {
