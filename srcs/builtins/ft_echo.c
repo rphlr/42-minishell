@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 07:34:38 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 18:47:48 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/27 19:12:04 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ static void	echo_print(char *str)
 	}
 }
 
-<<<<<<< HEAD
 //static char **split_cmd_to_tokens(char *cmd)
 //{
 //	int count = 0;
@@ -64,36 +63,6 @@ static void	echo_print(char *str)
 //	tokens[count] = NULL;
 //	return tokens;
 //}
-=======
-// static char **split_cmd_to_tokens(char *cmd)
-// {
-// 	int count = 0;
-// 	char **tokens;
-// 	char *token;
-// 	char *cmd_copy = ft_strdup(cmd);
-
-// 	token = ft_strtok(cmd_copy, " ");
-// 	while (token)
-// 	{
-// 		count++;
-// 		token = ft_strtok(NULL, " ");
-// 	}
-// 	cmd_copy = ft_strdup(cmd);
-// 	tokens = (char **)ft_gc_malloc((count + 1) * sizeof(char *));
-// 	if (!tokens)
-// 		return NULL;
-// 	count = 0;
-// 	token = ft_strtok(cmd_copy, " ");
-// 	while (token)
-// 	{
-// 		tokens[count++] = ft_strdup(token);
-// 		// count++;
-// 		token = ft_strtok(NULL, " ");
-// 	}
-// 	tokens[count + 1] = NULL;
-// 	return tokens;
-// }
->>>>>>> main
 
 // char **split_cmd_to_tokens(char *cmd) {
 //     int count = 0;
@@ -217,24 +186,13 @@ static void	echo_print(char *str)
 //     return tokens;
 // }
 
-
-
 void	ft_echo(char *cmd, t_global *global)
 {
 	int	nwln;
 	int i;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-	nwln = 1;
-=======
-	nwln  = 1;
-	tokens = split_cmd_to_tokens(cmd);
->>>>>>> 70258eb3ff850f618045b294be1b488fbfdff991
-=======
 	(void)cmd;
 	nwln  = 1;
->>>>>>> main
 	i = 0;
 	while (global->line->token[i] && ft_strcmp(global->line->token[i], "echo") != 0)
 		i++;
@@ -254,4 +212,3 @@ void	ft_echo(char *cmd, t_global *global)
 	if (nwln)
 		ft_printf("\n");
 }
-
