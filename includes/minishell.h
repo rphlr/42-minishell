@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 00:40:01 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/28 00:47:44 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,8 @@ t_state					check_errors(t_token *type, char **tokens,
 char					*epur_str(char *line);
 t_global				*parse_cmd(t_global *global);
 t_count					*count_types(t_token *type);
-t_state					ft_error(t_token *type, char **tokens, t_global *global);
+t_state					ft_error(t_token *type, char **tokens,
+							t_global *global);
 t_cmds					*init_cmds(char **tokens, t_token *type);
 t_line					*init_line(char *line, t_global *global);
 t_global				*init_global(char **envp);

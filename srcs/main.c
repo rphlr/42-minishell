@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 00:41:33 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/28 00:51:04 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 // ✅: Do not interpret unclosed quotes or unspecified special characters
 //			like \ (eg with $’\n’)
 // ✅: Handle ' and " (quotes) correctly
-// ❌: Handle redirections > >> < <<
+// ✅: Handle redirections > >> < <<
 // ✅: Handle pipes | correctly
 // ✅: Handle environment variables ($ followed by characters)
 // ✅: Handle $? (exit code of the previous program)
@@ -115,9 +115,8 @@ static int	lsh_loop(t_global *global)
 	}
 	while (1)
 	{
-		// signal(SIGINT, SIG_IGN);
-    	// signal(SIGQUIT, SIG_IGN);
-		rdm_prompt_clr = ft_strjoin(ft_strjoin(ft_strjoin("\033[", ft_itoa(get_random() % 7 + 31)), "m"), PROMPT);
+		rdm_prompt_clr = ft_strjoin(ft_strjoin(ft_strjoin("\033[",
+						ft_itoa(get_random() % 7 + 31)), "m"), PROMPT);
 		line = readline(rdm_prompt_clr);
 		if (!check_token(line))
 			break ;
@@ -148,7 +147,6 @@ static int	lsh_loop(t_global *global)
 		global = parse_cmd(global);
 		if (!ft_strcmp(global->line->cmds->cmd, ""))
 			continue ;
-		// printfsd: %d\n", global->line->count->special_cases);
 		run_cmd(global);
 	}
 	return (global->exit_code);

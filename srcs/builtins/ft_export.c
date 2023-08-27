@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 10:47:18 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 01:14:54 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,34 +41,35 @@ static t_env	*new_env_item(char *name, char *value)
 	return (new_item);
 }
 
-t_env *clone_env_list(t_env *head) 
+t_env	*clone_env_list(t_env *head)
 {
-	t_env *new_head = NULL;
-	t_env *new_current = NULL;
-	t_env *current = head;
+	t_env	*new_head;
+	t_env	*new_current;
+	t_env	*current;
+	t_env	*new_node;
 
-	while (current) 
+	new_head = NULL;
+	new_current = NULL;
+	current = head;
+	while (current)
 	{
-		t_env *new_node = malloc(sizeof(t_env));
+		new_node = malloc(sizeof(t_env));
 		new_node->name = ft_strdup(current->name);
 		new_node->value = ft_strdup(current->value);
 		new_node->next = NULL;
-
-		if (!new_head) 
+		if (!new_head)
 		{
 			new_head = new_node;
 			new_current = new_node;
 		}
-		else 
+		else
 		{
 			new_current->next = new_node;
 			new_current = new_node;
 		}
-
 		current = current->next;
 	}
-
-	return new_head;
+	return (new_head);
 }
 
 void	sorting_env(t_env *env_cpy)
@@ -126,10 +127,10 @@ void	ft_export(t_global *global, t_line *line)
 	i = 1;
 	while (line->token[i])
 	{
-
 		if (!ft_isalpha(line->token[i][0]) && line->token[i][0] != '_')
 		{
-			ft_printf("minishell: export: `%s': not a valid identifier\n", line->token[i]);
+			ft_printf("minishell: export: `%s': not a valid identifier\n",
+				line->token[i]);
 			return ;
 		}
 		extract_name_value(line->token[i], &name, &value);
