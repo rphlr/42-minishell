@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:19:43 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 10:19:52 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/26 15:28:12 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void	ft_exit(t_global *global)
 	char	c;
 
 	i = 1;
-	global->exit_code = 0;
+	global->exit_code = manage_exit(NULL);
 	ft_printf("exit\n");
 	if (global->line->token[i + 1] && global->line->type[i] == IGNORE)
 		i++;
@@ -187,5 +187,5 @@ void	ft_exit(t_global *global)
 		if (global->exit_code < 0 || global->exit_code > 255)
 			global->exit_code %= 256;
 	}
-	exit(global->exit_code);
+	exit(manage_exit(&global->exit_code));
 }

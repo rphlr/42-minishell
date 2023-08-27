@@ -3,22 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
+/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/21 14:45:54 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/26 16:54:51 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <termios.h>
+// #include <readline/readline.h>
+// #include <readline/history.h>
+// #include <termios.h>
 
 //c_lflag = 1011 0001      1011 0001
 //ECHOCTL = 0000 0001 ~ -> 1111 1110  &
 //          0000 0001      1011 0000
 // clean ctr-c dans le terminal
+
+void handle_sigpipe(int signo)
+{
+	(void) signo;
+}
+
 void	set_termios(void)
 {
 	static struct termios	term;
@@ -40,41 +46,59 @@ void	ft_signal(void)
 	sigaction(SIGQUIT, &s, NULL);
 	s.sa_handler = sigint_manage;// function crl-c
 	sigaction(SIGINT, &s, NULL);
+	signal(SIGPIPE, handle_sigpipe);
 }
 
 void	sigint_manage(int num)
 {
-	(void)num;
-	if (num == SIGINT)
+	(void) num;
+	int exit_code;
+	pid_t reset_pid;
+	pid_t child_pid;
+
+	child_pid = manage_pid(NULL);
+	reset_pid = -1;
+	if (child_pid > 0)
 	{
-		write(1, "\n", 1);
+        ft_printf("\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
-	}
-}
-
-void	update_signal_handler(int num)
-{
-	(void)num;
-	if (num == SIGINT)
+        kill(child_pid, SIGINT);
+		exit_code = 130;
+    } else
 	{
-		write(1, "\n", 1);
+        ft_printf("\n");
+		rl_replace_line("", 0);
+		rl_on_new_line();
 		rl_redisplay();
-	}
-		else if (num == SIGQUIT)
-	{
-		write (1, "quitting minishell\n", 19);
-		rl_redisplay();
-	}
+		exit_code = 1;
+    }
+	manage_exit(&exit_code);
+    manage_pid(&reset_pid);
 }
 
-void	update_signal(void)
-{
-	struct sigaction	s;
+// void	update_signal_handler(int num)
+// {
+// 	(void)num;
+// 	if (num == SIGINT)
+// 	{
+// 		ft_printf("C'est quoi ça\n");
+// 		rl_redisplay();
+// 	}
+// 	if (num == SIGQUIT)
+// 	{
+// 		ft_printf("quitting minishell\n");
+// 		rl_redisplay();
+// 	}
+// }
 
-	s.sa_flags = 0;
-	s.sa_handler = update_signal_handler;
-	sigemptyset(&s.sa_mask);
-	sigaction(SIGQUIT, &s, NULL); //crt bcklash
-	sigaction(SIGINT, &s, NULL); //crt C
-}
+// void	update_signal(void)
+// {
+// 	struct sigaction	s;
+
+// 	s.sa_flags = 0;
+// 	s.sa_handler = update_signal_handler;
+// 	sigemptyset(&s.sa_mask);
+// 	sigaction(SIGQUIT, &s, NULL); //crt bcklash
+// 	sigaction(SIGINT, &s, NULL); //crt C
+// }

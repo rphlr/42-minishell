@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
+/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 11:37:04 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/26 16:56:19 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,8 @@ typedef enum s_redirectiontype
 	NO_REDIRECTION,
 	INPUT_REDIRECTION,
 	OUTPUT_REDIRECTION,
-	APPEND_REDIRECTION
+	APPEND_REDIRECTION,
+	HEREDOC_REDIRECTION
 }						t_redirectiontype;
 
 typedef enum s_option
@@ -142,6 +143,8 @@ typedef struct s_redirection
 {
 	t_redirectiontype	type;
 	char				*filename;
+	char				*limiter;
+	int					type_hd;
 }						t_redirection;
 
 typedef struct s_env
@@ -154,9 +157,7 @@ typedef struct s_env
 typedef struct s_cmds
 {
 	char				*cmd;
-	char				*home_folder;
-	t_redirection		*input;
-	t_redirection		*output;
+	t_redirection		*redir;
 	struct s_cmds		*next;
 }						t_cmds;
 
@@ -192,18 +193,19 @@ typedef struct s_line
 typedef struct s_global
 {
 	int					exit_code;
+	char				*home_folder;
 	t_env				*env;
 	t_line				*line;
 }						t_global;
 
 /* FUNCTIONS */
 // *---* builtins *---*
-void					ft_echo(t_global *global);
-char					*get_env_value(char *name, t_global *global);
+void					ft_echo(char *cmd);
+char					*get_env_value(char *name, t_env *env);
 void					ft_env(t_global *global);
 void					ft_pwd(t_line *line);
 void					ft_export(t_global *global, t_line *line);
-void					ft_cd(t_global *global);
+void					ft_cd(char *cmd, t_global *global);
 void					ft_unset(t_global *global, t_line *line);
 void					ft_exit(t_global *global);
 
@@ -215,10 +217,10 @@ bool					check_token(char *line);
 t_state					check_errors(t_token *type, char **tokens,
 							t_global *global);
 char					*epur_str(char *line);
-int						parse_cmd(t_line *line);
+t_global				*parse_cmd(t_global *global);
 t_count					*count_types(t_token *type);
-t_state					ft_error(t_token *type, char **tokens,
-							t_global *global);
+t_state					ft_error(t_token *type, char **tokens, t_global *global);
+t_cmds					*init_cmds(char **tokens, t_token *type);
 t_line					*init_line(char *line, t_global *global);
 t_global				*init_global(char **envp);
 char					*format_options(char *token);
@@ -228,13 +230,13 @@ t_token					*init_tokens_type(char **tokens);
 char					*ft_remove_char(char *str, char c);
 
 // *---* exec *---*
+pid_t					manage_pid(pid_t *new_pid);
+int						manage_exit(int *new_code);
 void					run_cmd(t_global *global);
 
 // *---* signals *---*
 void					ft_signal(void);
 void					sigint_manage(int num);
-void					update_signal_handler(int num);
-void					update_signal(void);
 void					set_termios(void);
 
 // remove when finish
