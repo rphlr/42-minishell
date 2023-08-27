@@ -6,11 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 07:34:38 by rrouille          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/08/27 15:36:06 by mariavillar      ###   ########.fr       */
-=======
-/*   Updated: 2023/08/26 16:46:49 by rrouille         ###   ########.fr       */
->>>>>>> 70258eb3ff850f618045b294be1b488fbfdff991
+/*   Updated: 2023/08/27 18:23:55 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,30 +24,6 @@ static int	check_option(char *str)
 
 static void	echo_print(char *str)
 {
-<<<<<<< HEAD
-	char	*output;
-
-	output = ft_gc_malloc(ft_strlen(str) + 1);
-	if (!output)
-		return ;
-	if (global->line->type[i] != CLOSED_DQUOTE && global->line->type[i]
-		!= CLOSED_QUOTE)
-	{
-		while (*str)
-		{
-			if (*str == '\\')
-			{
-				str++;
-				ft_printf("%c", *str);
-				str++;
-				continue ;
-			}
-			ft_printf("%c", *str++);
-		}
-		return ;
-	}
-=======
->>>>>>> 70258eb3ff850f618045b294be1b488fbfdff991
 	while (*str)
 	{
 		if (*str == '\\')
@@ -65,32 +37,32 @@ static void	echo_print(char *str)
 	}
 }
 
-static char **split_cmd_to_tokens(char *cmd)
-{
-	int count = 0;
-	char **tokens;
-	char *token;
-	char *cmd_copy = ft_strdup(cmd);
+//static char **split_cmd_to_tokens(char *cmd)
+//{
+//	int count = 0;
+//	char **tokens;
+//	char *token;
+//	char *cmd_copy = ft_strdup(cmd);
 
-	token = ft_strtok(cmd_copy, " ");
-	while (token)
-	{
-		count++;
-		token = ft_strtok(NULL, " ");
-	}
-	cmd_copy = ft_strdup(cmd);
-	tokens = (char **)ft_gc_malloc((count + 1) * sizeof(char *));
-	count = 0;
-	token = ft_strtok(cmd_copy, " ");
-	while (token)
-	{
-		tokens[count] = ft_strdup(token);
-		count++;
-		token = ft_strtok(NULL, " ");
-	}
-	tokens[count] = NULL;
-	return tokens;
-}
+//	token = ft_strtok(cmd_copy, " ");
+//	while (token)
+//	{
+//		count++;
+//		token = ft_strtok(NULL, " ");
+//	}
+//	cmd_copy = ft_strdup(cmd);
+//	tokens = (char **)ft_gc_malloc((count + 1) * sizeof(char *));
+//	count = 0;
+//	token = ft_strtok(cmd_copy, " ");
+//	while (token)
+//	{
+//		tokens[count] = ft_strdup(token);
+//		count++;
+//		token = ft_strtok(NULL, " ");
+//	}
+//	tokens[count] = NULL;
+//	return tokens;
+//}
 
 // char **split_cmd_to_tokens(char *cmd) {
 //     int count = 0;
