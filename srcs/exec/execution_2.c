@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 01:21:32 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/28 01:28:49 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/28 02:00:26 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,40 @@
 
 static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 {
-	pid_t pid;
-	int status;
-	char *argv[100];
-	int i = 0;
+	pid_t	pid;
+	int		status;
+	char	*argv[100];
+	int		i;
+	char	*cmd_ptr;
+	int		j;
+	char	**paths;
+	char	*path;
 
-	char *cmd_ptr = cmd;
-    for (int j = 0; global->line->token[j]; j++)
-    {
-        if (ft_strncmp(cmd_ptr, global->line->token[j], ft_strlen(global->line->token[j])) == 0)
-        {
-            argv[i] = global->line->token[j];
-            i++;
-            cmd_ptr += ft_strlen(global->line->token[j]);
-            if (*cmd_ptr == ' ')
-                cmd_ptr++;
-        }
-    }
-    argv[i] = NULL;
+	i = 0;
+	j = 0;
+	cmd_ptr = cmd;
+	j = 0;
+	while (global->line->token[j])
+	{
+		if (ft_strncmp(cmd_ptr, global->line->token[j], ft_strlen(global->line->token[j])) == 0)
+		{
+			argv[i] = global->line->token[j];
+			i++;
+			cmd_ptr += ft_strlen(global->line->token[j]);
+			if (*cmd_ptr == ' ')
+				cmd_ptr++;
+		}
+		j++;
+	}
+	argv[i] = NULL;
 	if (!global->env)
 	{
 		ft_printf("minishell: %s: No such file or directory\n", argv[0]);
 		global->exit_code = 127;
 		return (global->exit_code);
 	}
-	char **paths = env_to_char(global);
-	char *path = get_path(argv[0], paths);
+	paths = env_to_char(global);
+	path = get_path(argv[0], paths);
 	if (!path)
 	{
 		ft_printf("minishell: %s: command not found\n", argv[0]);
@@ -220,7 +228,7 @@ static void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 		perror("fork");
 		exit(EXIT_FAILURE);
 	}
-	
+
 	pid_t pid2 = fork();
 	if (pid2 == 0)
 	{
