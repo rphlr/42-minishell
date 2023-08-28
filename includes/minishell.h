@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 12:22:22 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 17:45:45 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,6 +214,16 @@ typedef struct s_global
 	t_line				*line;
 }						t_global;
 
+// Fill params
+typedef struct s_fill_params
+{
+	char				**new_tokens;
+	t_token				*new_types;
+	int					*token_idx;
+	int					original_count;
+	int					entries_count;
+}           		    t_fill_params;
+
 /* ---------<<PROTOTYPES>>--------- */
 // Builtins
 void					ft_echo(char *cmd, t_global *global);
@@ -241,7 +251,29 @@ t_line					*init_line(char *line, t_global *global);
 t_global				*init_global(char **envp);
 char					*format_options(char *token);
 char					**parsed_line(char *line);
+t_env					*init_env(char **envp);
 t_token					*init_tokens_type(char **tokens);
+void					set_filename(t_cmds *head, char **tokens,
+							t_token *type, int *i);
+void					handle_token(t_cmds *head, char **tokens,
+							t_token *type, int *i);
+int						open_directory(DIR **dir);
+int						count_quotes_in_token(char *token);
+int						count_new_tokens(char *token);
+int						count_total_tokens(char **tokens);
+char					**split_tokens_with_multiple_quotes(char **tokens);
+void					handle_star_token(t_global *global, int *token_idx,
+							int *type_idx, int original_count);
+void					handle_input_error(char **tokens);
+void					handle_output_error(char **tokens);
+void					handle_append_error(char **tokens);
+void					handle_heredoc_error(char **tokens);
+void					handle_and_error(char **tokens);
+t_token					*process_token(t_token *type, t_count *count);
+int						count_substrings(char *line);
+// char					*format_token(char *token, t_global *global);
+char					*extract_variable_name(char *ptoken);
+int						biggest_var_value(t_env	*env);
 
 // Execution
 pid_t					manage_pid(pid_t *new_pid);

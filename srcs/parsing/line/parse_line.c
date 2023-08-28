@@ -6,42 +6,42 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 14:32:35 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 11:47:09 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 17:09:51 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	count_substrings(char *line)
-{
-	int	count;
+// static int	count_substrings(char *line)
+// {
+// 	int	count;
 
-	count = 0;
-	while (*line && (*line == ' ' || *line == '\t'))
-		line++;
-	while (*line)
-	{
-		if (*line == '"' || *line == '\'')
-		{
-			count++;
-			line++;
-			while (*line && (*line != '"' && *line != '\''))
-				line++;
-			if (*line)
-				line++;
-		}
-		else if (*line != ' ' && *line != '\t')
-		{
-			count++;
-			while (*line && *line != ' ' && *line != '\t' && *line != '"'
-				&& *line != '\'')
-				line++;
-		}
-		else
-			line++;
-	}
-	return (count);
-}
+// 	count = 0;
+// 	while (*line && (*line == ' ' || *line == '\t'))
+// 		line++;
+// 	while (*line)
+// 	{
+// 		if (*line == '"' || *line == '\'')
+// 		{
+// 			count++;
+// 			line++;
+// 			while (*line && (*line != '"' && *line != '\''))
+// 				line++;
+// 			if (*line)
+// 				line++;
+// 		}
+// 		else if (*line != ' ' && *line != '\t')
+// 		{
+// 			count++;
+// 			while (*line && *line != ' ' && *line != '\t' && *line != '"'
+// 				&& *line != '\'')
+// 				line++;
+// 		}
+// 		else
+// 			line++;
+// 	}
+// 	return (count);
+// }
 
 static char	extract_quoted_string(char **line_pointer, char **output)
 {
@@ -80,15 +80,34 @@ static char	*extract_unquoted_string(char **line_pointer)
 	return (ft_strndup(start, line - start));
 }
 
-char	**parsed_line(char *line)
+static void	skip_spaces(char **line)
 {
-	char	*temp_line;
-	char	**result;
-	int		index;
+	while (**line && (**line == ' ' || **line == '\t'))
+		(*line)++;
+}
+
+static char	*merge_and_extract_quotes(char **line, char quote_used)
+{
 	char	*current_string;
-	char	quote_used;
 	char	*next_string;
 	char	*merged_string;
+
+	extract_quoted_string(line, &current_string);
+	while (*((*line) - 1) == quote_used && (**line != ' ' && **line != '\t'
+			&& **line != '\0'))
+	{
+		extract_quoted_string(line, &next_string);
+		merged_string = ft_strjoin(current_string, next_string);
+		current_string = merged_string;
+	}
+	return (current_string);
+}
+
+char	**parsed_line(char *line)
+{
+	char	**result;
+	int		index;
+	char	*temp_line;
 
 	temp_line = line;
 	result = (char **)ft_gc_malloc(sizeof(char *) * (count_substrings(line)
@@ -98,22 +117,11 @@ char	**parsed_line(char *line)
 	index = 0;
 	while (*line)
 	{
-		while (*line && (*line == ' ' || *line == '\t'))
-			line++;
+		skip_spaces(&line);
 		if ((*line == '"' || *line == '\'') && (line == temp_line || *(line
 					- 1) != '\\'))
-		{
-			quote_used = extract_quoted_string(&line, &current_string);
-			while (*(line - 1) == quote_used && (*line != ' ' && *line != '\t'
-					&& *line != '\0'))
-			{
-				extract_quoted_string(&line, &next_string);
-				merged_string = ft_strjoin(current_string, next_string);
-				current_string = merged_string;
-			}
-			result[index++] = current_string;
-		}
-		else if (*line && *line != ' ' && *line != '\t')
+			result[index++] = merge_and_extract_quotes(&line, *line);
+		else if (*line)
 			result[index++] = extract_unquoted_string(&line);
 	}
 	result[index] = NULL;

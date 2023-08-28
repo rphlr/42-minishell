@@ -6,13 +6,13 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:38:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 11:36:29 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 17:01:56 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_count	*count_types(t_token *type)
+static t_count	*initialize_count(void)
 {
 	t_count	*count;
 
@@ -20,38 +20,19 @@ t_count	*count_types(t_token *type)
 	if (!count)
 		return (NULL);
 	count->special_cases = false;
+	return (count);
+}
+
+t_count	*count_types(t_token *type)
+{
+	t_count	*count;
+
+	count = initialize_count();
+	if (!count)
+		return (NULL);
 	while (*type != END)
 	{
-		if (*type == INPUT)
-			count->nbr_inputs++;
-		else if (*type == OUTPUT)
-			count->nbr_outputs++;
-		else if (*type == APPEND)
-			count->nbr_appends++;
-		else if (*type == HEREDOC)
-			count->nbr_heredocs++;
-		else if (*type == PIPE)
-			count->nbr_pipes++;
-		else if (*type == SEMICOLON)
-			count->nbr_semicolons++;
-		else if (*type == AND)
-			count->nbr_ands++;
-		else if (*type == OR)
-			count->nbr_ors++;
-		else if (*type == OPTIONS)
-		{
-			type++;
-			count->nbr_options++;
-			continue ;
-		}
-		else
-		{
-			type++;
-			count->nbr_tokens++;
-			continue ;
-		}
-		count->special_cases = true;
-		count->nbr_tokens++;
+		type = process_token(type, count);
 		type++;
 	}
 	count->nbr_cmds = count->nbr_pipes + 1;

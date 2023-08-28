@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   manager.c                                          :+:      :+:    :+:   */
+/*   redirection_filename.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/25 17:08:38 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 13:08:27 by rrouille         ###   ########.fr       */
+/*   Created: 2023/08/28 15:35:07 by rrouille          #+#    #+#             */
+/*   Updated: 2023/08/28 15:36:28 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	manage_exit(int *new_code)
+static int	is_token_continue(t_token *type, int *i)
 {
-	static int	exit_code;
-
-	if (new_code)
-		exit_code = *new_code;
-	return (exit_code);
+	return (type[*i] != PIPE && type[*i] != SEMICOLON && type[*i] != AND
+		&& type[*i] != OR);
 }
 
-pid_t	manage_pid(pid_t *new_pid)
+void	set_filename(t_cmds *head, char **tokens, t_token *type, int *i)
 {
-	static pid_t	child_pid;
-
-	// if (child_pid < 0)
-	// 	child_pid = 0;
-	if (new_pid)
-		child_pid = *new_pid;
-	return (child_pid);
+	while (tokens[*i] && is_token_continue(type, i))
+		handle_token(head, tokens, type, i);
 }

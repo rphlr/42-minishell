@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 12:18:39 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 17:46:00 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static t_state	*get_error_table(void)
 	return (error_table);
 }
 
-static char	*extract_variable_name(char *ptoken)
+char	*extract_variable_name(char *ptoken)
 {
 	char	*start;
 	int		len;
@@ -50,7 +50,7 @@ static char	*extract_variable_name(char *ptoken)
 	return (var_name);
 }
 
-static int	biggest_var_value(t_env	*env)
+int	biggest_var_value(t_env	*env)
 {
 	int		len;
 	int		len_biggest;
