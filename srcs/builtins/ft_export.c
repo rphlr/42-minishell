@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/23 10:47:18 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 12:21:23 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static t_env	*new_env_item(char *name, char *value)
 	return (new_item);
 }
 
-t_env *clone_env_list(t_env *head) 
+static t_env *clone_env_list(t_env *head) 
 {
 	t_env *new_head = NULL;
 	t_env *new_current = NULL;
@@ -71,7 +71,7 @@ t_env *clone_env_list(t_env *head)
 	return new_head;
 }
 
-void	sorting_env(t_env *env_cpy)
+static void	sorting_env(t_env *env_cpy)
 {
 	t_env	*current;
 	t_env	*tmp;

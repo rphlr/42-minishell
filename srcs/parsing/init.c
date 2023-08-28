@@ -6,13 +6,13 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 11:44:04 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 12:17:44 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	set_filename(t_cmds *head, char **tokens, t_token *type, int *i)
+static void	set_filename(t_cmds *head, char **tokens, t_token *type, int *i)
 {
 	while (tokens[*i] && type[*i] != PIPE && type[*i] != SEMICOLON
 		&& type[*i] != AND && type[*i] != OR)
@@ -121,7 +121,7 @@ t_cmds	*init_cmds(char **tokens, t_token *type)
 	return (head);
 }
 
-char	**merge_adjacent_quotes(char **tokens)
+static char	**merge_adjacent_quotes(char **tokens)
 {
 	char	**temp_tokens;
 	char	*current;

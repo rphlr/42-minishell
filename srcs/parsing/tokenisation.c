@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 09:02:47 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 20:00:26 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 12:17:04 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,34 +48,6 @@ static void	detect_type(char **tokens, int i, t_token *type)
 			type[i] = WORD;
 		j++;
 	}
-}
-
-t_token	*remove_double_option(char **tokens, t_token *type)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (type[i] != END)
-	{
-		if (type[i] == OPTIONS)
-		{
-			while (type[i + 1] == OPTIONS)
-			{
-				tokens[i] = ft_strjoin(tokens[i], ft_strtrim(tokens[i + 1],
-							"-"));
-				j = i + 1;
-				while (type[j] != END)
-				{
-					tokens[j] = tokens[j + 1];
-					type[j] = type[j + 1];
-					j++;
-				}
-			}
-		}
-		i++;
-	}
-	return (type);
 }
 
 t_token	*init_tokens_type(char **tokens)

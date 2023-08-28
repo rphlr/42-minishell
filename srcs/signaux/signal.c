@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/28 11:53:13 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 12:15:16 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,34 +17,12 @@
 //          0000 0001      1011 0000
 // clean ctr-c dans le terminal
 
-void	handle_sigpipe(int signo)
+static void	handle_sigpipe(int signo)
 {
 	(void)signo;
 }
 
-void	set_termios(void)
-{
-	static struct termios	term;
-
-	tcgetattr(0, &term);
-	term.c_lflag = term.c_lflag & ~ECHOCTL;
-	tcsetattr(0, 0, &term);
-}
-
-void	ft_signal(void)
-{
-	struct sigaction	s;
-
-	s.sa_handler = SIG_IGN;
-	sigemptyset(&s.sa_mask);
-	s.sa_flags = 0;
-	sigaction(SIGQUIT, &s, NULL);
-	s.sa_handler = sigint_manage;
-	sigaction(SIGINT, &s, NULL);
-	signal(SIGPIPE, handle_sigpipe);
-}
-
-void	sigint_manage(int num)
+static void	sigint_manage(int num)
 {
 	int		exit_code;
 	pid_t	reset_pid;
@@ -71,4 +49,26 @@ void	sigint_manage(int num)
 	}
 	manage_exit(&exit_code);
 	manage_pid(&reset_pid);
+}
+
+void	set_termios(void)
+{
+	static struct termios	term;
+
+	tcgetattr(0, &term);
+	term.c_lflag = term.c_lflag & ~ECHOCTL;
+	tcsetattr(0, 0, &term);
+}
+
+void	ft_signal(void)
+{
+	struct sigaction	s;
+
+	s.sa_handler = SIG_IGN;
+	sigemptyset(&s.sa_mask);
+	s.sa_flags = 0;
+	sigaction(SIGQUIT, &s, NULL);
+	s.sa_handler = sigint_manage;
+	sigaction(SIGINT, &s, NULL);
+	signal(SIGPIPE, handle_sigpipe);
 }

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 12:03:18 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 12:22:22 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,6 @@ void					ft_exit(t_global *global);
 // Parsing
 t_state					check_token_errors(t_token *type, char **tokens,
 							t_state *error_table);
-int						check_options_syntax(char *token);
 bool					check_token(char *line);
 t_state					check_errors(t_token *type, char **tokens,
 							t_global *global);
@@ -243,7 +242,6 @@ t_global				*init_global(char **envp);
 char					*format_options(char *token);
 char					**parsed_line(char *line);
 t_token					*init_tokens_type(char **tokens);
-char					*ft_remove_char(char *str, char c);
 
 // Execution
 pid_t					manage_pid(pid_t *new_pid);
@@ -252,7 +250,6 @@ void					run_cmd(t_global *global);
 
 // Signals
 void					ft_signal(void);
-void					sigint_manage(int num);
 void					set_termios(void);
 
 #endif

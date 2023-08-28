@@ -6,13 +6,13 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:19:43 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/26 15:28:12 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 12:21:44 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_remove_char(char *str, char c)
+static char	*ft_remove_char(char *str, char c)
 {
 	int		len;
 	char	*new_str;

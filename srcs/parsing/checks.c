@@ -6,13 +6,13 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:39:22 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 11:21:32 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 12:20:04 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_options_syntax(char *token)
+static int	check_options_syntax(char *token)
 {
 	while (*++token)
 	{
