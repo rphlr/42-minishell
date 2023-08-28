@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 12:04:23 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 12:23:19 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static char	*rm_newline(char *line)
 	return (line);
 }
 
-void	add_to_history_list(t_history **head, char *line)
+static void	add_to_history_list(t_history **head, char *line)
 {
 	t_history	*new_entry;
 	t_history	*current;
