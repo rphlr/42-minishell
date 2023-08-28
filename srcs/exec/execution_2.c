@@ -6,11 +6,58 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 01:21:32 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/28 02:00:26 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/28 12:40:01 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	cmd_is_primaries(char *cmd)
+{
+	char	*cmd_copy;
+	char	*first_word;
+
+	cmd_copy = ft_strdup(cmd);
+	first_word = ft_strtok(cmd_copy, " ");
+	if (!ft_strcmp(first_word, "echo"))
+		return (1);
+	else if (!ft_strcmp(first_word, "cd"))
+		return (1);
+	else if (!ft_strcmp(first_word, "pwd"))
+		return (1);
+	else if (!ft_strcmp(first_word, "export"))
+		return (1);
+	else if (!ft_strcmp(first_word, "unset"))
+		return (1);
+	else if (!ft_strcmp(first_word, "env"))
+		return (1);
+	else if (!ft_strcmp(first_word, "exit"))
+		return (1);
+	return (0);
+}
+
+static void	execute_primaries(char	*cmd, t_global *global)
+{
+	char	*cmd_copy;
+	char	*first_word;
+
+	cmd_copy = ft_strdup(cmd);
+	first_word = ft_strtok(cmd_copy, " ");
+	if (!ft_strcmp(first_word, "echo"))
+		ft_echo(cmd, global);
+	else if (!ft_strcmp(first_word, "cd"))
+		ft_cd(cmd, global);
+	else if (!ft_strcmp(first_word, "pwd"))
+		ft_pwd(global->line);
+	else if (!ft_strcmp(first_word, "export"))
+		ft_export(global, global->line);
+	else if (!ft_strcmp(first_word, "unset"))
+		ft_unset(global, global->line);
+	else if (!ft_strcmp(first_word, "env"))
+		ft_env(global);
+	else if (!ft_strcmp(first_word, "exit"))
+		ft_exit(global);
+}
 
 static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 {
@@ -26,8 +73,8 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 	i = 0;
 	j = 0;
 	cmd_ptr = cmd;
-	j = 0;
-	while (global->line->token[j])
+	j = -1;
+	while (global->line->token[++j])
 	{
 		if (ft_strncmp(cmd_ptr, global->line->token[j], ft_strlen(global->line->token[j])) == 0)
 		{
@@ -37,7 +84,6 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 			if (*cmd_ptr == ' ')
 				cmd_ptr++;
 		}
-		j++;
 	}
 	argv[i] = NULL;
 	if (!global->env)

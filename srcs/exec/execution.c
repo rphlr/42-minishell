@@ -6,13 +6,13 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 01:22:27 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/28 12:43:03 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	**env_to_char(t_global *global)
+char	**env_to_char(t_global *global)
 {
 	char	**paths;
 
@@ -31,7 +31,7 @@ static char	**env_to_char(t_global *global)
 	return (paths);
 }
 
-static char	*get_path(char *command, char **paths)
+char	*get_path(char *command, char **paths)
 {
 	char	*path;
 	char	*tmp;
@@ -51,53 +51,6 @@ static char	*get_path(char *command, char **paths)
 		paths++;
 	}
 	return (NULL);
-}
-
-static int	cmd_is_primaries(char *cmd)
-{
-	char	*cmd_copy;
-	char	*first_word;
-
-	cmd_copy = ft_strdup(cmd);
-	first_word = ft_strtok(cmd_copy, " ");
-	if (!ft_strcmp(first_word, "echo"))
-		return (1);
-	else if (!ft_strcmp(first_word, "cd"))
-		return (1);
-	else if (!ft_strcmp(first_word, "pwd"))
-		return (1);
-	else if (!ft_strcmp(first_word, "export"))
-		return (1);
-	else if (!ft_strcmp(first_word, "unset"))
-		return (1);
-	else if (!ft_strcmp(first_word, "env"))
-		return (1);
-	else if (!ft_strcmp(first_word, "exit"))
-		return (1);
-	return (0);
-}
-
-static void	execute_primaries(char	*cmd, t_global *global)
-{
-	char	*cmd_copy;
-	char	*first_word;
-
-	cmd_copy = ft_strdup(cmd);
-	first_word = ft_strtok(cmd_copy, " ");
-	if (!ft_strcmp(first_word, "echo"))
-		ft_echo(cmd, global);
-	else if (!ft_strcmp(first_word, "cd"))
-		ft_cd(cmd, global);
-	else if (!ft_strcmp(first_word, "pwd"))
-		ft_pwd(global->line);
-	else if (!ft_strcmp(first_word, "export"))
-		ft_export(global, global->line);
-	else if (!ft_strcmp(first_word, "unset"))
-		ft_unset(global, global->line);
-	else if (!ft_strcmp(first_word, "env"))
-		ft_env(global);
-	else if (!ft_strcmp(first_word, "exit"))
-		ft_exit(global);
 }
 
 void	ft_heredoc(char *filename, char *limiter, int type)
@@ -150,7 +103,7 @@ void	ft_heredoc(char *filename, char *limiter, int type)
 		ft_printf("Error: failed to open temporary file\n");
 		exit (1);
 	}
-	while ((buf == get_next_line(fd_final)))
+	while ((buf = get_next_line(fd_final)))
 		write(STDOUT_FILENO, buf, ft_strlen(buf));
 	close(fd_final);
 	unlink(".heredoc_content");
