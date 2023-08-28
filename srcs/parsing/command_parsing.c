@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:42:55 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 15:16:31 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 11:35:43 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,15 @@ t_global	*parse_cmd(t_global *global)
 {
 	DIR				*dir;
 	struct dirent	*entry;
+	t_token			*new_types;
 	int				token_idx;
 	int				type_idx;
+	int				i;
+	int				j;
 	int				original_count;
+	char			**new_tokens;
+	int				entries_count;
+	char			*entries_array[1000];
 
 	original_count = 0;
 	while (global->line->token[original_count] != NULL)
@@ -44,50 +50,63 @@ t_global	*parse_cmd(t_global *global)
 			}
 			else
 			{
-				int entries_count = 0;
-				char *entries_array[1000];
-				while ((entry = readdir(dir)) != NULL) {
-					if (entry->d_name[0] != '.' && entries_count < 1000) {
+				entries_count = 0;
+				entry = readdir(dir);
+				while (entry)
+				{
+					if (entry->d_name[0] != '.' && entries_count < 1000)
+					{
 						entries_array[entries_count] = ft_strdup(entry->d_name);
 						entries_count++;
 					}
 				}
 				closedir(dir);
-				char **new_tokens = (char **)ft_gc_malloc(sizeof(char *) * (original_count + entries_count));
+				new_tokens = (char **)ft_gc_malloc(sizeof(char *)
+						* (original_count + entries_count));
 				if (!new_tokens)
-					return NULL;
-				t_token *new_types = (t_token *)ft_gc_malloc(sizeof(t_token) * (original_count + entries_count));
+					return (NULL);
+				new_types = (t_token *)ft_gc_malloc(sizeof(t_token)
+						* (original_count + entries_count));
 				if (!new_types)
-					return NULL;
-				for (int j = 0; j < token_idx; j++) {
+					return (NULL);
+				j = -1;
+				while (++j < token_idx)
+				{
 					new_tokens[j] = global->line->token[j];
 					new_types[j] = global->line->type[j];
 				}
-				for (int i = 0; i < entries_count; i++) {
+				i = -1;
+				while (++i < entries_count)
+				{
 					new_tokens[token_idx + i] = entries_array[i];
 					new_types[type_idx + i] = WORD;
 				}
-				for (int j = token_idx+1; j < original_count; j++) {
+				j = token_idx;
+				while (++j < original_count)
+				{
 					new_tokens[j + entries_count - 1] = global->line->token[j];
 					new_types[j + entries_count - 1] = global->line->type[j];
 				}
-
 				new_tokens[original_count + entries_count - 1] = NULL;
 				new_types[original_count + entries_count - 1] = END;
-
 				global->line->token = new_tokens;
 				global->line->type = new_types;
-
 				token_idx += entries_count;
 			}
 			type_idx++;
-		} else if (global->line->type[type_idx] == TILDE) {
+		}
+		else if (global->line->type[type_idx] == TILDE)
+		{
 			define_home_folder(global->env, global);
-			global->line->token[token_idx] = ft_strdup(get_env_value("HOME", global->env));
-			if (global->line->token[token_idx] == NULL) global->line->token[token_idx] = ft_strdup("~");
+			global->line->token[token_idx] = ft_strdup(get_env_value("HOME",
+						global->env));
+			if (global->line->token[token_idx] == NULL)
+				global->line->token[token_idx] = ft_strdup("~");
 			token_idx++;
 			type_idx++;
-		} else {
+		}
+		else
+		{
 			token_idx++;
 			type_idx++;
 		}

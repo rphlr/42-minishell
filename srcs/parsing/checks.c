@@ -6,31 +6,11 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:39:22 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 07:58:27 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 11:21:32 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// static int	check_options_doublon(char *token)
-// {
-// 	char	*start;
-// 	char	*compare;
-
-// 	start = token;
-// 	while (*start)
-// 	{
-// 		compare = start + 1;
-// 		while (*compare)
-// 		{
-// 			if (*start == *compare)
-// 				return (1);
-// 			compare++;
-// 		}
-// 		start++;
-// 	}
-// 	return (0);
-// }
 
 int	check_options_syntax(char *token)
 {
@@ -42,8 +22,7 @@ int	check_options_syntax(char *token)
 	return (0);
 }
 
-t_state	check_token_errors(t_token *type, char **tokens,
-		t_state *error_table)
+t_state	check_token_errors(t_token *type, char **tokens, t_state *error_table)
 {
 	while (*type != END)
 	{
@@ -77,56 +56,52 @@ t_state	check_errors(t_token *type, char **tokens, t_global *global)
 
 	state = ft_error(type, tokens, global);
 	if (state == QUOTE_ERROR)
-		ft_printf("minishell: quote error\n");
+		ft_printf(ERR_QUOTE);
 	else if (state == DQUOTE_ERROR)
-		ft_printf("minishell: dquote error\n");
+		ft_printf(ERR_DQUOTE);
 	else if (state == PIPE_ERROR)
-		ft_printf("minishell: syntax error near unexpected token `|'\n");
+		ft_printf(ERR_PARSE, "|");
 	else if (state == INPUT_ERROR)
 	{
 		if (!ft_strcmp(tokens[0], "<"))
-			ft_printf(\
-			"minishell: syntax error near unexpected token `newline'\n");
+			ft_printf(ERR_PARSE, "newline");
 		else
-			ft_printf("minishell: syntax error near unexpected token `<'\n");
+			ft_printf(ERR_PARSE, "<");
 	}
 	else if (state == OUTPUT_ERROR)
 	{
 		if (!ft_strcmp(tokens[0], ">"))
-			ft_printf(\
-			"minishell: syntax error near unexpected token `newline'\n");
+			ft_printf(ERR_PARSE, "newline");
 		else
-			ft_printf("minishell: syntax error near unexpected token `>'\n");
+			ft_printf(ERR_PARSE, ">");
 	}
 	else if (state == APPEND_ERROR)
 	{
 		if (!ft_strcmp(tokens[0], ">>"))
-			ft_printf(\
-			"minishell: syntax error near unexpected token `newline'\n");
+			ft_printf(ERR_PARSE, "newline");
 		else
-			ft_printf("minishell: syntax error near unexpected token `>>'\n");
+			ft_printf(ERR_PARSE, ">>");
 	}
 	else if (state == HEREDOC_ERROR)
 	{
 		if (!ft_strcmp(tokens[0], "<<"))
-			ft_printf(\
-			"minishell: syntax error near unexpected token `newline'\n");
+			ft_printf(ERR_PARSE, "newline");
 		else
-			ft_printf("minishell: syntax error near unexpected token `<<'\n");
+			ft_printf(ERR_PARSE, "<<");
 	}
 	else if (state == AND_ERROR)
 	{
 		if (!ft_strcmp(tokens[0], "&"))
-			ft_printf("minishell: syntax error near unexpected token `&'\n");
+			ft_printf(ERR_PARSE, "&");
 		else
-			ft_printf("minishell: syntax error near unexpected token `&&'\n");
+			ft_printf(ERR_PARSE, "&&");
 	}
 	else if (state == OR_ERROR)
-		ft_printf("minishell: syntax error near unexpected token `||'\n");
+		ft_printf(ERR_PARSE, "||");
 	else if (state == SEMICOLON_ERROR)
-		ft_printf("minishell: syntax error near unexpected token `;'\n");
+		ft_printf(ERR_PARSE, ";");
 	else if (state == OPTIONS_ERROR)
-		ft_printf("option error `%s'\n", tokens[0]);
+		ft_printf(ERR_OPTION, tokens[0]);
 	if (state != VALID)
 		return (state);
 	return (VALID);

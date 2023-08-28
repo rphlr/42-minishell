@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:38:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 15:34:06 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 11:36:29 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,13 @@ t_count	*count_types(t_token *type)
 		{
 			type++;
 			count->nbr_options++;
-			continue;
+			continue ;
 		}
 		else
 		{
 			type++;
 			count->nbr_tokens++;
-			continue;
+			continue ;
 		}
 		count->special_cases = true;
 		count->nbr_tokens++;

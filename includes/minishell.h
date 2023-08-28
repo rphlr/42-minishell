@@ -6,13 +6,15 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 15:45:14 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 12:03:18 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+/* ---------<<INCLUDES>>--------- */
+// Librairies
 # include "../mylib/includes/mylib.h"
 # include <errno.h>
 # include <fcntl.h>
@@ -29,8 +31,9 @@
 # include <termios.h>
 # include <unistd.h>
 # include <termios.h>
-#include <dirent.h>
+# include <dirent.h>
 
+/* ---------<<MACROS>>--------- */
 // Colors definition
 # define C_RED "\033[0;31m"
 # define C_GREEN "\033[0;32m"
@@ -60,15 +63,19 @@
 # define C_BMAGENTA "\033[45m"
 # define C_BCYAN "\033[46m"
 
-# define STDIN 0
-# define STDOUT 1
-# define STDERR 2
-
-// # define HOMEFOLDER NULL
-
-// # define PROMPT C_CYAN" rapidshell > "C_RESET
+// Create a random colored prompt
 # define PROMPT "\033[1m\033[7m\033[4m\033[41m Les pros du HTML >\033[0m "
 
+// Define errors print
+# define ERR_QUOTE "minishell: quote error\n"
+# define ERR_DQUOTE "minishell: dquote error\n"
+# define ERR_PARSE "minishell: syntax error near unexpected token `%s'\n"
+# define ERR_OPTION "option error `%s'\n"
+# define ERR_CD "minishell: cd: %s: %s\n"
+# define ERR_CD_HOME "minishell: cd: HOME not set\n"
+
+/* ---------<<STRUCTURES>>--------- */
+// Types of tokens
 typedef enum s_token
 {
 	WORD,
@@ -102,6 +109,7 @@ typedef enum s_token
 	END
 }	t_token;
 
+// State of the parsing
 typedef enum state
 {
 	VALID,
@@ -118,6 +126,7 @@ typedef enum state
 	OPTIONS_ERROR
 }						t_state;
 
+// Types of redirections
 typedef enum s_redirectiontype
 {
 	NO_REDIRECTION,
@@ -127,6 +136,7 @@ typedef enum s_redirectiontype
 	HEREDOC_REDIRECTION
 }						t_redirectiontype;
 
+// Options for echo
 typedef enum s_option
 {
 	NO_OPTION,
@@ -134,11 +144,14 @@ typedef enum s_option
 	INVALID_OPTION
 }						t_option;
 
-typedef struct s_history {
+// History
+typedef struct s_history
+{
 	char				*line;
 	struct s_history	*next;
 }	t_history;
 
+// Redirections and heredocs
 typedef struct s_redirection
 {
 	t_redirectiontype	type;
@@ -147,6 +160,7 @@ typedef struct s_redirection
 	int					type_hd;
 }						t_redirection;
 
+// Environment variables
 typedef struct s_env
 {
 	char				*name;
@@ -154,6 +168,7 @@ typedef struct s_env
 	struct s_env		*next;
 }						t_env;
 
+// Commands
 typedef struct s_cmds
 {
 	char				*cmd;
@@ -161,6 +176,7 @@ typedef struct s_cmds
 	struct s_cmds		*next;
 }						t_cmds;
 
+// Count tokens
 typedef struct s_count
 {
 	int					nbr_tokens;
@@ -175,9 +191,10 @@ typedef struct s_count
 	int					nbr_ands;
 	int					nbr_ors;
 	int					nbr_options;
-	bool 				special_cases;
+	bool				special_cases;
 }						t_count;
 
+// Line
 typedef struct s_line
 {
 	char				**token;
@@ -188,6 +205,7 @@ typedef struct s_line
 	t_count				*count;
 }						t_line;
 
+// Global structure
 typedef struct s_global
 {
 	int					exit_code;
@@ -196,8 +214,8 @@ typedef struct s_global
 	t_line				*line;
 }						t_global;
 
-/* FUNCTIONS */
-// *---* builtins *---*
+/* ---------<<PROTOTYPES>>--------- */
+// Builtins
 void					ft_echo(char *cmd, t_global *global);
 char					*get_env_value(char *name, t_env *env);
 void					ft_env(t_global *global);
@@ -207,36 +225,34 @@ void					ft_cd(char *cmd, t_global *global);
 void					ft_unset(t_global *global, t_line *line);
 void					ft_exit(t_global *global);
 
-// *---* parsing *---*
+// Parsing
 t_state					check_token_errors(t_token *type, char **tokens,
 							t_state *error_table);
 int						check_options_syntax(char *token);
 bool					check_token(char *line);
-t_state					check_errors(t_token *type, char **tokens, t_global *global);
+t_state					check_errors(t_token *type, char **tokens,
+							t_global *global);
 char					*epur_str(char *line);
 t_global				*parse_cmd(t_global *global);
 t_count					*count_types(t_token *type);
-t_state					ft_error(t_token *type, char **tokens, t_global *global);
+t_state					ft_error(t_token *type, char **tokens,
+							t_global *global);
 t_cmds					*init_cmds(char **tokens, t_token *type);
 t_line					*init_line(char *line, t_global *global);
 t_global				*init_global(char **envp);
 char					*format_options(char *token);
 char					**parsed_line(char *line);
 t_token					*init_tokens_type(char **tokens);
-
 char					*ft_remove_char(char *str, char c);
 
-// *---* exec *---*
+// Execution
 pid_t					manage_pid(pid_t *new_pid);
 int						manage_exit(int *new_code);
 void					run_cmd(t_global *global);
 
-// *---* signals *---*
+// Signals
 void					ft_signal(void);
 void					sigint_manage(int num);
 void					set_termios(void);
-
-// remove when finish
-void					print_infos(t_line *line);
 
 #endif
