@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 17:46:00 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/29 10:46:53 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,42 +30,50 @@ static t_state	*get_error_table(void)
 	return (error_table);
 }
 
-char	*extract_variable_name(char *ptoken)
+static char	*handle_quotes(char *token, int *in_double_quotes,
+		int *in_simple_quotes)
 {
-	char	*start;
-	int		len;
-	char	*var_name;
-
-	start = ptoken;
-	while (*ptoken && ((*ptoken >= 'a' && *ptoken <= 'z') || (*ptoken >= 'A'
-				&& *ptoken <= 'Z') || (*ptoken >= '0' && *ptoken <= '9')
-			|| *ptoken == '_'))
-		ptoken++;
-	len = ptoken - start;
-	var_name = (char *)ft_gc_malloc(len + 1);
-	if (!var_name)
-		return (NULL);
-	ft_strncpy(var_name, start, len);
-	var_name[len] = '\0';
-	return (var_name);
+	if (*token == '\'' && !*in_double_quotes)
+	{
+		*in_simple_quotes = !*in_simple_quotes;
+		return (token + 1);
+	}
+	if (*token == '\"' && !*in_simple_quotes)
+	{
+		*in_double_quotes = !*in_double_quotes;
+		return (token + 1);
+	}
+	return (token);
 }
 
-int	biggest_var_value(t_env	*env)
+static char	*handle_env_variable(char *token, char *output, int *i,
+		t_global *global)
 {
-	int		len;
-	int		len_biggest;
-	t_env	*current;
+	char	*var_name;
+	char	*var_value;
+	char	*num;
 
-	len_biggest = 0;
-	current = env;
-	while (current)
+	if (*token == '?')
 	{
-		len = ft_strlen(current->value);
-		if (len > len_biggest)
-			len_biggest = len;
-		current = current->next;
+		global->exit_code = manage_exit(NULL);
+		num = ft_itoa(global->exit_code);
+		while (*num)
+			output[(*i)++] = *num++;
+		return (token + 1);
 	}
-	return (len_biggest);
+	var_name = extract_variable_name(token);
+	if (ft_strlen(var_name) > 0)
+	{
+		var_value = get_env_value(var_name, global->env);
+		if (var_value)
+		{
+			while (*var_value)
+				output[(*i)++] = *var_value++;
+		}
+		return (token + ft_strlen(var_name));
+	}
+	output[(*i)++] = '$';
+	return (token);
 }
 
 static char	*format_token(char *token, t_global *global)
@@ -75,64 +83,19 @@ static char	*format_token(char *token, t_global *global)
 	char	*output;
 	int		i;
 	int		len_biggest_var_value;
-	char	*num;
-	char	*var_name;
-	char	*var_value;
 
 	in_double_quotes = 0;
 	in_simple_quotes = 0;
+	i = 0;
 	len_biggest_var_value = biggest_var_value(global->env);
 	output = (char *)ft_gc_malloc(len_biggest_var_value + 1);
 	if (!output)
 		return (NULL);
-	i = 0;
 	while (*token)
 	{
-		if (*token == '\'' && !in_double_quotes)
-		{
-			in_simple_quotes = !in_simple_quotes;
-			token++;
-			continue ;
-		}
-		if (*token == '\"' && !in_simple_quotes)
-		{
-			in_double_quotes = !in_double_quotes;
-			token++;
-			continue ;
-		}
-		if (*token == '$')
-		{
-			if (in_simple_quotes)
-			{
-				output[i++] = *token++;
-				continue ;
-			}
-			token++;
-			if (*token == '?')
-			{
-				global->exit_code = manage_exit(NULL);
-				num = ft_itoa(global->exit_code);
-				while (*num)
-					output[i++] = *num++;
-				token++;
-			}
-			else
-			{
-				var_name = extract_variable_name(token);
-				if (ft_strlen(var_name) > 0)
-				{
-					var_value = get_env_value(var_name, global->env);
-					if (var_value)
-					{
-						while (*var_value)
-							output[i++] = *var_value++;
-					}
-					token += ft_strlen(var_name);
-				}
-				else
-					output[i++] = '$';
-			}
-		}
+		token = handle_quotes(token, &in_double_quotes, &in_simple_quotes);
+		if (*token == '$' && !in_simple_quotes)
+			token = handle_env_variable(++token, output, &i, global);
 		else
 			output[i++] = *token++;
 	}

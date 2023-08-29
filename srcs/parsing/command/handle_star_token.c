@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 15:26:09 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 16:01:28 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/29 10:24:26 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	read_directory_entries(DIR *dir, char *entries_array[])
 }
 
 static void	fill_new_arrays(t_global *global, char *entries_array[],
-		int entries_count, t_fill_params *params)
+		int entries_count, t_format *params)
 {
 	int	i;
 	int	j;
@@ -69,12 +69,12 @@ static void	handle_if_block(t_global *global, int *token_idx)
 static void	handle_else_block(t_global *global, int *token_idx,
 		int original_count, DIR *dir)
 {
-	t_fill_params	*params;
-	char			*entries_array[1000];
-	char			**new_tokens;
-	t_token			*new_types;
+	t_format	*params;
+	char		*entries_array[1000];
+	char		**new_tokens;
+	t_token		*new_types;
 
-	params = (t_fill_params *)ft_gc_malloc(sizeof(t_fill_params));
+	params = (t_format *)ft_gc_malloc(sizeof(t_format));
 	if (!params)
 		return ;
 	params->entries_count = read_directory_entries(dir, entries_array);
@@ -85,7 +85,7 @@ static void	handle_else_block(t_global *global, int *token_idx,
 	if (!new_tokens || !new_types)
 		return ;
 	fill_new_arrays(global, entries_array, params->entries_count,
-		&(t_fill_params){.new_tokens = new_tokens, .new_types = new_types,
+		&(t_format){.new_tokens = new_tokens, .new_types = new_types,
 		.token_idx = token_idx, .original_count = original_count});
 	global->line->token = new_tokens;
 	global->line->type = new_types;
