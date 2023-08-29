@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 01:25:05 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 01:38:26 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,30 +238,39 @@ void					run_cmd(t_global *global);
 int						cmd_is_primaries(char *cmd);
 void					execute_primaries(char	*cmd, t_global *global);
 void					execute_specials(t_global *global);
-int						execute_cmd(char *cmd, t_redirection *redir, t_global *global);
+int						execute_cmd(char *cmd, t_redirection *redir,
+							t_global *global);
 void					ft_redir(t_global *global, t_cmds *curr_cmd);
-void					ft_or(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd);
-void					ft_and(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd);
+void					ft_or(t_global *global, t_cmds *curr_cmd,
+							t_cmds *next_cmd);
+void					ft_and(t_global *global, t_cmds *curr_cmd,
+							t_cmds *next_cmd);
 void					execute_pipeline(t_global *global, t_cmds *cmds);
-void					ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd);
+void					ft_pipe(t_global *global, t_cmds *curr_cmd,
+							t_cmds *next_cmd);
 void					handle_redirection(char *filename, int type);
 int						open_and_check(char *filename, int flags);
 void					process_heredoc(char *limiter);
 void					create_heredoc_file(void);
 void					fill_argv(char *cmd, char **argv, t_global *global);
-int						handle_redirections(t_redirection *redir, t_global *global);
-int						pid_creation(t_global *global, char	**paths, char *argv[], t_redirection *redir);
-void					create_file(int fd, t_redirection *redir, t_global *global);
-void					ft_semicolon(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd);
+int						handle_redirections(t_redirection *redir,
+							t_global *global);
+int						pid_creation(t_global *global, char	**paths,
+							char *argv[], t_redirection *redir);
+void					create_file(int fd, t_redirection *redir,
+							t_global *global);
+void					ft_semicolon(t_global *global, t_cmds *curr_cmd,
+							t_cmds *next_cmd);
 int						checking_primaries(t_global *global, int primaries);
 void					execute_pipeline(t_global *global, t_cmds *cmds);
 int						count_cmds(t_cmds *cmds);
-void					initialize_pipes(int fds[][2], int num_cmds, t_global *global);
+void					initialize_pipes(int fds[][2], int num_cmds,
+							t_global *global);
 void					dup_and_close(int fds[][2], int i, int num_cmds);
-void					check_first_pid(pid_t pid, int fds[2], t_cmds *curr_cmd, t_global *global);
-void					check_second_pid(pid_t pid2, int fds[2], t_cmds *next_cmd, t_global *global);
-
-
+void					check_first_pid(pid_t pid, int fds[2], t_cmds *curr_cmd,
+							t_global *global);
+void					check_second_pid(pid_t pid2, int fds[2],
+							t_cmds *next_cmd, t_global *global);
 
 // *---* signals *---*
 void					ft_signal(void);
