@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:49:26 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/29 09:14:08 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/29 15:09:19 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,4 +104,14 @@ t_global	*init_global(char **envp)
 	global->env = init_env(envp);
 	global->line = NULL;
 	return (global);
+}
+
+void	init_format(t_format *fmt, t_global *global)
+{
+	fmt->in_double_quotes = 0;
+	fmt->in_simple_quotes = 0;
+	fmt->i = 0;
+	fmt->output = (char *)ft_gc_malloc(biggest_var_value(global->env) + 1);
+	if (!fmt->output)
+		return ;
 }

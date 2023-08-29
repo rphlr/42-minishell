@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/27 16:10:35 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/29 14:46:04 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ static int	cmd_is_primaries(char *cmd)
 	char *cmd_copy = ft_strdup(cmd);
 	char *first_word = ft_strtok(cmd_copy, " ");
 
+	if (!first_word)
+		return (0);
 	if (!ft_strcmp(first_word, "echo"))
 		return (1);
 	else if (!ft_strcmp(first_word, "cd"))

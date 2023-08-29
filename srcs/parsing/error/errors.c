@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:45:19 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/29 10:46:53 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/29 14:27:10 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,6 @@ static t_state	*get_error_table(void)
 	error_table[OR] = OR_ERROR;
 	error_table[SEMICOLON] = SEMICOLON_ERROR;
 	return (error_table);
-}
-
-static char	*handle_quotes(char *token, int *in_double_quotes,
-		int *in_simple_quotes)
-{
-	if (*token == '\'' && !*in_double_quotes)
-	{
-		*in_simple_quotes = !*in_simple_quotes;
-		return (token + 1);
-	}
-	if (*token == '\"' && !*in_simple_quotes)
-	{
-		*in_double_quotes = !*in_double_quotes;
-		return (token + 1);
-	}
-	return (token);
 }
 
 static char	*handle_env_variable(char *token, char *output, int *i,
@@ -76,31 +60,30 @@ static char	*handle_env_variable(char *token, char *output, int *i,
 	return (token);
 }
 
-static char	*format_token(char *token, t_global *global)
+static char	*handle_token_static(char *token, t_format *fmt, t_global *global)
 {
-	int		in_double_quotes;
-	int		in_simple_quotes;
-	char	*output;
-	int		i;
-	int		len_biggest_var_value;
-
-	in_double_quotes = 0;
-	in_simple_quotes = 0;
-	i = 0;
-	len_biggest_var_value = biggest_var_value(global->env);
-	output = (char *)ft_gc_malloc(len_biggest_var_value + 1);
-	if (!output)
-		return (NULL);
 	while (*token)
 	{
-		token = handle_quotes(token, &in_double_quotes, &in_simple_quotes);
-		if (*token == '$' && !in_simple_quotes)
-			token = handle_env_variable(++token, output, &i, global);
+		if (is_quotes(*token, &fmt->in_double_quotes, &fmt->in_simple_quotes))
+			token++;
+		else if (*token == '$' && !(fmt->in_simple_quotes))
+			token = handle_env_variable(++token, fmt->output, &fmt->i, global);
 		else
-			output[i++] = *token++;
+			fmt->output[fmt->i++] = *token++;
 	}
-	output[i] = '\0';
-	return (output);
+	return (fmt->output);
+}
+
+static char	*format_token(char *token, t_global *global)
+{
+	t_format	fmt;
+
+	init_format(&fmt, global);
+	if (!fmt.output)
+		return (NULL);
+	fmt.output = handle_token_static(token, &fmt, global);
+	fmt.output[fmt.i] = '\0';
+	return (fmt.output);
 }
 
 t_state	ft_error(t_token *type, char **tokens, t_global *global)

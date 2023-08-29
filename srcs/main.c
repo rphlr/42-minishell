@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/29 09:04:59 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/29 15:19:10 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,10 @@ static int	lsh_loop(t_global *global)
 		if (!check_token(line))
 			break ;
 		if (line_is_wspaces(line))
+		{
+			free(line);
 			continue ;
+		}
 		if (line && ft_strcmp(line, ""))
 		{
 			last_entry = history_head;

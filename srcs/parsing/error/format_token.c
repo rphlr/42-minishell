@@ -6,13 +6,13 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 17:14:25 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/29 13:38:00 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/29 15:00:13 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	handle_quotes(char c, int *in_double_quotes, int *in_simple_quotes)
+int	is_quotes(char c, int *in_double_quotes, int *in_simple_quotes)
 {
 	if (c == '\'' && !(*in_double_quotes))
 	{
@@ -33,28 +33,20 @@ static void	init_vars(t_global *global, t_format *fmt)
 	fmt->in_simple_quotes = 0;
 	fmt->i = 0;
 	fmt->output = (char *)ft_gc_malloc(biggest_var_value(global->env) + 1);
-}
-static void process_tokens(char *token, t_global *global, t_format *fmt)
-{
-    if (!handle_quotes(*token, &fmt->in_double_quotes, &fmt->in_simple_quotes))
-    {
-        if (*token == '$')
-            handle_dollar(&token, global, fmt);
-        else
-            fmt->output[fmt->i++] = *token;
-    }
+	if (!fmt->output)
+		return ;
 }
 
-// static void	process_tokens(char *token, t_global *global, t_format *fmt)
-// {
-// 	if (!handle_quotes(*token, &fmt->in_double_quotes, &fmt->in_simple_quotes))
-// 	{
-// 		if (*token == '$')
-// 			handle_dollar(&token, global, fmt);
-// 		else
-// 			fmt->output[fmt->i++] = *token;
-// 	}
-// }
+static void	process_tokens(char *token, t_global *global, t_format *fmt)
+{
+	if (!is_quotes(*token, &fmt->in_double_quotes, &fmt->in_simple_quotes))
+	{
+		if (*token == '$')
+			handle_dollar(&token, global, fmt);
+		else
+			fmt->output[fmt->i++] = *token;
+	}
+}
 
 char	*format_token(char *token, t_global *global)
 {

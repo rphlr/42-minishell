@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:53:18 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 12:21:23 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/29 14:58:57 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ static t_env *clone_env_list(t_env *head)
 
 	while (current) 
 	{
-		t_env *new_node = malloc(sizeof(t_env));
+		t_env *new_node = ft_gc_malloc(sizeof(t_env));
+		if (!new_node)
+			return (NULL);
 		new_node->name = ft_strdup(current->name);
 		new_node->value = ft_strdup(current->value);
 		new_node->next = NULL;

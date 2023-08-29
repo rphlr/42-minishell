@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 15:26:09 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/29 10:24:26 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/29 15:17:37 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,12 @@ static void	handle_else_block(t_global *global, int *token_idx,
 	t_token		*new_types;
 
 	params = (t_format *)ft_gc_malloc(sizeof(t_format));
-	if (!params)
-		return ;
 	params->entries_count = read_directory_entries(dir, entries_array);
 	new_tokens = (char **)ft_gc_malloc(sizeof(char *) * (original_count
 				+ params->entries_count));
 	new_types = (t_token *)ft_gc_malloc(sizeof(t_token) * (original_count
 				+ params->entries_count));
-	if (!new_tokens || !new_types)
+	if (!new_tokens || !new_types || !params)
 		return ;
 	fill_new_arrays(global, entries_array, params->entries_count,
 		&(t_format){.new_tokens = new_tokens, .new_types = new_types,

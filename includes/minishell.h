@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/29 10:34:14 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/29 14:27:44 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,6 +278,8 @@ int						count_substrings(char *line);
 char					*extract_variable_name(char *ptoken);
 int						biggest_var_value(t_env	*env);
 void					handle_dollar(char **token, t_global *global, t_format *fmt);
+int						is_quotes(char c, int *in_double_quotes, int *in_simple_quotes);
+void					init_format(t_format *fmt, t_global *global);
 
 // Execution
 pid_t					manage_pid(pid_t *new_pid);
