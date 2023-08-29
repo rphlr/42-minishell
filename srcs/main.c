@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:32:20 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 00:51:04 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 01:52:57 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,26 @@ void	add_to_history_list(t_history **head, char *line)
 	}
 }
 
+//void	init_history(char *line, t_history *history_head,
+//	int history_fd)
+//{
+//	history_head = NULL;
+//	history_fd = open(".minishell_history", O_CREAT | O_RDWR, 0644);
+//	if (history_fd == -1)
+//		ft_printf("minishell: can't open history file\n");
+//	else
+//	{
+//		line = get_next_line(history_fd);
+//		while (line)
+//		{
+//			line = rm_newline(line);
+//			add_history(line);
+//			add_to_history_list(&history_head, line);
+//			line = get_next_line(history_fd);
+//		}
+//	}
+//}
+
 static int	lsh_loop(t_global *global)
 {
 	char		*line;
@@ -98,6 +118,10 @@ static int	lsh_loop(t_global *global)
 	t_history	*history_head;
 	t_history	*last_entry;
 
+	//history_fd = 0;
+	//history_head = NULL;
+	//line = NULL;
+	//init_history(line, history_head, history_fd);
 	history_head = NULL;
 	history_fd = open(".minishell_history", O_CREAT | O_RDWR, 0644);
 	if (history_fd == -1)

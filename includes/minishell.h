@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 01:38:26 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 01:51:05 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,8 @@ t_global				*init_global(char **envp);
 char					*format_options(char *token);
 char					**parsed_line(char *line);
 t_token					*init_tokens_type(char **tokens);
-
+//void					init_history(char *line, t_history *history_head,
+//							int history_fd);
 char					*ft_remove_char(char *str, char c);
 
 // *---* exec *---*
