@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 12:42:22 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/29 18:51:47 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,8 +161,6 @@ typedef struct s_cmds
 	struct s_cmds		*next;
 }						t_cmds;
 
-// structure qui garde tous les cas "spéciaux"
-// donc au lieu de line->nbr_pipes, c'est line->count->nbr_pipes
 typedef struct s_count
 {
 	int					nbr_tokens;
@@ -237,6 +235,25 @@ void					ft_heredoc(char *filename, char *limiter, int type);
 pid_t					manage_pid(pid_t *new_pid);
 int						manage_exit(int *new_code);
 void					run_cmd(t_global *global);
+int						cmd_is_primaries(char *cmd);
+void					execute_primaries(char	*cmd, t_global *global);
+void					execute_specials(t_global *global);
+int						execute_cmd(char *cmd, t_redirection *redir, t_global *global);
+void					ft_redir(t_global *global, t_cmds *curr_cmd);
+void					ft_or(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd);
+void					ft_and(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd);
+void					execute_pipeline(t_global *global, t_cmds *cmds);
+void					ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd);
+void					handle_redirection(char *filename, int type);
+int						open_and_check(char *filename, int flags);
+void					process_heredoc(char *limiter);
+void					create_heredoc_file(void);
+void					fill_argv(char *cmd, char **argv, t_global *global);
+int						handle_redirections(t_redirection *redir, t_global *global);
+int						pid_creation(t_global *global, char	**paths, char *argv[], t_redirection *redir);
+void					create_file(int fd, t_redirection *redir, t_global *global);
+void					ft_semicolon(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd);
+int						checking_primaries(t_global *global, int primaries);
 
 // *---* signals *---*
 void					ft_signal(void);

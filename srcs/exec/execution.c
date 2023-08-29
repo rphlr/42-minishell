@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 12:43:03 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/29 10:37:38 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,58 +53,57 @@ char	*get_path(char *command, char **paths)
 	return (NULL);
 }
 
-void	ft_heredoc(char *filename, char *limiter, int type)
+void	create_heredoc_file(void)
 {
-	int		file;
-	int		fd_final;
-	char	*buf;
+	int	file;
 
-	fd_final = 0;
 	file = open(".heredoc_content", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (file < 0)
 	{
 		ft_printf("Error: failed to open temporary file\n");
-		exit (1);
+		exit(1);
 	}
+	close(file);
+}
+
+void	process_heredoc(char *limiter)
+{
+	char	*buf;
+	int		file;
+
 	while (true)
 	{
 		ft_printf("heredoc> ");
 		buf = get_next_line(0);
 		if (!buf)
+			exit(1);
+		if (!ft_strncmp(limiter, buf, ft_strlen(limiter)))
 		{
-			close(file);
+			free(buf);
+			break ;
+		}
+		file = open(".heredoc_content", O_WRONLY | O_APPEND);
+		if (file < 0)
+		{
+			ft_printf("Error: failed to open temporary file\n");
+			free(buf);
 			exit(1);
 		}
-		if (!ft_strncmp(limiter, buf, ft_strlen(limiter)))
-			break ;
 		write(file, buf, ft_strlen(buf));
+		close(file);
+		free(buf);
 	}
-	close(file);
-	if (filename)
+}
+
+int	open_and_check(char *filename, int flags)
+{
+	int	fd;
+
+	fd = open(filename, flags, 0644);
+	if (fd < 0)
 	{
-		if (type == INPUT)
-			fd_final = open(filename, O_RDONLY);
-		else if (type == APPEND)
-			fd_final = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
-		else if (type == OUTPUT)
-			fd_final = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		if (fd_final < 0)
-		{
-			ft_printf("minishell: %s: No such file or directory\n", filename);
-			exit (1);
-		}
-		dup2(fd_final, STDOUT_FILENO);
-		close(fd_final);
+		ft_printf("minishell: %s: No such file or directory\n", filename);
+		exit(1);
 	}
-	fd_final = open(".heredoc_content", O_RDONLY);
-	if (fd_final < 0)
-	{
-		unlink(".heredoc_content");
-		ft_printf("Error: failed to open temporary file\n");
-		exit (1);
-	}
-	while ((buf = get_next_line(fd_final)))
-		write(STDOUT_FILENO, buf, ft_strlen(buf));
-	close(fd_final);
-	unlink(".heredoc_content");
+	return (fd);
 }
