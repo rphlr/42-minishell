@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 17:02:13 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/28 17:03:25 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/29 09:20:48 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static t_token	*handle_options_and_default(t_token *type, t_count *count)
 	if (*type == OPTIONS)
 	{
 		count->nbr_options++;
-		return (type + 1);
+		return (type);
 	}
 	count->nbr_tokens++;
 	return (type);
