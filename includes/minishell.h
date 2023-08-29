@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/29 19:13:51 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/29 20:00:17 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,8 +282,10 @@ t_token					handle_pipe(char *token);
 t_token					handle_input_redirect(char *token);
 t_token					handle_output_redirect(char *token);
 t_token					handle_dash(char *token);
-void					handle_dollar(char **token, t_global *global, t_format *fmt);
-int						is_quotes(char c, int *in_double_quotes, int *in_simple_quotes);
+void					handle_dollar(char **token, t_global *global,
+							t_format *fmt);
+int						is_quotes(char c, int *in_double_quotes,
+							int *in_simple_quotes);
 void					init_format(t_format *fmt, t_global *global);
 
 // Execution
