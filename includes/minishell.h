@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/29 18:51:47 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 01:25:05 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,6 +254,14 @@ int						pid_creation(t_global *global, char	**paths, char *argv[], t_redirectio
 void					create_file(int fd, t_redirection *redir, t_global *global);
 void					ft_semicolon(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd);
 int						checking_primaries(t_global *global, int primaries);
+void					execute_pipeline(t_global *global, t_cmds *cmds);
+int						count_cmds(t_cmds *cmds);
+void					initialize_pipes(int fds[][2], int num_cmds, t_global *global);
+void					dup_and_close(int fds[][2], int i, int num_cmds);
+void					check_first_pid(pid_t pid, int fds[2], t_cmds *curr_cmd, t_global *global);
+void					check_second_pid(pid_t pid2, int fds[2], t_cmds *next_cmd, t_global *global);
+
+
 
 // *---* signals *---*
 void					ft_signal(void);

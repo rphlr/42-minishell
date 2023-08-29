@@ -6,23 +6,70 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 13:37:24 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/29 17:51:32 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 01:32:32 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
+int	count_cmds(t_cmds *cmds)
 {
-	int		fds[2];
-	pid_t	pid;
-	pid_t	pid2;
+	int		num_cmds;
+	t_cmds	*tmp;
 
-	if (pipe(fds) < 0)
+	num_cmds = 0;
+	tmp = cmds;
+	while (tmp)
 	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
+		num_cmds++;
+		tmp = tmp->next;
 	}
+	return (num_cmds);
+}
+
+void	initialize_pipes(int fds[][2], int num_cmds, t_global *global)
+{
+	int	i;
+
+	i = -1;
+	while (++i < num_cmds - 1)
+	{
+		if (pipe(fds[i]) < 0)
+		{
+			perror("pipe");
+			global->exit_code = EXIT_FAILURE;
+			exit(global->exit_code);
+		}
+	}
+}
+
+void	dup_and_close(int fds[][2], int i, int num_cmds)
+{
+	int	j;
+
+	j = -1;
+	if (i != 0)
+	{
+		dup2(fds[i - 1][0], STDIN_FILENO);
+		close(fds[i - 1][0]);
+	}
+	if (i != num_cmds - 1)
+	{
+		dup2(fds[i][1], STDOUT_FILENO);
+		close(fds[i][1]);
+	}
+	while (++j < num_cmds - 1)
+	{
+		if (j != i - 1)
+			close(fds[j][0]);
+		if (j != i)
+			close(fds[j][1]);
+	}
+}
+
+void	check_first_pid(pid_t pid, int fds[2], t_cmds *curr_cmd,
+	t_global *global)
+{
 	pid = fork();
 	if (pid == 0)
 	{
@@ -37,6 +84,11 @@ void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 		perror("fork");
 		exit(EXIT_FAILURE);
 	}
+}
+
+void	check_second_pid(pid_t pid2, int fds[2], t_cmds *next_cmd,
+	t_global *global)
+{
 	pid2 = fork();
 	if (pid2 == 0)
 	{
@@ -51,6 +103,23 @@ void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 		perror("fork");
 		exit(EXIT_FAILURE);
 	}
+}
+
+void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
+{
+	int		fds[2];
+	pid_t	pid;
+	pid_t	pid2;
+
+	pid = 0;
+	pid2 = 0;
+	if (pipe(fds) < 0)
+	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+	check_first_pid(pid, fds, curr_cmd, global);
+	check_second_pid(pid2, fds, next_cmd, global);
 	close(fds[0]);
 	close(fds[1]);
 	waitpid(pid, NULL, 0);
@@ -87,7 +156,7 @@ void	execute_specials(t_global *global)
 			ft_redir(global, curr_cmd);
 			return ;
 		}
-		else if (count_tmp->nbr_ors > 0 && *type_tmp == OR)
+		if (count_tmp->nbr_ors > 0 && *type_tmp == OR)
 		{
 			count_tmp->nbr_ors--;
 			ft_or(global, curr_cmd, curr_cmd->next);
