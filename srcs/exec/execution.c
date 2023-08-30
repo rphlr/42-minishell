@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/29 10:37:38 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 14:08:31 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,22 +76,20 @@ void	process_heredoc(char *limiter)
 		ft_printf("heredoc> ");
 		buf = get_next_line(0);
 		if (!buf)
-			exit(1);
-		if (!ft_strncmp(limiter, buf, ft_strlen(limiter)))
 		{
-			free(buf);
-			break ;
+			close(file);
+			exit(1);
 		}
+		if (!ft_strncmp(limiter, buf, ft_strlen(limiter)))
+			break ;
 		file = open(".heredoc_content", O_WRONLY | O_APPEND);
 		if (file < 0)
 		{
 			ft_printf("Error: failed to open temporary file\n");
-			free(buf);
 			exit(1);
 		}
 		write(file, buf, ft_strlen(buf));
 		close(file);
-		free(buf);
 	}
 }
 

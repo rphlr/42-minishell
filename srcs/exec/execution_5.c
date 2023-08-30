@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 13:36:45 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 00:41:38 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 13:48:40 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,20 @@ void	execute_pipeline(t_global *global, t_cmds *cmds)
 	int		num_cmds;
 	int		i;
 	pid_t	pid;
-	int		fds[count_cmds(cmds) - 1][2];
+	//int		fds[count_cmds(cmds) - 1][2];
+	int        **fds;
 
+	num_cmds = count_cmds(cmds);
+	fds = ft_gc_malloc(sizeof(int *) * (num_cmds - 1));
+	if (!fds)
+		exit(EXIT_FAILURE);
+	i = -1;
+	while (++i < num_cmds - 1)
+	{
+		fds[i] = ft_gc_malloc(sizeof(int) * 2);
+		if (!fds[i])
+			exit(EXIT_FAILURE);
+	}
 	i = -1;
 	num_cmds = count_cmds(cmds);
 	initialize_pipes(fds, num_cmds, global);
