@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   options.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 14:43:52 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/25 14:28:21 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/28 00:01:02 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

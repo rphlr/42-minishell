@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 15:59:29 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 16:32:27 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ static void	handle_sigpipe(int signo)
 	(void)signo;
 }
 
-int	manage_handle_sigint(int *new_value);
 static void	sigint_manage(int num)
 {
     (void)num;
