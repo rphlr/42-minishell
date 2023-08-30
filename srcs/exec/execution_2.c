@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
+/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 01:21:32 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 15:10:21 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 16:43:56 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,21 +55,12 @@ int	cmd_is_primaries(char *cmd)
 
 	cmd_copy = ft_strdup(cmd);
 	first_word = ft_strtok(cmd_copy, " ");
-	if (!first_word)
-		return (0);
-	if (!ft_strcmp(first_word, "echo"))
-		return (1);
-	else if (!ft_strcmp(first_word, "cd"))
-		return (1);
-	else if (!ft_strcmp(first_word, "pwd"))
-		return (1);
-	else if (!ft_strcmp(first_word, "export"))
-		return (1);
-	else if (!ft_strcmp(first_word, "unset"))
-		return (1);
-	else if (!ft_strcmp(first_word, "env"))
-		return (1);
-	else if (!ft_strcmp(first_word, "exit"))
+	if (!ft_strcmp(first_word, "echo") || !ft_strcmp(first_word, "cd")
+		|| !ft_strcmp(first_word, "pwd") || !ft_strcmp(first_word, "export")
+		|| !ft_strcmp(first_word, "unset") || !ft_strcmp(first_word, "env")
+		|| !ft_strcmp(first_word, "exit") || !ft_strcmp(first_word, "clear")
+		|| !ft_strcmp(first_word, "easter_egg") || !ft_strcmp(first_word, "ee")
+		|| !ft_strcmp(first_word, "ms"))
 		return (1);
 	return (0);
 }
@@ -95,6 +86,12 @@ void	execute_primaries(char	*cmd, t_global *global)
 		ft_env(global);
 	else if (!ft_strcmp(first_word, "exit"))
 		ft_exit(global);
+	else if (!ft_strcmp(first_word, "clear"))
+		ft_printf(C_CLEAR);
+	else if (!ft_strcmp(first_word, "easter_egg") || !ft_strcmp(first_word, "ee"))
+		ft_easter_egg();
+	else if (!ft_strcmp(first_word, "ms"))
+		ft_mslvl_see(global->env);
 }
 
 int	execute_cmd(char *cmd, t_redirection *redir, t_global *global)
