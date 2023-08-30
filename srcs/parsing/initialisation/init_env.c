@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 16:18:59 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 11:52:06 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 17:20:24 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ static t_env	*remove_otherlvls(t_env *head)
 {
 	t_env	*current;
 	t_env	*last;
-	t_env	*tmp;
 
 	current = head;
 	last = NULL;
@@ -99,7 +98,6 @@ static t_env	*remove_otherlvls(t_env *head)
 				last->next = current->next;
 			else
 				head = current->next;
-			tmp = current;
 			current = current->next;
 		}
 		else

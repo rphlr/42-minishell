@@ -1,61 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution_5.c                                      :+:      :+:    :+:   */
+/*   manage_pipes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/29 13:36:45 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 15:39:31 by mariavillar      ###   ########.fr       */
+/*   Created: 2023/08/30 17:41:09 by mvillarr          #+#    #+#             */
+/*   Updated: 2023/08/30 18:05:25 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	checking_primaries(t_global *global, int primaries)
+void	initialize_pipes(int **fds, int num_cmds, t_global *global)
 {
-	if (global->line->count->special_cases == true)
+	int	i;
+
+	i = -1;
+	while (++i < num_cmds - 1)
 	{
-		execute_specials(global);
-		return (1);
+		if (pipe(fds[i]) < 0)
+		{
+			perror("pipe");
+			global->exit_code = EXIT_FAILURE;
+			exit(global->exit_code);
+		}
 	}
-	primaries = cmd_is_primaries(global->line->cmds->cmd);
-	if (primaries)
-	{
-		execute_primaries(global->line->cmds->cmd, global);
-		return (1);
-	}
-	if (!get_env_value("PATH", global->env))
-	{
-		ft_printf("minishell: %s: No such file or directory\n",
-			global->line->cmds->cmd);
-		global->exit_code = 127;
-		manage_exit(&global->exit_code);
-		return (1);
-	}
-	return (0);
 }
 
-void	create_file(int fd, t_redirection *redir, t_global *global)
+void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 {
-	fd = -1;
-	if (redir->type == OUTPUT_REDIRECTION)
-		fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	else if (redir->type == APPEND_REDIRECTION)
-		fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	else if (redir->type == INPUT_REDIRECTION)
-		fd = open(redir->filename, O_RDONLY);
-	if (fd == -1)
+	int		fds[2];
+	pid_t	pid;
+	pid_t	pid2;
+
+	pid = 0;
+	pid2 = 0;
+	if (pipe(fds) < 0)
 	{
-		ft_printf("minishell: %s: %s\n", redir->filename, strerror(errno));
-		global->exit_code = 1;
+		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
-	if (redir->type == OUTPUT_REDIRECTION || redir->type == APPEND_REDIRECTION)
-		dup2(fd, STDOUT_FILENO);
-	else if (redir->type == INPUT_REDIRECTION)
-		dup2(fd, STDIN_FILENO);
-	close (fd);
+	check_first_pid(pid, fds, curr_cmd, global);
+	check_second_pid(pid2, fds, next_cmd, global);
+	close(fds[0]);
+	close(fds[1]);
+	waitpid(pid, NULL, 0);
+	waitpid(pid2, NULL, 0);
 }
 
 void	execute_pipeline(t_global *global, t_cmds *cmds)
@@ -106,4 +97,28 @@ void	execute_pipeline(t_global *global, t_cmds *cmds)
 	i = -1;
 	while (++i < num_cmds)
 		wait(NULL);
+}
+
+void	dup_and_close(int **fds, int i, int num_cmds)
+{
+	int	j;
+
+	j = -1;
+	if (i != 0)
+	{
+		dup2(fds[i - 1][0], STDIN_FILENO);
+		close(fds[i - 1][0]);
+	}
+	if (i != num_cmds - 1)
+	{
+		dup2(fds[i][1], STDOUT_FILENO);
+		close(fds[i][1]);
+	}
+	while (++j < num_cmds - 1)
+	{
+		if (j != i - 1)
+			close(fds[j][0]);
+		if (j != i)
+			close(fds[j][1]);
+	}
 }

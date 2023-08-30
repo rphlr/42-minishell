@@ -1,57 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution.c                                        :+:      :+:    :+:   */
+/*   manage_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 16:34:54 by rrouille         ###   ########.fr       */
+/*   Created: 2023/08/30 17:30:26 by mvillarr          #+#    #+#             */
+/*   Updated: 2023/08/30 18:04:51 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	**env_to_char(t_global *global)
-{
-	char	**paths;
-
-	if (!global->env)
-		return (NULL);
-	while (ft_strcmp(global->env->name, "PATH"))
-	{
-		global->env = global->env->next;
-		if (!global->env)
-			return (NULL);
-	}
-	paths = ft_gc_malloc(sizeof(char *) * (ft_strlen(global->env->value) + 1));
-	if (!paths)
-		return (NULL);
-	paths = ft_split(global->env->value, ':');
-	return (paths);
-}
-
-char	*get_path(char *command, char **paths)
-{
-	char	*path;
-	char	*tmp;
-
-	if (command[0] == '.' || command[0] == '/')
-	{
-		if (access(command, F_OK) == 0)
-			return (command);
-		return (NULL);
-	}
-	while (*paths)
-	{
-		tmp = ft_strjoin(*paths, "/");
-		path = ft_strjoin(tmp, command);
-		if (access(path, F_OK) == 0)
-			return (path);
-		paths++;
-	}
-	return (NULL);
-}
 
 void	create_heredoc_file(void)
 {
@@ -94,15 +53,42 @@ void	process_heredoc(char *limiter)
 	}
 }
 
-int	open_and_check(char *filename, int flags)
+void	ft_heredoc(char *filename, char *limiter, int type)
+{
+	create_heredoc_file();
+	process_heredoc(limiter);
+	handle_redirection(filename, type);
+	g_current_state = STATE_NORMAL;
+}
+
+int	handle_redirections(t_redirection *redir, t_global *global)
 {
 	int	fd;
 
-	fd = open(filename, flags, 0644);
-	if (fd < 0)
+	fd = 0;
+	if (!redir)
+		return (0);
+	if (redir->type == HEREDOC_REDIRECTION)
 	{
-		ft_printf("minishell: %s: No such file or directory\n", filename);
-		exit(1);
+		ft_heredoc(redir->filename, redir->limiter, redir->type_hd);
+		exit(EXIT_SUCCESS);
 	}
-	return (fd);
+	create_file(fd, redir, global);
+	return (1);
+}
+
+void	handle_redirection(char *filename, int type)
+{
+	int		fd_final;
+	char	*buf;
+
+	is_filename(filename, type);
+	fd_final = open_and_check(".heredoc_content", O_RDONLY);
+	buf = get_next_line(fd_final);
+	while (buf)
+	{
+		write(STDOUT_FILENO, buf, ft_strlen(buf));
+		buf = get_next_line(fd_final);
+	}
+	close(fd_final);
 }

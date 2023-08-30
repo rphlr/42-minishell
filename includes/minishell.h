@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 16:52:40 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 18:14:34 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,6 +324,8 @@ void					ft_and(t_global *global, t_cmds *curr_cmd,
 void					execute_pipeline(t_global *global, t_cmds *cmds);
 void					ft_pipe(t_global *global, t_cmds *curr_cmd,
 							t_cmds *next_cmd);
+char					*found_command(t_global *global, char **paths, char *argv[]);
+void					is_filename(char *filename, int type);
 void					handle_redirection(char *filename, int type);
 int						open_and_check(char *filename, int flags);
 void					process_heredoc(char *limiter);

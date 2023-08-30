@@ -1,70 +1,57 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution_6.c                                      :+:      :+:    :+:   */
+/*   manage_pid.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/29 13:37:24 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 15:13:42 by mariavillar      ###   ########.fr       */
+/*   Created: 2023/08/30 17:47:31 by mvillarr          #+#    #+#             */
+/*   Updated: 2023/08/30 17:52:59 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	count_cmds(t_cmds *cmds)
+int	pid_creation(t_global *global, char **paths, char *argv[],
+		t_redirection *redir)
 {
-	int		num_cmds;
-	t_cmds	*tmp;
+	pid_t	pid;
+	int		status;
+	char	**env_array;
 
-	num_cmds = 0;
-	tmp = cmds;
-	while (tmp)
+	g_current_state = STATE_BLOCKING_CMD;
+	pid = fork();
+	manage_pid(&pid);
+	if (!pid)
 	{
-		num_cmds++;
-		tmp = tmp->next;
+		if (handle_redirections(redir, global))
+			return (manage_exit(NULL));
+		env_array = env_list_to_array(global->env);
+		execve(found_command(global, paths, argv), argv, env_array);
+		if (manage_exit(NULL) == 127)
+			exit(127);
+		global->exit_code = EXIT_FAILURE;
+		exit(global->exit_code);
 	}
-	return (num_cmds);
+	else if (pid < 0)
+	{
+		perror("fork");
+		return (-1);
+	}
+	waitpid(pid, &status, 0);
+	g_current_state = STATE_NORMAL;
+	if (manage_exit(NULL) != 130)
+		return (WEXITSTATUS(status));
+	return (manage_exit(NULL));
 }
 
-void	initialize_pipes(int **fds, int num_cmds, t_global *global)
+pid_t	manage_pid(pid_t *new_pid)
 {
-	int	i;
+	static pid_t	child_pid;
 
-	i = -1;
-	while (++i < num_cmds - 1)
-	{
-		if (pipe(fds[i]) < 0)
-		{
-			perror("pipe");
-			global->exit_code = EXIT_FAILURE;
-			exit(global->exit_code);
-		}
-	}
-}
-
-void	dup_and_close(int **fds, int i, int num_cmds)
-{
-	int	j;
-
-	j = -1;
-	if (i != 0)
-	{
-		dup2(fds[i - 1][0], STDIN_FILENO);
-		close(fds[i - 1][0]);
-	}
-	if (i != num_cmds - 1)
-	{
-		dup2(fds[i][1], STDOUT_FILENO);
-		close(fds[i][1]);
-	}
-	while (++j < num_cmds - 1)
-	{
-		if (j != i - 1)
-			close(fds[j][0]);
-		if (j != i)
-			close(fds[j][1]);
-	}
+	if (new_pid)
+		child_pid = *new_pid;
+	return (child_pid);
 }
 
 void	check_first_pid(pid_t pid, int fds[2], t_cmds *curr_cmd,
