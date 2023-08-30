@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 16:16:17 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 14:05:26 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 15:11:28 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	pid_creation(t_global *global, char **paths, char *argv[],
 	if (!pid)
 	{
 		if (handle_redirections(redir, global))
-		 return (manage_exit(NULL));
+			return (manage_exit(NULL));
 		printf("jsadfjfasdjhg");
 		execve(found_command(global, paths, argv), argv, NULL);
 		if (manage_exit(NULL) == 127)

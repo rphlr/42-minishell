@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 13:56:34 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 15:31:06 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,14 +272,18 @@ void					check_first_pid(pid_t pid, int fds[2], t_cmds *curr_cmd,
 							t_global *global);
 void					check_second_pid(pid_t pid2, int fds[2],
 							t_cmds *next_cmd, t_global *global);
-int					check_or(t_count *count_tmp, t_global *global,
+int						check_or(t_count *count_tmp, t_global *global,
 							t_cmds *curr_cmd, t_token *type_tmp);
-int					check_and(t_count *count_tmp, t_global *global,
+int						check_and(t_count *count_tmp, t_global *global,
 							t_cmds *curr_cmd, t_token *type_tmp);
-int					check_semicolon_and_pipe(t_count *count_tmp,
-							t_global *global, t_cmds *curr_cmd, t_token *type_tmp);
-int	check_special(t_count *count_tmp, t_global *global, t_cmds *curr_cmd,
-	t_token *type_tmp);
+int						check_semicolon_and_pipe(t_count *count_tmp,
+							t_global *global, t_cmds *curr_cmd,
+							t_token *type_tmp);
+int						check_special(t_count *count_tmp, t_global *global,
+							t_cmds *curr_cmd,
+							t_token *type_tmp);
+void					call_checks(t_count *count_tmp, t_global *global,
+							t_cmds *curr_cmd, t_token *type_tmp);
 
 // *---* signals *---*
 void					ft_signal(void);

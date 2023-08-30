@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 13:36:45 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 13:48:40 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 15:25:50 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,12 @@ void	create_file(int fd, t_redirection *redir, t_global *global)
 	close (fd);
 }
 
-//----------------------------------
-
 void	execute_pipeline(t_global *global, t_cmds *cmds)
 {
 	int		num_cmds;
 	int		i;
 	pid_t	pid;
-	//int		fds[count_cmds(cmds) - 1][2];
-	int        **fds;
+	int		**fds;
 
 	num_cmds = count_cmds(cmds);
 	fds = ft_gc_malloc(sizeof(int *) * (num_cmds - 1));

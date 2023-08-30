@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 01:21:32 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 14:03:25 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 15:10:21 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,9 @@ void	handle_redirection(char *filename, int type)
 	while (buf)
 	{
 		write(STDOUT_FILENO, buf, ft_strlen(buf));
-		//free(buf);
 		buf = get_next_line(fd_final);
 	}
 	close(fd_final);
-	//unlink(".heredoc_content");
 }
 
 int	cmd_is_primaries(char *cmd)
