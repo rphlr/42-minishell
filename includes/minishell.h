@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/29 20:00:17 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 17:01:42 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@
 # define C_REVERSE "\033[7m"
 # define C_INVISIBLE "\033[8m"
 # define C_STRIKETHROUGH "\033[9m"
+# define C_CLEAR "\033[2J\033[1;1H"
 
 // Background colors definition
 # define C_BBLACK "\033[40m"
@@ -74,7 +75,16 @@
 # define ERR_CD "minishell: cd: %s: %s\n"
 # define ERR_CD_HOME "minishell: cd: HOME not set\n"
 
+int g_current_state;
+
 /* ---------<<STRUCTURES>>--------- */
+typedef enum
+{
+    STATE_NORMAL,
+    STATE_HEREDOC,
+    STATE_BLOCKING_CMD
+} 	t_shell_state;
+
 // Types of tokens
 typedef enum s_token
 {
@@ -231,6 +241,7 @@ typedef struct s_format
 /* ---------<<PROTOTYPES>>--------- */
 // Builtins
 void					ft_echo(char *cmd, t_global *global);
+char					**env_list_to_array(t_env *env_list);
 char					*get_env_value(char *name, t_env *env);
 void					ft_env(t_global *global);
 void					ft_pwd(t_line *line);
@@ -238,6 +249,8 @@ void					ft_export(t_global *global, t_line *line);
 void					ft_cd(char *cmd, t_global *global);
 void					ft_unset(t_global *global, t_line *line);
 void					ft_exit(t_global *global);
+void					ft_easter_egg(void);
+void					ft_mslvl_see(t_env *env);
 
 // Parsing
 t_state					check_token_errors(t_token *type, char **tokens,
@@ -289,9 +302,65 @@ int						is_quotes(char c, int *in_double_quotes,
 void					init_format(t_format *fmt, t_global *global);
 
 // Execution
+//void					init_history(char *line, t_history *history_head,
+//							int history_fd);
+// char					*ft_remove_char(char *str, char c);
+
+// *---* exec *---*
+char					**env_to_char(t_global *global);
+char					*get_path(char *command, char **paths);
+void					ft_heredoc(char *filename, char *limiter, int type);
 pid_t					manage_pid(pid_t *new_pid);
 int						manage_exit(int *new_code);
 void					run_cmd(t_global *global);
+int						cmd_is_primaries(char *cmd);
+void					execute_primaries(char	*cmd, t_global *global);
+void					execute_specials(t_global *global);
+int						execute_cmd(char *cmd, t_redirection *redir,
+							t_global *global);
+void					ft_redir(t_global *global, t_cmds *curr_cmd);
+void					ft_or(t_global *global, t_cmds *curr_cmd,
+							t_cmds *next_cmd);
+void					ft_and(t_global *global, t_cmds *curr_cmd,
+							t_cmds *next_cmd);
+void					execute_pipeline(t_global *global, t_cmds *cmds);
+void					ft_pipe(t_global *global, t_cmds *curr_cmd,
+							t_cmds *next_cmd);
+void					handle_redirection(char *filename, int type);
+int						open_and_check(char *filename, int flags);
+void					process_heredoc(char *limiter);
+void					create_heredoc_file(void);
+void					fill_argv(char *cmd, char **argv, t_global *global);
+int						handle_redirections(t_redirection *redir,
+							t_global *global);
+int						pid_creation(t_global *global, char	**paths,
+							char *argv[], t_redirection *redir);
+void					create_file(int fd, t_redirection *redir,
+							t_global *global);
+void					ft_semicolon(t_global *global, t_cmds *curr_cmd,
+							t_cmds *next_cmd);
+int						checking_primaries(t_global *global, int primaries);
+void					execute_pipeline(t_global *global, t_cmds *cmds);
+int						count_cmds(t_cmds *cmds);
+void					initialize_pipes(int **fds, int num_cmds,
+							t_global *global);
+void					dup_and_close(int **fds, int i, int num_cmds);
+void					check_first_pid(pid_t pid, int fds[2], t_cmds *curr_cmd,
+							t_global *global);
+void					check_second_pid(pid_t pid2, int fds[2],
+							t_cmds *next_cmd, t_global *global);
+int						check_or(t_count *count_tmp, t_global *global,
+							t_cmds *curr_cmd, t_token *type_tmp);
+int						check_and(t_count *count_tmp, t_global *global,
+							t_cmds *curr_cmd, t_token *type_tmp);
+int						check_semicolon_and_pipe(t_count *count_tmp,
+							t_global *global, t_cmds *curr_cmd,
+							t_token *type_tmp);
+int						check_special(t_count *count_tmp, t_global *global,
+							t_cmds *curr_cmd,
+							t_token *type_tmp);
+void					call_checks(t_count *count_tmp, t_global *global,
+							t_cmds *curr_cmd, t_token *type_tmp);
 
 // Signals
 void					ft_signal(void);

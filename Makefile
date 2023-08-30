@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+         #
+#    By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/14 15:20:40 by rrouille          #+#    #+#              #
-#    Updated: 2023/08/27 09:38:14 by rrouille         ###   ########.fr        #
+#    Updated: 2023/08/28 00:39:44 by mariavillar      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,7 @@ CLEARLN			= \r\033[K
 # Sources
 SRCS			= ${shell find ${SRCSDIR} -type f -name '*.c'}
 OBJS			= ${patsubst ${SRCSDIR}%,${OBJSDIR}%,${SRCS:%.c=%.o}}
-CFLAGS			= -Werror -Wall -Wextra
+CFLAGS			= -Werror -Wall -Wextra -g
 CC				= gcc
 RM				= rm -rf
 MV				= mv
@@ -142,7 +142,7 @@ draw_begining:
 					sleep 0.01; \
 				done; \
 				printf '%s' "$$line"
-			@sleep 0.2
+			@sleep 5
 			@${ECHO} "${CLEAR}"
 
 draw_bonus:
