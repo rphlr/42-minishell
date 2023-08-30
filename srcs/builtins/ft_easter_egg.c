@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 10:35:48 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 16:39:18 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 18:50:24 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 void	ft_easter_egg(void)
 {
 	ft_printf(C_YELLOW"\n");
-	ft_printf("	███    ███ ██ ███    ██ ██ ███████ ██   ██ ███████ ██\t██\n");
-	ft_printf("	████  ████ ██ ████   ██ ██ ██      ██   ██ ██      ██\t██\n");
-	ft_printf("	██ ████ ██ ██ ██ ██  ██ ██ ███████ ███████ █████   ██\t██\n");
-	ft_printf("	██  ██  ██ ██ ██  ██ ██ ██      ██ ██   ██ ██      ██\t██\n");
-	ft_printf("	██      ██ ██ ██   ████ ██ ███████ ██   ██ ███████ ███████ ███████\n");
+	ft_printf(MS_1);
+	ft_printf(MS_2);
+	ft_printf(MS_3);
+	ft_printf(MS_4);
+	ft_printf(MS_5);
 	ft_printf("\n"C_RESET);
 	ft_printf("This is a shell, not a game.\n");
 	ft_printf("You can't play with it.\n");

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 17:01:42 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 20:09:44 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,15 @@
 # define C_BMAGENTA "\033[45m"
 # define C_BCYAN "\033[46m"
 
-// Create a random colored prompt
+// Create  prompt
 # define PROMPT "\033[1m\033[7m\033[4m\033[41m Les pros du HTML >\033[0m "
+
+// Define ee
+# define MS_1 "███    ███ ██ ███    ██ ██ █████ ██  ██ ███████ ██     ██\n"
+# define MS_2 "████  ████ ██ ████   ██ ██ ██    ██  ██ ██      ██     ██\n"
+# define MS_3 "██ ████ ██ ██ ██ ██  ██ ██ █████ ██████ █████   ██     ██\n"
+# define MS_4 "██  ██  ██ ██ ██  ██ ██ ██    ██ ██  ██ ██      ██     ██\n"
+# define MS_5 "██      ██ ██ ██   ████ ██ █████ ██  ██ ███████ ██████ ██████\n"
 
 // Define errors print
 # define ERR_QUOTE "minishell: quote error\n"
@@ -75,15 +82,17 @@
 # define ERR_CD "minishell: cd: %s: %s\n"
 # define ERR_CD_HOME "minishell: cd: HOME not set\n"
 
-int g_current_state;
+# define SHLVL "You are currently using %s level%s of our minishell.\n"
+
+int	g_current_state;
 
 /* ---------<<STRUCTURES>>--------- */
-typedef enum
+typedef enum s_shell_state
 {
-    STATE_NORMAL,
-    STATE_HEREDOC,
-    STATE_BLOCKING_CMD
-} 	t_shell_state;
+	STATE_NORMAL,
+	STATE_HEREDOC,
+	STATE_BLOCKING_CMD
+}						t_shell_state;
 
 // Types of tokens
 typedef enum s_token
@@ -239,15 +248,30 @@ typedef struct s_format
 }						t_format;
 
 /* ---------<<PROTOTYPES>>--------- */
+// Main
+int						lsh_loop(t_global *global);
+int						line_is_wspaces(char *line);
+void					add_to_history_list(t_history **head, char *line);
+char					*rm_newline(char *line);
+
 // Builtins
 void					ft_echo(char *cmd, t_global *global);
 char					**env_list_to_array(t_env *env_list);
 char					*get_env_value(char *name, t_env *env);
 void					ft_env(t_global *global);
 void					ft_pwd(t_line *line);
+void					add_env_node(t_env **new_head, t_env **new_current,
+							t_env *node);
+t_env					*clone_env_node(t_env *src);
+t_env					*new_env_item(char *name, char *value);
+t_env					*clone_env_list(t_env *head);
+void					extract_name_value(char *token, char **name,
+							char **value);
+void					sorting_env(t_env *env_cpy);
 void					ft_export(t_global *global, t_line *line);
 void					ft_cd(char *cmd, t_global *global);
 void					ft_unset(t_global *global, t_line *line);
+bool					check_exit_token(char *arg);
 void					ft_exit(t_global *global);
 void					ft_easter_egg(void);
 void					ft_mslvl_see(t_env *env);
@@ -342,6 +366,7 @@ void					ft_semicolon(t_global *global, t_cmds *curr_cmd,
 int						checking_primaries(t_global *global, int primaries);
 void					execute_pipeline(t_global *global, t_cmds *cmds);
 int						count_cmds(t_cmds *cmds);
+t_env					*find_or_create_mslvl(t_env *head);
 void					initialize_pipes(int **fds, int num_cmds,
 							t_global *global);
 void					dup_and_close(int **fds, int i, int num_cmds);
@@ -364,6 +389,7 @@ void					call_checks(t_count *count_tmp, t_global *global,
 
 // Signals
 void					ft_signal(void);
+void					sigint_manage(int num);
 void					set_termios(void);
 
 #endif

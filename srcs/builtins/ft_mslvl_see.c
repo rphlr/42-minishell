@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 11:53:00 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 11:56:56 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 18:58:33 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ void	ft_mslvl_see(t_env *env)
 		if (!ft_strcmp(current->name, "MSLVL"))
 		{
 			if (!ft_strcmp(current->value, "1"))
-				ft_printf("You are currently using %s level of our minishell.\n", current->value);
+				ft_printf(SHLVL, current->value, "");
 			else
-				ft_printf("You are currently using %s levels of our minishell.\n", current->value);
+				ft_printf(SHLVL, current->value, "s");
 			return ;
 		}
 		current = current->next;
