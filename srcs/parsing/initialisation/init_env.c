@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 16:18:59 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 20:09:08 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 20:59:02 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ static t_env	*remove_otherlvls(t_env *head)
 {
 	t_env	*current;
 	t_env	*last;
-	t_env	*tmp;
 
 	current = head;
 	last = NULL;
@@ -101,7 +100,6 @@ static t_env	*remove_otherlvls(t_env *head)
 				last->next = current->next;
 			else
 				head = current->next;
-			tmp = current;
 			current = current->next;
 		}
 		else
