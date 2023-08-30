@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 16:32:27 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 18:57:46 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ static void	sigint_manage(int num)
 {
     (void)num;
 	int		exit_code;
-	pid_t	child_pid;
+	//pid_t	child_pid;
 	pid_t	reset_pid;
 
-	child_pid = manage_pid(NULL);
+	//child_pid = manage_pid(NULL);
 	reset_pid = -1;
 	if (g_current_state == STATE_HEREDOC)
 	{
@@ -40,7 +40,8 @@ static void	sigint_manage(int num)
 	else if (g_current_state == STATE_BLOCKING_CMD)
 	{
 		ft_printf("\n");
-		kill(child_pid, SIGINT);
+		//if (child_pid > 0)
+			//kill(child_pid, SIGINT);
 		exit_code = 130;
 	}
 	else if (g_current_state == STATE_NORMAL)

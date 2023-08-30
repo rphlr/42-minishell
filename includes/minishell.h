@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 18:14:34 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/30 18:29:18 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,6 +335,7 @@ int						handle_redirections(t_redirection *redir,
 							t_global *global);
 int						pid_creation(t_global *global, char	**paths,
 							char *argv[], t_redirection *redir);
+int						check_state(pid_t pid, int status);
 void					create_file(int fd, t_redirection *redir,
 							t_global *global);
 void					ft_semicolon(t_global *global, t_cmds *curr_cmd,
