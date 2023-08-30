@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 16:16:17 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 16:47:26 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 16:52:00 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,29 +34,6 @@ char	*found_command(t_global *global, char **paths, char *argv[])
 	return (path);
 }
 
-char **env_list_to_array(t_env *env_list)
-{
-    int count = 0;
-    t_env *tmp = env_list;
-    while (tmp)
-    {
-        count++;
-        tmp = tmp->next;
-    }
-    char **env_array = ft_gc_malloc((count + 1) * sizeof(char *));
-    if (!env_array)
-        return NULL;
-    tmp = env_list;
-    for (int i = 0; i < count; i++)
-    {
-        env_array[i] = ft_strjoin(tmp->name, "=");
-        env_array[i] = ft_strjoin(env_array[i], tmp->value);
-        tmp = tmp->next;
-    }
-    env_array[count] = NULL;
-    return env_array;
-}
-
 int	pid_creation(t_global *global, char **paths, char *argv[],
 		t_redirection *redir)
 {
@@ -71,7 +48,6 @@ int	pid_creation(t_global *global, char **paths, char *argv[],
 	{
 		if (handle_redirections(redir, global))
 			return (manage_exit(NULL));
-		printf("jsadfjfasdjhg");
 		env_array = env_list_to_array(global->env);
 		execve(found_command(global, paths, argv), argv, env_array);
 		if (manage_exit(NULL) == 127)

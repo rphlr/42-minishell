@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 16:31:07 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 16:52:40 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,7 @@ typedef struct s_format
 /* ---------<<PROTOTYPES>>--------- */
 // Builtins
 void					ft_echo(char *cmd, t_global *global);
+char					**env_list_to_array(t_env *env_list);
 char					*get_env_value(char *name, t_env *env);
 void					ft_env(t_global *global);
 void					ft_pwd(t_line *line);
