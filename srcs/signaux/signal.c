@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 13:15:09 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 13:32:14 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,18 @@ static void	sigint_manage(int num)
 	reset_pid = -1;
 	if (g_current_state == STATE_HEREDOC)
 	{
-		ft_printf("heredoc\n");
 		exit_code = 1;
+		manage_exit(&exit_code);
+		printf("%d\n", manage_exit(NULL));
+		return ;
 	}
 	else if (g_current_state == STATE_BLOCKING_CMD)
 	{
 		ft_printf("\n");
 		kill(child_pid, SIGINT);
-		exit_code = 130;
+		printf("exit code: %d\n", manage_exit(NULL));
+		if (manage_exit(NULL) != 1)
+			exit_code = 130;
 	}
 	else if (g_current_state == STATE_NORMAL)
 	{
