@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 12:59:11 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 15:52:42 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,6 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 	int status;
 	char *argv[100];
 	int i = 0;
-	// int reset_pid = -1;
 
 	char *cmd_ptr = cmd;
     for (int j = 0; global->line->token[j]; j++)
@@ -278,20 +277,20 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 		char **env_array = env_list_to_array(global->env);
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		// manage_pid(&reset_pid);
 		execve(path, argv, env_array);
 		perror("execve");
 		global->exit_code = EXIT_FAILURE;
 		exit (global->exit_code);
 	}
 	else if (pid < 0)
-	{
 		return -1;
-	}
 	else
 	{
+		// printf("ec av wpid: %d\n", manage_exit(NULL));
+		// printf("g_current_state: %d\n", g_current_state);
 		waitpid(pid, &status, 0);
 		g_current_state = STATE_NORMAL;
+		// printf("ec ap wpid: %d\n", manage_exit(NULL));
 		if (manage_exit(NULL) != 130)
 			return (WEXITSTATUS(status));
 		else

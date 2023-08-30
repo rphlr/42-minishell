@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 13:32:14 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 15:59:29 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void	handle_sigpipe(int signo)
 	(void)signo;
 }
 
+int	manage_handle_sigint(int *new_value);
 static void	sigint_manage(int num)
 {
     (void)num;
@@ -30,22 +31,18 @@ static void	sigint_manage(int num)
 	pid_t	reset_pid;
 
 	child_pid = manage_pid(NULL);
-
 	reset_pid = -1;
 	if (g_current_state == STATE_HEREDOC)
 	{
 		exit_code = 1;
 		manage_exit(&exit_code);
-		printf("%d\n", manage_exit(NULL));
 		return ;
 	}
 	else if (g_current_state == STATE_BLOCKING_CMD)
 	{
 		ft_printf("\n");
 		kill(child_pid, SIGINT);
-		printf("exit code: %d\n", manage_exit(NULL));
-		if (manage_exit(NULL) != 1)
-			exit_code = 130;
+		exit_code = 130;
 	}
 	else if (g_current_state == STATE_NORMAL)
 	{
