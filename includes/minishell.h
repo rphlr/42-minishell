@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/29 19:13:51 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 13:13:09 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@
 # define C_REVERSE "\033[7m"
 # define C_INVISIBLE "\033[8m"
 # define C_STRIKETHROUGH "\033[9m"
+# define C_CLEAR "\033[2J\033[1;1H"
 
 // Background colors definition
 # define C_BBLACK "\033[40m"
@@ -74,7 +75,16 @@
 # define ERR_CD "minishell: cd: %s: %s\n"
 # define ERR_CD_HOME "minishell: cd: HOME not set\n"
 
+int g_current_state;
+
 /* ---------<<STRUCTURES>>--------- */
+typedef enum
+{
+    STATE_NORMAL,
+    STATE_HEREDOC,
+    STATE_BLOCKING_CMD
+} 	t_shell_state;
+
 // Types of tokens
 typedef enum s_token
 {
@@ -238,6 +248,8 @@ void					ft_export(t_global *global, t_line *line);
 void					ft_cd(char *cmd, t_global *global);
 void					ft_unset(t_global *global, t_line *line);
 void					ft_exit(t_global *global);
+void					ft_easter_egg(void);
+void					ft_mslvl_see(t_env *env);
 
 // Parsing
 t_state					check_token_errors(t_token *type, char **tokens,

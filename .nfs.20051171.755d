@@ -1,0 +1,351 @@
+[jerry]$ awk '{print $3 "\t" $4}' marks.txt
+[jerry]$ awk '/a/ {print $0}' marks.txt
+awk '/a/ {print $0}' marks.txt
+vim
+vim Marks.txt
+ls
+awk '/a/ {print $0}' Marks.txt
+awk '/a/{++cnt} END {print "Count = ", cnt}' Marks.txt 
+cat
+cat | cat | ls
+cat | cat | cat | ls
+exit
+rm fichier1 fichier2
+cat Makefile > fichier1 > fichier2
+ls
+cat fichier1
+rm fichier2 
+./minishell 
+sa
+s
+
+exit
+cat << EOF
+echo $?
+exit
+clear
+exit
+clear
+exit
+clear
+exit
+ee
+exit
+ee
+exit
+ee
+exit
+clear
+sdklfh
+ee
+exit
+clear
+exit
+clear
+jsadhkjh
+env
+./minishell 
+exit
+xit
+env
+./minishell 
+exit
+xit
+env
+exit
+env
+exit
+env
+./minishell
+env
+ls
+exit
+cat
+cat << EOF
+exit
+cat
+cat << EOF
+exit
+./minishell 
+ls
+./minishell 
+s
+ex
+exit
+s
+cat
+./minishell 
+/bin/bash
+exit
+./minishell 
+env
+exit
+env
+./minishell 
+env
+exit
+easter_egg
+ee
+clear
+shdgfh
+sdf
+s
+ee
+exit
+env
+./minishell 
+exit
+/minishell 
+env
+exit
+env
+./minishell 
+exit
+xit
+env
+./minishell 
+env
+exit
+env
+./minishell 
+env
+exit
+env
+exit
+env
+./minishell
+env
+exit
+env
+./minishell
+env
+en
+env
+exit
+env
+./minishell 
+env
+exit
+env
+./minishell 
+env
+./minishell 
+exit
+env
+./minishell 
+env
+./minishell 
+env
+./minishell 
+env
+exit
+cat << EOF
+exit
+cat
+cat << EOF
+
+cat << EOF
+exit
+env
+exit
+env
+./minishell 
+exit
+xit
+ms
+./minishell 
+ms
+exit
+ms
+./minishell 
+exit
+it
+ms
+./minishell 
+ms
+./minishell 
+ms
+bash
+ms
+./minishell 
+ms
+./minishell 
+ms
+cat
+ls
+echo $?
+ls
+jksdhf
+ehco
+echo
+/bin/echo
+jhdfexut
+ls
+dsf
+cat
+ls
+cat
+ls
+cat
+ls
+exiit
+ls
+exit
+ls
+exit
+ls
+exit
+ls
+exit
+ls
+exit
+ls
+exit
+ls
+exit
+ls
+exit
+ls
+exot
+ls
+exit
+ls
+exit
+ls
+exit
+ls
+cat
+exit
+ls
+cat
+exit
+ls
+cat
+ezxit
+cat
+exit
+cat
+exit
+cat
+exit
+cat
+cat << EOF
+exit
+cat
+cat << EOF
+exit
+cat
+cat << EOF
+exit
+cat << EOF
+cat
+exit
+ls
+cat
+cat << EOF
+exit
+ls
+cat
+cat << EOF
+exit
+cat << EOF
+exit
+cat << EOF
+cat
+exit
+cat
+cat << EOF
+exit
+ls
+cat
+exit
+cat
+exit
+cat
+exit
+ls
+exit
+cat << EOF
+exit
+cat << EOF
+exit
+echo 1 || echo 2
+cat
+cat << EOF
+exit
+cat << EOF
+cat
+exit
+ls
+cat'
+cat
+echo $?
+exit
+echo $?
+cat
+cat << EOF
+exit
+cat
+exit
+cat
+exit
+cat
+exit
+cat
+exit
+cat
+exit
+cat
+echo $?
+exit
+cat
+exit
+cat
+echo $?
+exit
+echo $?
+cat << EOF
+bash
+exit
+cat << EOF
+echo $?
+exit
+cat << EOF
+echo $?
+exit
+echo $?
+cat
+echo $?
+cat << EOF
+echo $?
+cat
+echo $?
+exit
+cat
+echo $?
+exit
+cat
+echo $?
+./minishell 
+cat << EOF
+echo $?
+cat << EOF
+exit
+cat << EOF
+cat
+echo $?
+cat << EOF
+exit
+cat
+cat << EOF
+ls
+cat
+ext=it
+cat << EOF
+echo $?
+exit
+cat << EOF
+exit
+cat << EOF
+echo $?
+exit

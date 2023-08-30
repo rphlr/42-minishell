@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:32:41 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/28 12:15:16 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 13:15:09 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,26 @@ static void	handle_sigpipe(int signo)
 
 static void	sigint_manage(int num)
 {
+    (void)num;
 	int		exit_code;
-	pid_t	reset_pid;
 	pid_t	child_pid;
+	pid_t	reset_pid;
 
-	(void)num;
 	child_pid = manage_pid(NULL);
+
 	reset_pid = -1;
-	if (child_pid > 0)
+	if (g_current_state == STATE_HEREDOC)
+	{
+		ft_printf("heredoc\n");
+		exit_code = 1;
+	}
+	else if (g_current_state == STATE_BLOCKING_CMD)
 	{
 		ft_printf("\n");
-		rl_replace_line("", 0);
-		rl_on_new_line();
 		kill(child_pid, SIGINT);
 		exit_code = 130;
 	}
-	else
+	else if (g_current_state == STATE_NORMAL)
 	{
 		ft_printf("\n");
 		rl_replace_line("", 0);
@@ -51,12 +55,41 @@ static void	sigint_manage(int num)
 	manage_pid(&reset_pid);
 }
 
+// static void	sigint_manage(int num)
+// {
+// 	int		exit_code;
+// 	pid_t	reset_pid;
+// 	pid_t	child_pid;
+
+// 	(void)num;
+// 	child_pid = manage_pid(NULL);
+// 	reset_pid = -1;
+// 	if (child_pid > 0)
+// 	{
+// 		ft_printf("\n");
+// 		rl_replace_line("", 0);
+// 		rl_on_new_line();
+// 		kill(child_pid, SIGINT);
+// 		exit_code = 130;
+// 	}
+// 	else
+// 	{
+// 		ft_printf("\n");
+// 		rl_replace_line("", 0);
+// 		rl_on_new_line();
+// 		rl_redisplay();
+// 		exit_code = 1;
+// 	}
+// 	manage_exit(&exit_code);
+// 	manage_pid(&reset_pid);
+// }
+
 void	set_termios(void)
 {
 	static struct termios	term;
 
 	tcgetattr(0, &term);
-	term.c_lflag = term.c_lflag & ~ECHOCTL;
+	term.c_lflag &= ~ECHOCTL;
 	tcsetattr(0, 0, &term);
 }
 
@@ -70,5 +103,7 @@ void	ft_signal(void)
 	sigaction(SIGQUIT, &s, NULL);
 	s.sa_handler = sigint_manage;
 	sigaction(SIGINT, &s, NULL);
-	signal(SIGPIPE, handle_sigpipe);
+	s.sa_handler = handle_sigpipe;
+	sigaction(SIGPIPE, &s, NULL);
+	// signal(SIGPIPE, handle_sigpipe);
 }

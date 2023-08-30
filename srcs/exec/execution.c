@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/15 16:57:29 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/29 14:46:04 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/30 12:59:11 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ static int	cmd_is_primaries(char *cmd)
 	char *cmd_copy = ft_strdup(cmd);
 	char *first_word = ft_strtok(cmd_copy, " ");
 
-	if (!first_word)
-		return (0);
 	if (!ft_strcmp(first_word, "echo"))
 		return (1);
 	else if (!ft_strcmp(first_word, "cd"))
@@ -73,6 +71,12 @@ static int	cmd_is_primaries(char *cmd)
 	else if (!ft_strcmp(first_word, "env"))
 		return (1);
 	else if (!ft_strcmp(first_word, "exit"))
+		return (1);
+	else if (!ft_strcmp(first_word, "clear"))
+		return (1);
+	else if (!ft_strcmp(first_word, "easter_egg") || !ft_strcmp(first_word, "ee"))
+		return (1);
+	else if (!ft_strcmp(first_word, "ms"))
 		return (1);
 	return (0);
 }
@@ -96,6 +100,12 @@ static void	execute_primaries(char	*cmd, t_global *global)
 		ft_env(global);
 	else if (!ft_strcmp(first_word, "exit"))
 		ft_exit(global);
+	else if (!ft_strcmp(first_word, "clear"))
+		ft_printf(C_CLEAR);
+	else if (!ft_strcmp(first_word, "easter_egg") || !ft_strcmp(first_word, "ee"))
+		ft_easter_egg();
+	else if (!ft_strcmp(first_word, "ms"))
+		ft_mslvl_see(global->env);
 }
 
 void	ft_heredoc(char *filename, char *limiter, int type)
@@ -111,6 +121,7 @@ void	ft_heredoc(char *filename, char *limiter, int type)
 		ft_printf("Error: failed to open temporary file\n");
 		exit (1);
 	}
+	g_current_state = STATE_HEREDOC;
 	while (true)
 	{
 		ft_printf("heredoc> ");
@@ -152,6 +163,30 @@ void	ft_heredoc(char *filename, char *limiter, int type)
 		write(STDOUT_FILENO, buf, ft_strlen(buf));
 	close(fd_final);
 	unlink(".heredoc_content");
+	g_current_state = STATE_NORMAL;
+}
+
+char **env_list_to_array(t_env *env_list)
+{
+    int count = 0;
+    t_env *tmp = env_list;
+    while (tmp)
+    {
+        count++;
+        tmp = tmp->next;
+    }
+    char **env_array = ft_gc_malloc((count + 1) * sizeof(char *));
+    if (!env_array)
+        return NULL;
+    tmp = env_list;
+    for (int i = 0; i < count; i++)
+    {
+        env_array[i] = ft_strjoin(tmp->name, "=");
+        env_array[i] = ft_strjoin(env_array[i], tmp->value);
+        tmp = tmp->next;
+    }
+    env_array[count] = NULL;
+    return env_array;
 }
 
 static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
@@ -160,6 +195,7 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 	int status;
 	char *argv[100];
 	int i = 0;
+	// int reset_pid = -1;
 
 	char *cmd_ptr = cmd;
     for (int j = 0; global->line->token[j]; j++)
@@ -189,6 +225,7 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 		return (global->exit_code);
 	}
 	pid = fork();
+	g_current_state = STATE_BLOCKING_CMD;
 	manage_pid(&pid);
 	if (!pid)
 	{
@@ -238,19 +275,23 @@ static int execute_cmd(char *cmd, t_redirection *redir, t_global *global)
 					break;
 			}
 		}
-		execve(path, argv, NULL);
+		char **env_array = env_list_to_array(global->env);
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		// manage_pid(&reset_pid);
+		execve(path, argv, env_array);
 		perror("execve");
 		global->exit_code = EXIT_FAILURE;
 		exit (global->exit_code);
 	}
 	else if (pid < 0)
 	{
-		perror("fork");
 		return -1;
 	}
 	else
 	{
 		waitpid(pid, &status, 0);
+		g_current_state = STATE_NORMAL;
 		if (manage_exit(NULL) != 130)
 			return (WEXITSTATUS(status));
 		else
