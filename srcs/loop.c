@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   loop.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 19:51:40 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/31 09:55:55 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 15:03:33 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ void	loop_prompt(t_global *global, int history_fd)
 		line = readline(prompt_clr);
 		if (!check_token(line))
 			break ;
-		if (add_to_history(&history_head, line, history_fd) || !ft_strcmp(line, ""))
+		if (add_to_history(&history_head, line, history_fd) || !ft_strcmp(line,
+				""))
 			continue ;
 		global->line = init_line(line, global);
 		if (!global->line)
