@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/31 15:37:36 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 16:30:21 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -340,6 +340,7 @@ void					init_format(t_format *fmt, t_global *global);
 // char					*ft_remove_char(char *str, char c);
 
 // *---* exec *---*
+void					close_and_wait(int **fds, int num_cmds);
 char					**env_to_char(t_global *global);
 char					*get_path(char *command, char **paths);
 void					ft_heredoc(char *filename, char *limiter, int type);

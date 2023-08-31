@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 13:36:45 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/31 16:23:58 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 16:29:19 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,39 +49,11 @@ void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 	waitpid(pid2, NULL, 0);
 }
 
-void	close_and_wait(int **fds, int num_cmds)
+void	pipe_loop(t_global *global, t_cmds *cmds, int **fds, int num_cmds)
 {
 	int	i;
+	int	pid;
 
-	i = -1;
-	while (++i < num_cmds - 1)
-	{
-		close(fds[i][0]);
-		close(fds[i][1]);
-	}
-	i = -1;
-	while (++i < num_cmds)
-		wait(NULL);
-}
-
-void	execute_pipeline(t_global *global, t_cmds *cmds)
-{
-	int		num_cmds;
-	int		i;
-	pid_t	pid;
-	int		**fds;
-
-	num_cmds = count_cmds(cmds);
-	fds = ft_gc_malloc(sizeof(int *) * (num_cmds - 1));
-	if (!fds)
-		exit(EXIT_FAILURE);
-	i = -1;
-	while (++i < num_cmds - 1)
-	{
-		fds[i] = ft_gc_malloc(sizeof(int) * 2);
-		if (!fds[i])
-			exit(EXIT_FAILURE);
-	}
 	i = -1;
 	num_cmds = count_cmds(cmds);
 	initialize_pipes(fds, num_cmds, global);
@@ -103,16 +75,27 @@ void	execute_pipeline(t_global *global, t_cmds *cmds)
 		}
 		cmds = cmds->next;
 	}
+}
+
+void	execute_pipeline(t_global *global, t_cmds *cmds)
+{
+	int		num_cmds;
+	int		i;
+	int		**fds;
+
+	num_cmds = count_cmds(cmds);
+	fds = ft_gc_malloc(sizeof(int *) * (num_cmds - 1));
+	if (!fds)
+		exit(EXIT_FAILURE);
+	i = -1;
+	while (++i < num_cmds - 1)
+	{
+		fds[i] = ft_gc_malloc(sizeof(int) * 2);
+		if (!fds[i])
+			exit(EXIT_FAILURE);
+	}
+	pipe_loop(global, cmds, fds, num_cmds);
 	close_and_wait(fds, num_cmds);
-// 	i = -1;
-// 	while (++i < num_cmds - 1)
-// 	{
-// 		close(fds[i][0]);
-// 		close(fds[i][1]);
-// 	}
-// 	i = -1;
-// 	while (++i < num_cmds)
-// 		wait(NULL);
 }
 
 void	dup_and_close(int **fds, int i, int num_cmds)
