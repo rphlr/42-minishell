@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 19:51:40 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 19:53:54 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 09:10:12 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,20 @@ int	ft_read_history(char *filename)
 	return (history_fd);
 }
 
-int	add_to_history(char *line, int history_fd)
+int	add_to_history(t_history **head, char *line, int history_fd)
 {
 	t_history	*last_entry;
-	t_history	*head;
 
-	head = NULL;
 	if (line && ft_strcmp(line, ""))
 	{
-		last_entry = head;
+		last_entry = *head;
 		while (last_entry && last_entry->next)
 			last_entry = last_entry->next;
 		if (!last_entry || ft_strcmp(line, last_entry->line))
 		{
 			add_history(line);
 			ft_putendl_fd(line, history_fd);
-			add_to_history_list(&head, line);
+			add_to_history_list(head, line);
 		}
 		if (line_is_wspaces(line))
 		{
@@ -66,7 +64,9 @@ void	loop_prompt(t_global *global, int history_fd)
 {
 	char		*rdm_prompt_clr;
 	char		*line;
+	t_history	*history_head;
 
+	history_head = NULL;
 	while (1)
 	{
 		rdm_prompt_clr = ft_strjoin(ft_strjoin(ft_strjoin(
@@ -74,7 +74,7 @@ void	loop_prompt(t_global *global, int history_fd)
 		line = readline(rdm_prompt_clr);
 		if (!check_token(line))
 			break ;
-		if (add_to_history(line, history_fd) || !ft_strcmp(line, ""))
+		if (add_to_history(&history_head, line, history_fd) || !ft_strcmp(line, ""))
 			continue ;
 		global->line = init_line(line, global);
 		if (!global->line)
