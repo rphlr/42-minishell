@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 01:21:32 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 16:43:56 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 08:46:42 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	handle_redirection(char *filename, int type)
 		buf = get_next_line(fd_final);
 	}
 	close(fd_final);
+	unlink(".heredoc_content");
 }
 
 int	cmd_is_primaries(char *cmd)
