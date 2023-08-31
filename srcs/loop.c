@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 19:51:40 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/31 09:10:12 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 09:55:55 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,15 @@ int	add_to_history(t_history **head, char *line, int history_fd)
 
 void	loop_prompt(t_global *global, int history_fd)
 {
-	char		*rdm_prompt_clr;
+	char		*prompt_clr;
 	char		*line;
 	t_history	*history_head;
 
 	history_head = NULL;
 	while (1)
 	{
-		rdm_prompt_clr = ft_strjoin(ft_strjoin(ft_strjoin(
-						"\033[", ft_itoa(get_random() % 7 + 31)), "m"), PROMPT);
-		line = readline(rdm_prompt_clr);
+		prompt_clr = ft_strjoin(get_next_color(), PROMPT);
+		line = readline(prompt_clr);
 		if (!check_token(line))
 			break ;
 		if (add_to_history(&history_head, line, history_fd) || !ft_strcmp(line, ""))

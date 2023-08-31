@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/30 20:09:44 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 09:47:38 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,13 @@ typedef struct s_count
 	bool				special_cases;
 }						t_count;
 
+typedef struct s_rgb
+{
+	int				r;
+	int				g;
+	int				b;
+}					t_rgb;
+
 // Line
 typedef struct s_line
 {
@@ -386,6 +393,7 @@ int						check_special(t_count *count_tmp, t_global *global,
 							t_token *type_tmp);
 void					call_checks(t_count *count_tmp, t_global *global,
 							t_cmds *curr_cmd, t_token *type_tmp);
+char					*get_next_color(void);
 
 // Signals
 void					ft_signal(void);
