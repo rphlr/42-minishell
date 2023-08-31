@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/31 09:47:38 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 14:57:08 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,6 +357,8 @@ void					ft_and(t_global *global, t_cmds *curr_cmd,
 void					execute_pipeline(t_global *global, t_cmds *cmds);
 void					ft_pipe(t_global *global, t_cmds *curr_cmd,
 							t_cmds *next_cmd);
+char					*found_command(t_global *global, char **paths, char *argv[]);
+void					is_filename(char *filename, int type);
 void					handle_redirection(char *filename, int type);
 int						open_and_check(char *filename, int flags);
 void					process_heredoc(char *limiter);
@@ -366,6 +368,7 @@ int						handle_redirections(t_redirection *redir,
 							t_global *global);
 int						pid_creation(t_global *global, char	**paths,
 							char *argv[], t_redirection *redir);
+int						check_state(pid_t pid, int status);
 void					create_file(int fd, t_redirection *redir,
 							t_global *global);
 void					ft_semicolon(t_global *global, t_cmds *curr_cmd,

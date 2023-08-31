@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution_4.c                                      :+:      :+:    :+:   */
+/*   manage_specials.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
+/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/29 13:35:39 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 14:03:05 by mariavillar      ###   ########.fr       */
+/*   Created: 2023/08/30 15:12:13 by mvillarr          #+#    #+#             */
+/*   Updated: 2023/08/31 14:54:12 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,30 @@ void	ft_semicolon(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 	execute_cmd(next_cmd->cmd, next_cmd->redir, global);
 }
 
-void	run_cmd(t_global *global)
+void	execute_specials(t_global *global)
 {
-	int	primaries;
+	t_count	*count_tmp;
+	t_cmds	*curr_cmd;
+	t_token	*type_tmp;
 
-	primaries = 0;
-	global->exit_code = 0;
-	manage_exit(&global->exit_code);
-	if (checking_primaries(global, primaries))
-		return ;
-	global->exit_code = execute_cmd(global->line->cmds->cmd,
-			global->line->cmds->redir, global);
-	manage_exit(&global->exit_code);
+	count_tmp = global->line->count;
+	curr_cmd = global->line->cmds;
+	type_tmp = global->line->type;
+	while (count_tmp->special_cases)
+	{
+		while (!(*type_tmp == INPUT || *type_tmp == OUTPUT || *type_tmp
+				== APPEND || *type_tmp == HEREDOC || *type_tmp == AND
+				|| *type_tmp == OR || *type_tmp == SEMICOLON || *type_tmp
+				== PIPE) && *type_tmp != END)
+			type_tmp++;
+		call_checks(count_tmp, global, curr_cmd, type_tmp);
+		if (curr_cmd->next)
+			curr_cmd = curr_cmd->next;
+		type_tmp++;
+		if (!count_tmp->nbr_inputs && !count_tmp->nbr_outputs
+			&& !count_tmp->nbr_appends && !count_tmp->nbr_heredocs
+			&& !count_tmp->nbr_ors && !count_tmp->nbr_ands
+			&& !count_tmp->nbr_semicolons && !count_tmp->nbr_pipes)
+			count_tmp->special_cases = false;
+	}
 }
