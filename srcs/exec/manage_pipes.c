@@ -6,7 +6,7 @@
 /*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 13:36:45 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/31 16:30:15 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/31 18:29:00 by mariavillar      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 	waitpid(pid, NULL, 0);
 	waitpid(pid2, NULL, 0);
 }
-// -----------------
 
 void    close_and_wait(int **fds, int num_cmds)
 {

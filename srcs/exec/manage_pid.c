@@ -6,17 +6,27 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:47:31 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/31 14:55:25 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 16:32:40 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	wait_and_manage_exit(pid_t pid)
+{
+	int	status;
+
+	waitpid(pid, &status, 0);
+	g_current_state = STATE_NORMAL;
+	if (manage_exit(NULL) != 130)
+		return (WEXITSTATUS(status));
+	return (manage_exit(NULL));
+}
+
 int	pid_creation(t_global *global, char **paths, char *argv[],
 		t_redirection *redir)
 {
 	pid_t	pid;
-	int		status;
 	char	**env_array;
 
 	g_current_state = STATE_BLOCKING_CMD;
@@ -33,16 +43,12 @@ int	pid_creation(t_global *global, char **paths, char *argv[],
 		global->exit_code = EXIT_FAILURE;
 		exit(global->exit_code);
 	}
-	else if (pid < 0)
+	if (pid < 0)
 	{
 		perror("fork");
 		return (-1);
 	}
-	waitpid(pid, &status, 0);
-	g_current_state = STATE_NORMAL;
-	if (manage_exit(NULL) != 130)
-		return (WEXITSTATUS(status));
-	return (manage_exit(NULL));
+	return (wait_and_manage_exit(pid));
 }
 
 void	check_first_pid(pid_t pid, int fds[2], t_cmds *curr_cmd,

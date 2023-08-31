@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   manage_files.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
+/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:58:07 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 18:01:00 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/31 16:30:04 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	close_and_wait(int **fds, int num_cmds)
+{
+	int	i;
+
+	i = -1;
+	while (++i < num_cmds - 1)
+	{
+		close(fds[i][0]);
+		close(fds[i][1]);
+	}
+	i = -1;
+	while (++i < num_cmds)
+		wait(NULL);
+}
 
 void	create_file(int fd, t_redirection *redir, t_global *global)
 {

@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/31 14:57:08 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 16:33:39 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,6 +260,8 @@ int						lsh_loop(t_global *global);
 int						line_is_wspaces(char *line);
 void					add_to_history_list(t_history **head, char *line);
 char					*rm_newline(char *line);
+int						line_does_not_exist(t_global *global, char *line);
+int						command_empty(t_global *global);
 
 // Builtins
 void					ft_echo(char *cmd, t_global *global);
@@ -338,6 +340,7 @@ void					init_format(t_format *fmt, t_global *global);
 // char					*ft_remove_char(char *str, char c);
 
 // *---* exec *---*
+void					close_and_wait(int **fds, int num_cmds);
 char					**env_to_char(t_global *global);
 char					*get_path(char *command, char **paths);
 void					ft_heredoc(char *filename, char *limiter, int type);
@@ -357,7 +360,8 @@ void					ft_and(t_global *global, t_cmds *curr_cmd,
 void					execute_pipeline(t_global *global, t_cmds *cmds);
 void					ft_pipe(t_global *global, t_cmds *curr_cmd,
 							t_cmds *next_cmd);
-char					*found_command(t_global *global, char **paths, char *argv[]);
+char					*found_command(t_global *global, char **paths,
+							char *argv[]);
 void					is_filename(char *filename, int type);
 void					handle_redirection(char *filename, int type);
 int						open_and_check(char *filename, int flags);
