@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 16:16:17 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 16:52:00 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 08:19:43 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,15 @@ char	*found_command(t_global *global, char **paths, char *argv[])
 {
 	char	*path;
 
+	
 	path = get_path(argv[0], paths);
+	if (ft_strcmp(argv[0], ">>") == 0 || ft_strcmp(argv[0], ">") == 0
+		|| ft_strcmp(argv[0], "<") == 0 || ft_strcmp(argv[0], "<<") == 0)
+	{
+		global->exit_code = 0;
+		manage_exit(&global->exit_code);
+		return (path);
+	}
 	if (!path)
 	{
 		ft_printf("minishell: %s: command not found\n", argv[0]);
@@ -104,5 +112,5 @@ int	handle_redirections(t_redirection *redir, t_global *global)
 		exit(EXIT_SUCCESS);
 	}
 	create_file(fd, redir, global);
-	return (1);
+	return (0);
 }
