@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 13:36:45 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/31 14:56:14 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 16:23:58 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,21 @@ void	ft_pipe(t_global *global, t_cmds *curr_cmd, t_cmds *next_cmd)
 	waitpid(pid2, NULL, 0);
 }
 
+void	close_and_wait(int **fds, int num_cmds)
+{
+	int	i;
+
+	i = -1;
+	while (++i < num_cmds - 1)
+	{
+		close(fds[i][0]);
+		close(fds[i][1]);
+	}
+	i = -1;
+	while (++i < num_cmds)
+		wait(NULL);
+}
+
 void	execute_pipeline(t_global *global, t_cmds *cmds)
 {
 	int		num_cmds;
@@ -88,15 +103,16 @@ void	execute_pipeline(t_global *global, t_cmds *cmds)
 		}
 		cmds = cmds->next;
 	}
-	i = -1;
-	while (++i < num_cmds - 1)
-	{
-		close(fds[i][0]);
-		close(fds[i][1]);
-	}
-	i = -1;
-	while (++i < num_cmds)
-		wait(NULL);
+	close_and_wait(fds, num_cmds);
+// 	i = -1;
+// 	while (++i < num_cmds - 1)
+// 	{
+// 		close(fds[i][0]);
+// 		close(fds[i][1]);
+// 	}
+// 	i = -1;
+// 	while (++i < num_cmds)
+// 		wait(NULL);
 }
 
 void	dup_and_close(int **fds, int i, int num_cmds)
