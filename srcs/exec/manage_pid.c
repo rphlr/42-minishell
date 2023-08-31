@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:47:31 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/31 14:55:25 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 15:43:15 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	pid_creation(t_global *global, char **paths, char *argv[],
 		global->exit_code = EXIT_FAILURE;
 		exit(global->exit_code);
 	}
-	else if (pid < 0)
+	if (pid < 0)
 	{
 		perror("fork");
 		return (-1);

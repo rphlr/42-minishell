@@ -6,7 +6,7 @@
 /*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:28:03 by rrouille          #+#    #+#             */
-/*   Updated: 2023/08/31 14:57:08 by rrouille         ###   ########.fr       */
+/*   Updated: 2023/08/31 15:37:36 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,6 +260,8 @@ int						lsh_loop(t_global *global);
 int						line_is_wspaces(char *line);
 void					add_to_history_list(t_history **head, char *line);
 char					*rm_newline(char *line);
+int						line_does_not_exist(t_global *global, char *line);
+int						command_empty(t_global *global);
 
 // Builtins
 void					ft_echo(char *cmd, t_global *global);
