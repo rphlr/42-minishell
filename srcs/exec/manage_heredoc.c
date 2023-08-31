@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manage_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariavillarroel <mariavillarroel@studen    +#+  +:+       +#+        */
+/*   By: rrouille <rrouille@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:30:26 by mvillarr          #+#    #+#             */
-/*   Updated: 2023/08/30 18:04:51 by mariavillar      ###   ########.fr       */
+/*   Updated: 2023/08/31 14:47:50 by rrouille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	handle_redirections(t_redirection *redir, t_global *global)
 		exit(EXIT_SUCCESS);
 	}
 	create_file(fd, redir, global);
-	return (1);
+	return (0);
 }
 
 void	handle_redirection(char *filename, int type)
@@ -91,4 +91,5 @@ void	handle_redirection(char *filename, int type)
 		buf = get_next_line(fd_final);
 	}
 	close(fd_final);
+	unlink(".heredoc_content");
 }
