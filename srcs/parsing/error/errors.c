@@ -16,7 +16,7 @@ static t_state	*get_error_table(void)
 {
 	t_state	*error_table;
 
-	error_table = ft_gc_malloc(8 * sizeof(t_state));
+	error_table = ft_gc_malloc(9 * sizeof(t_state));
 	if (!error_table)
 		return (NULL);
 	error_table[PIPE] = PIPE_ERROR;
@@ -26,7 +26,7 @@ static t_state	*get_error_table(void)
 	error_table[HEREDOC] = HEREDOC_ERROR;
 	error_table[AND] = AND_ERROR;
 	error_table[OR] = OR_ERROR;
-	error_table[SEMICOLON] = SEMICOLON_ERROR;
+	error_table[SEMICOLON] = SEMICOLON_ERROR; //(SEMICOLON = 8)
 	return (error_table);
 }
 
